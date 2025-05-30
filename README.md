@@ -46,17 +46,21 @@ src/
 ## 🚀 ¡Comenzemos! | Let's begin!
 
 ### 1️⃣ Instala todo lo necesario | Install everything needed
+
 ```bash
 yarn
 ```
 
 ### 2️⃣ Crea tu archivo de configuración | Create your configuration file
+
 Crea un archivo `.env` y agrega: | Create a `.env` file and add:
+
 ```env
 VITE_API_URL=tu_url_api_aquí
 ```
 
 ### 3️⃣ ¡Inicia el proyecto! | Start the project!
+
 ```bash
 yarn dev
 ```
@@ -64,44 +68,53 @@ yarn dev
 ## 📚 ¿Qué hace cada carpeta? | What does each folder do?
 
 ### 🌐 /src/api
+
 ¡Aquí guardamos toda la configuración para hablar con nuestras APIs! El archivo `config.ts` ya está listo con Axios para hacer peticiones HTTP fácilmente.
 
 Here we store all the configuration to talk with our APIs! The `config.ts` file is ready with Axios to make HTTP requests easily.
 
 ### 🧩 /src/components
+
 ¡Aquí van todos los componentes pequeños y reutilizables! Por ejemplo:
+
 - Botones especiales
 - Tarjetas
 - Formularios
 - ¡Y más!
 
 Here go all the small and reusable components! For example:
+
 - Special buttons
 - Cards
 - Forms
 - And more!
 
 ### 📦 /src/containers
+
 ¡Aquí van los componentes más grandes que unen varias piezas! Son como pequeñas aplicaciones dentro de tu aplicación.
 
 Here go the larger components that unite several pieces! They're like small applications within your application.
 
 ### 🎣 /src/hooks
+
 ¡Funciones mágicas de React que puedes reutilizar! Ya incluimos `useApi` para hacer llamadas a APIs súper fácil.
 
 Magic React functions that you can reuse! We already included `useApi` to make API calls super easy.
 
 ### 📄 /src/pages
+
 ¡Las páginas completas de tu aplicación! Cada archivo aquí es una página diferente.
 
 The complete pages of your application! Each file here is a different page.
 
 ### 🗃️ /src/resources
+
 ¡Guarda aquí todas tus imágenes, iconos y archivos estáticos!
 
 Store all your images, icons, and static files here!
 
 ### 📝 /src/types
+
 ¡Definiciones de TypeScript para hacer tu código más seguro!
 
 TypeScript definitions to make your code safer!
@@ -131,4 +144,3 @@ TypeScript definitions to make your code safer!
 ¡Recuerda que la programación es un viaje emocionante! No tengas miedo de experimentar y aprender en el proceso. ¡Este proyecto está diseñado para ayudarte a crecer como desarrollador!
 
 Remember that programming is an exciting journey! Don't be afraid to experiment and learn in the process. This project is designed to help you grow as a developer!
-
