@@ -1,25 +1,5 @@
-interface UserState {
-  user: {
-    token: string | null;
-    id: string | null;
-    name: string | null;
-    lastName: string | null;
-    email: string | null;
-  };
-  isAuthenticated: boolean;
-}
+import type { UserState, UserAction } from '../types';
 
-type UserPayload = {
-  token: string;
-  id: string;
-  name: string;
-  lastName: string;
-  email: string;
-};
-
-type UserAction =
-  | { type: 'LOGIN'; payload: UserPayload }
-  | { type: 'LOGOUT'};
 
 export const userReducer = (state: UserState, action: UserAction): UserState => {
   switch (action.type) {
