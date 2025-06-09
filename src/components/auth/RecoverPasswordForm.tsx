@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { MailOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
+import { useFormContext } from '../../context/Form/useFormContext';
 
 export interface RecoverPasswordFormValues {
   email: string;
@@ -14,14 +15,17 @@ interface RecoverPasswordFormProps {
 
 const RecoverPasswordForm: React.FC<RecoverPasswordFormProps> = ({ onSubmit, isLoading }) => {
   const [form] = Form.useForm();
+  const { setFieldValue, setFieldError, resetForm } = useFormContext();
 
   const onFinish = (values: RecoverPasswordFormValues) => {
-    onSubmit(values);
+    setFieldValue('email', values.email);
+    onSubmit({ email: String(values.email) });
     form.resetFields();
+    resetForm();
   };
 
-  const onFinishFailed: FormProps<RecoverPasswordFormValues>['onFinishFailed'] = (errorInfo) => {
-    console.log('Fallo al enviar:', errorInfo);
+  const onFinishFailed: FormProps<RecoverPasswordFormValues>['onFinishFailed'] = () => {
+    setFieldError('email', 'Verifica tu email');
     message.error('Por favor, ingresa tu email.');
   };
 
