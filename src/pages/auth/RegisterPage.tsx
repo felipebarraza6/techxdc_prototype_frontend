@@ -10,12 +10,10 @@ const { Title } = Typography;
 const RegisterPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Ahora tipado correctamente con RegisterFormValues
+  // Maneja el registro de usuario
   const handleRegister = async (values: RegisterFormValues) => {
     setIsLoading(true);
-    // Aquí solo pasamos email y password al servicio simulado,
-    // ya que los otros campos (username, first_name, last_name)
-    // se usarían en una API real.
+   
     const result = await authService.register(values.email, values.password);
     setIsLoading(false);
 
