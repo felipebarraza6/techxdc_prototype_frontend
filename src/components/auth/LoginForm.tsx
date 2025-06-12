@@ -1,8 +1,9 @@
-// src/components/auth/LoginForm.tsx
 import React from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
+import { useFormContext } from '../../context/Form/useFormContext';
+import { useAuthPayload } from '../../hooks/useAuthPayload';
 
 interface LoginFormValues {
   email: string;
@@ -16,14 +17,24 @@ interface LoginFormProps {
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
   const [form] = Form.useForm();
+  const { setFieldValue, setFieldError, resetForm } = useFormContext();
+  const { getLoginPayload } = useAuthPayload();
 
   const onFinish = (values: LoginFormValues) => {
-    onSubmit(values);
+    setFieldValue('email', values.email);
+    setFieldValue('password', values.password);
+    const payload = getLoginPayload();
+    onSubmit({
+      email: String(payload.email),
+      password: String(payload.password),
+    });
     form.resetFields();
+    resetForm();
   };
 
-  const onFinishFailed: FormProps<LoginFormValues>['onFinishFailed'] = (errorInfo) => {
-    console.log('Fallo al enviar:', errorInfo);
+  const onFinishFailed: FormProps<LoginFormValues>['onFinishFailed'] = () => {
+    setFieldError('email', 'Verifica tu email');
+    setFieldError('password', 'Verifica tu contraseña');
     message.error('Por favor, completa todos los campos requeridos correctamente.');
   };
 

@@ -12,6 +12,7 @@ import GroupCreatePage from './pages/groups/GroupCreatePage';
 import GroupEditPage from './pages/groups/GroupEditPage';
 import './App.css';
 import { UserProvider } from './context/UserState';
+import { FormProvider } from './context/Form/FormContext';
 
 function App() {
   return (
@@ -19,28 +20,14 @@ function App() {
       <ConfigProvider
         theme={{
           token: {
+            // You can customize your theme tokens here
             colorPrimary: '#1890ff',
           },
         }}
       >
-        <Router>
-          <div className="app">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<RegisterPage />} />
-              <Route path="/recover-password" element={<RecoverPasswordPage />} />
-              <Route path="/clients" element={<ClientListPage />} />
-              <Route path="/clients/create" element={<ClientCreatePage />} />
-              <Route path="/clients/:id/edit" element={<ClientEditPage />} />
-              <Route path="/groups" element={<GroupListPage />} />
-              <Route path="/groups/create" element={<GroupCreatePage />} />
-              <Route path="/groups/:id/edit" element={<GroupEditPage />} />
-              {/* Redirección para rutas no encontradas */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </div>
-        </Router>
+        <div className="app">
+          <Home />
+        </div>
       </ConfigProvider>
     </UserProvider>
   );
