@@ -3,6 +3,8 @@ import Home from './pages/Home';
 import './App.css';
 import { UserProvider } from './context/UserState';
 import { FormProvider } from './context/Form/FormContext';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import CatchmentPointList from './pages/TestUseCatchmentPoint';
 
 function App() {
   return (
@@ -15,9 +17,17 @@ function App() {
             },
           }}
         >
-          <div className="app">
+          {/* <div className="app">
             <Home />
-          </div>
+          </div> */}
+          <Router>
+            <div className="app">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/catchments" element={<CatchmentPointList />} />
+              </Routes>
+            </div>
+          </Router>
         </ConfigProvider>
       </FormProvider>
     </UserProvider>
