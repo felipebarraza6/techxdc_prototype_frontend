@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useCatchmentPoint, type CatchmentPoint } from '../hooks/useCatchmentPoint';
+import { useCatchmentPoint, type CatchmentPoint } from '../../hooks/useCatchmentPoint';
 
 
 function CatchmentPointList() {
