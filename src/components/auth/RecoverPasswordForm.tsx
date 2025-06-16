@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { MailOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
-import { useFormContext } from '../../context/Form/useFormContext';
+import { useFormContext } from '../../hooks/useFormContext';
 
 export interface RecoverPasswordFormValues {
   email: string;
