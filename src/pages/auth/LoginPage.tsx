@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import LoginForm from '../../components/auth/LoginForm';
 import authService from '../../api/authService';
+import { FormProvider } from '../../context/Form/FormContext';
 import styles from './LoginPage.module.css';
 import logoIkolu from '../../assets/img/28af0370e8dff1ff9a5425f2c0c073a186072776.png';
 import logoSmartHydro from '../../assets/img/aa7df3241adfdd64e28732b13db3b6d3da44e47a.png';
@@ -27,7 +28,9 @@ const LoginPage: React.FC = () => {
           <img src={logoIkolu} alt="Ikolu Logo" className={styles.logo} />
           <span className={styles.title}>Ikolu App</span>
         </div>
-        <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
+        <FormProvider>
+          <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
+        </FormProvider>
         <div className={styles.info}>
           Para mayor información o problemas de acceso<br />
           envíanos un correo a <b>soporte@smarthydo.cl</b>
