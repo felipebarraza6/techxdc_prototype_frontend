@@ -1,10 +1,10 @@
-// src/pages/auth/LoginPage.tsx
 import React, { useState } from 'react';
-import { Typography, Card } from 'antd';
 import LoginForm from '../../components/auth/LoginForm';
 import authService from '../../api/authService';
-
-const { Title } = Typography;
+import { FormProvider } from '../../context/Form/FormContext';
+import styles from './LoginPage.module.css';
+import logoIkolu from '../../assets/img/28af0370e8dff1ff9a5425f2c0c073a186072776.png';
+import logoSmartHydro from '../../assets/img/aa7df3241adfdd64e28732b13db3b6d3da44e47a.png';
 
 const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -21,33 +21,22 @@ const LoginPage: React.FC = () => {
     }
   };
 
- return (
-    <div style={{
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      minHeight: '100vh',
-      width: '100vw',
-      backgroundColor: '#f0f2f5',
-      padding: '20px',
-      boxSizing: 'border-box',
-    }}>
-      <Card
-        style={{
-          width: '480px',
-          maxWidth: '90%',
-          height: 'auto',
-          padding: '40px',
-          borderRadius: '12px',
-          boxShadow: '0 8px 24px rgba(0, 0, 0, 0.1)',
-          backgroundColor: '#fff',
-        }}
-      >
-        <Title level={2} style={{ textAlign: 'center', marginBottom: '30px' }}>
-          Iniciar Sesión en Ikolu
-        </Title>
-        <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
-      </Card>
+  return (
+    <div className={styles.container}>
+      <div className={styles.loginCard}>
+        <div className={styles.header}>
+          <img src={logoIkolu} alt="Ikolu Logo" className={styles.logo} />
+          <span className={styles.title}>Ikolu App</span>
+        </div>
+        <FormProvider>
+          <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
+        </FormProvider>
+        <div className={styles.info}>
+          Para mayor información o problemas de acceso<br />
+          envíanos un correo a <b>soporte@smarthydo.cl</b>
+        </div>
+        <img src={logoSmartHydro} alt="Smart Hydro" className={styles.companyLogo} />
+      </div>
     </div>
   );
 };

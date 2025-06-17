@@ -1,21 +1,18 @@
-// src/pages/auth/RegisterPage.tsx
 import React, { useState } from 'react';
 import { Typography, Card } from 'antd';
 import RegisterForm from '../../components/auth/RegisterForm';
 import authService from '../../api/authService';
-import type { RegisterFormValues } from '../../components/auth/RegisterForm'; // Importa el tipo
+import type { RegisterFormValues } from '../../components/auth/RegisterForm';
+import { FormProvider } from '../../context/Form/FormContext'; // Importa desde FormContext
 
 const { Title } = Typography;
 
 const RegisterPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  // Ahora tipado correctamente con RegisterFormValues
+  
   const handleRegister = async (values: RegisterFormValues) => {
     setIsLoading(true);
-    // Aquí solo pasamos email y password al servicio simulado,
-    // ya que los otros campos (username, first_name, last_name)
-    // se usarían en una API real.
+
     const result = await authService.register(values.email, values.password);
     setIsLoading(false);
 
@@ -52,7 +49,9 @@ const RegisterPage: React.FC = () => {
         <Title level={2} style={{ textAlign: 'center', marginBottom: '30px' }}>
           Registrarse en Ikolu
         </Title>
-        <RegisterForm onSubmit={handleRegister} isLoading={isLoading} />
+        <FormProvider>
+          <RegisterForm onSubmit={handleRegister} isLoading={isLoading} />
+        </FormProvider>
       </Card>
     </div>
   );
