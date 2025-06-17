@@ -30,7 +30,9 @@
   width: 54px;
   height: 68px;
   margin: 0;
+  padding-bottom: 40px;
   display: block;
+
 }
 
 .title {
@@ -74,3 +76,4 @@
   height: 77px;
   margin: 32px 0 0 0;
 }
+
