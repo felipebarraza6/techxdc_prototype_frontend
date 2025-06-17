@@ -9,9 +9,10 @@ const { Title } = Typography;
 
 const RegisterPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  
   const handleRegister = async (values: RegisterFormValues) => {
     setIsLoading(true);
+
     const result = await authService.register(values.email, values.password);
     setIsLoading(false);
 
