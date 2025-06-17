@@ -1,8 +1,8 @@
-// src/pages/auth/LoginPage.tsx
 import React, { useState } from 'react';
 import { Typography, Card } from 'antd';
 import LoginForm from '../../components/auth/LoginForm';
 import authService from '../../api/authService';
+import { FormProvider } from '../../context/Form/FormContext';
 
 const { Title } = Typography;
 
@@ -21,7 +21,7 @@ const LoginPage: React.FC = () => {
     }
   };
 
- return (
+  return (
     <div style={{
       display: 'flex',
       justifyContent: 'center',
@@ -46,7 +46,9 @@ const LoginPage: React.FC = () => {
         <Title level={2} style={{ textAlign: 'center', marginBottom: '30px' }}>
           Iniciar Sesión en Ikolu
         </Title>
-        <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
+        <FormProvider>
+          <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
+        </FormProvider>
       </Card>
     </div>
   );

@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined, IdcardOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
-import { useFormContext } from '../../context/Form/useFormContext';
+import { useFormContext } from '../../hooks/useFormContext';
 import { useAuthPayload } from '../../hooks/useAuthPayload';
 
 export interface RegisterFormValues {
