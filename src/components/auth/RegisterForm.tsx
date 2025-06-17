@@ -1,10 +1,10 @@
-// src/components/auth/RegisterForm.tsx
 import React from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, MailOutlined, LockOutlined, IdcardOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
+import { useFormContext } from '../../hooks/useFormContext';
+import { useAuthPayload } from '../../hooks/useAuthPayload';
 
-// ¡Añadimos 'export' aquí!
 export interface RegisterFormValues {
   username: string;
   email: string;
@@ -21,14 +21,33 @@ interface RegisterFormProps {
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading }) => {
   const [form] = Form.useForm();
+  const { setFieldValue, setFieldError, resetForm } = useFormContext();
+  const { getRegisterPayload } = useAuthPayload();
 
   const onFinish = (values: RegisterFormValues) => {
-    onSubmit(values);
+    setFieldValue('username', values.username);
+    setFieldValue('email', values.email);
+    setFieldValue('first_name', values.first_name);
+    setFieldValue('last_name', values.last_name);
+    setFieldValue('password', values.password);
+    // No enviamos 'confirm' al backend, solo lo usamos para validación local
+
+    const payload = getRegisterPayload();
+    onSubmit({
+      username: String(payload.username),
+      email: String(payload.email),
+      first_name: String(payload.first_name),
+      last_name: String(payload.last_name),
+      password: String(payload.password),
+      confirm: values.confirm,
+    });
     form.resetFields();
+    resetForm();
   };
 
-  const onFinishFailed: FormProps<RegisterFormValues>['onFinishFailed'] = (errorInfo) => {
-    console.log('Fallo al enviar:', errorInfo);
+  const onFinishFailed: FormProps<RegisterFormValues>['onFinishFailed'] = () => {
+    setFieldError('email', 'Verifica tu email');
+    setFieldError('password', 'Verifica tu contraseña');
     message.error('Por favor, completa todos los campos requeridos correctamente.');
   };
 

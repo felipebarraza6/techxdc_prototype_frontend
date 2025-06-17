@@ -1,9 +1,9 @@
-// src/pages/auth/RecoverPasswordPage.tsx
 import React, { useState } from 'react';
 import { Typography, Card } from 'antd';
 import RecoverPasswordForm from '../../components/auth/RecoverPasswordForm';
 import authService from '../../api/authService';
 import type { RecoverPasswordFormValues } from '../../components/auth/RecoverPasswordForm';
+import { FormProvider } from '../../context/Form/FormContext';
 
 const { Title } = Typography;
 
@@ -48,7 +48,9 @@ const RecoverPasswordPage: React.FC = () => {
         <Title level={2} style={{ textAlign: 'center', marginBottom: '30px' }}>
           Recuperar Contraseña
         </Title>
-        <RecoverPasswordForm onSubmit={handleRecoverPassword} isLoading={isLoading} />
+        <FormProvider>
+          <RecoverPasswordForm onSubmit={handleRecoverPassword} isLoading={isLoading} />
+        </FormProvider>
       </Card>
     </div>
   );

@@ -1,8 +1,10 @@
-// src/components/auth/LoginForm.tsx
 import React from 'react';
 import { Form, Input, Button, message } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { LoginOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
+import { useFormContext } from '../../hooks/useFormContext';
+import { useAuthPayload } from '../../hooks/useAuthPayload';
+import styles from './LoginForm.module.css';
 
 interface LoginFormValues {
   email: string;
@@ -16,15 +18,30 @@ interface LoginFormProps {
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
   const [form] = Form.useForm();
+  const { setFieldValue, setFieldError, resetForm } = useFormContext();
+  const { getLoginPayload } = useAuthPayload();
 
   const onFinish = (values: LoginFormValues) => {
-    onSubmit(values);
+    setFieldValue('email', values.email);
+    setFieldValue('password', values.password);
+    const payload = getLoginPayload();
+    onSubmit({
+      email: String(payload.email),
+      password: String(payload.password),
+    });
     form.resetFields();
+    resetForm();
   };
 
-  const onFinishFailed: FormProps<LoginFormValues>['onFinishFailed'] = (errorInfo) => {
-    console.log('Fallo al enviar:', errorInfo);
+  const onFinishFailed: FormProps<LoginFormValues>['onFinishFailed'] = () => {
+    setFieldError('email', 'Verifica tu email');
+    setFieldError('password', 'Verifica tu contraseña');
     message.error('Por favor, completa todos los campos requeridos correctamente.');
+  };
+
+  const handleClear = () => {
+    form.resetFields();
+    resetForm();
   };
 
   return (
@@ -35,6 +52,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       layout="vertical"
+      className={styles.formContainer}
     >
       <Form.Item
         name="email"
@@ -44,8 +62,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
         ]}
       >
         <Input
-          prefix={<UserOutlined className="site-form-item-icon" />}
-          placeholder="Email"
+          className={styles.input}
+          placeholder="Usuario"
           type="email"
         />
       </Form.Item>
@@ -55,16 +73,29 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
         rules={[{ required: true, message: '¡Por favor, ingresa tu contraseña!' }]}
       >
         <Input.Password
-          prefix={<LockOutlined className="site-form-item-icon" />}
-          placeholder="Contraseña"
+          className={styles.input}
+          placeholder="Clave"
         />
       </Form.Item>
 
-      <Form.Item>
-        <Button type="primary" htmlType="submit" block loading={isLoading}>
-          Iniciar Sesión
+      <div className={styles.buttonRow}>
+        <Button
+          className={styles.loginButton}
+          icon={<LoginOutlined />}
+          htmlType="submit"
+          loading={isLoading}
+        >
+          Ingresar
         </Button>
-      </Form.Item>
+        <Button
+          className={styles.clearButton}
+          icon={<DeleteOutlined />}
+          htmlType="button"
+          onClick={handleClear}
+        >
+          Limpiar
+        </Button>
+      </div>
     </Form>
   );
 };
