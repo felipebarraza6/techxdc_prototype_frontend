@@ -1,8 +1,8 @@
 import { ConfigProvider } from 'antd';
-import Home from './pages/Home';
 import './App.css';
 import { UserProvider } from './context/UserState';
 import { FormProvider } from './context/Form/FormContext';
+import AppRouter from './Routes';
 
 function App() {
   return (
@@ -16,7 +16,7 @@ function App() {
           }}
         >
           <div className="app">
-            <Home />
+            <AppRouter />
           </div>
         </ConfigProvider>
       </FormProvider>
