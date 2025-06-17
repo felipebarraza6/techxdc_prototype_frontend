@@ -1,9 +1,10 @@
 import React from 'react';
 import { Form, Input, Button, message } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { LoginOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
 import { useFormContext } from '../../hooks/useFormContext';
 import { useAuthPayload } from '../../hooks/useAuthPayload';
+import styles from './LoginForm.module.css';
 
 interface LoginFormValues {
   email: string;
@@ -38,6 +39,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
     message.error('Por favor, completa todos los campos requeridos correctamente.');
   };
 
+  const handleClear = () => {
+    form.resetFields();
+    resetForm();
+  };
+
   return (
     <Form
       form={form}
@@ -46,6 +52,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
       layout="vertical"
+      className={styles.formContainer}
     >
       <Form.Item
         name="email"
@@ -55,8 +62,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
         ]}
       >
         <Input
-          prefix={<UserOutlined className="site-form-item-icon" />}
-          placeholder="Email"
+          className={styles.input}
+          placeholder="Usuario"
           type="email"
         />
       </Form.Item>
@@ -66,16 +73,29 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
         rules={[{ required: true, message: '¡Por favor, ingresa tu contraseña!' }]}
       >
         <Input.Password
-          prefix={<LockOutlined className="site-form-item-icon" />}
-          placeholder="Contraseña"
+          className={styles.input}
+          placeholder="Clave"
         />
       </Form.Item>
 
-      <Form.Item>
-        <Button type="primary" htmlType="submit" block loading={isLoading}>
-          Iniciar Sesión
+      <div className={styles.buttonRow}>
+        <Button
+          className={styles.loginButton}
+          icon={<LoginOutlined />}
+          htmlType="submit"
+          loading={isLoading}
+        >
+          Ingresar
         </Button>
-      </Form.Item>
+        <Button
+          className={styles.clearButton}
+          icon={<DeleteOutlined />}
+          htmlType="button"
+          onClick={handleClear}
+        >
+          Limpiar
+        </Button>
+      </div>
     </Form>
   );
 };

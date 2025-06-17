@@ -1,0 +1,76 @@
+.container {
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+}
+
+.loginCard {
+  width: 339px;
+  min-height: 335px; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 0 0 0;
+}
+
+.header {
+  width: 339px;
+  height: 98px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.logo {
+  width: 54px;
+  height: 68px;
+  margin: 0;
+  display: block;
+}
+
+.title {
+  width: 172px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 37.28px;
+  line-height: 46px;
+  color: #fff;
+  margin: 0;
+  text-align: center;
+}
+
+.info {
+  box-sizing: border-box;
+  width: 314px;
+  min-height: 58px;
+  background: #1F3461;
+  border: 1px solid #FFFFFF;
+  border-radius: 10px;
+  color: #FFFFFF;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 12.19px;
+  line-height: 18px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 20px;
+  margin: 24px 0 0 0;
+}
+
+.companyLogo {
+  width: 200px;
+  height: 77px;
+  margin: 32px 0 0 0;
+}
