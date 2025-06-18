@@ -1,20 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Typography } from 'antd';
+import { Card, Typography, message } from 'antd';
 import ClientForm from '../../components/clients/ClientForm';
 import { clientService } from '../../api/clientService';
 import type { Client } from '../../types/client';
+import { useApiResource } from '../../hooks/useApiResource';
 
 const { Title } = Typography;
 
 const ClientCreatePage: React.FC = () => {
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const {
+    create,
+    loading,
+  } = useApiResource<Client, Omit<Client, 'id' | 'created_at' | 'updated_at'>>(clientService);
+
   const handleSubmit = async (values: Omit<Client, 'id' | 'created_at' | 'updated_at'>) => {
-    setLoading(true);
-    await clientService.create(values);
-    setLoading(false);
+    await create(values);
+    message.success('Cliente creado correctamente');
     navigate('/clients');
   };
 

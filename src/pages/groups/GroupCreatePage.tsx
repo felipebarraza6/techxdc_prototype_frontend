@@ -1,20 +1,24 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Typography } from 'antd';
+import { Card, Typography, message } from 'antd';
 import GroupForm from '../../components/groups/GroupForm';
 import { groupService } from '../../api/groupService';
 import type { Group } from '../../types/group';
+import { useApiResource } from '../../hooks/useApiResource';
 
 const { Title } = Typography;
 
 const GroupCreatePage: React.FC = () => {
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const {
+    create,
+    loading,
+  } = useApiResource<Group, Omit<Group, 'id' | 'created_at' | 'updated_at'>>(groupService);
+
   const handleSubmit = async (values: Omit<Group, 'id' | 'created_at' | 'updated_at'>) => {
-    setLoading(true);
-    await groupService.create(values);
-    setLoading(false);
+    await create(values);
+    message.success('Grupo creado correctamente');
     navigate('/groups');
   };
 

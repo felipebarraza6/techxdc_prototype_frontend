@@ -1,38 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Button, Spin, Alert, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { clientService } from '../../api/clientService';
 import type { Client } from '../../types/client';
 import ClientCard from '../../components/clients/ClientCard';
+import { useApiResource } from '../../hooks/useApiResource';
 
 const ClientListPage: React.FC = () => {
-  const [clients, setClients] = useState<Client[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const fetchClients = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await clientService.list();
-      setClients(data);
-    } catch {
-      setError('Error al cargar los clientes');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: clients,
+    loading,
+    error,
+    fetchAll,
+    remove,
+  } = useApiResource<Client, Omit<Client, 'id' | 'created_at' | 'updated_at'>>(clientService);
 
   useEffect(() => {
-    fetchClients();
-  }, []);
+    fetchAll();
+  }, [fetchAll]);
 
   const handleDelete = async (id: string) => {
-    const success = await clientService.remove(id);
+    const success = await remove(id);
     if (success) {
       message.success('Cliente eliminado correctamente');
-      fetchClients();
     } else {
       message.error('No se pudo eliminar el cliente');
     }

@@ -1,38 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Button, Spin, Alert, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { groupService } from '../../api/groupService';
 import type { Group } from '../../types/group';
 import GroupCard from '../../components/groups/GroupCard';
+import { useApiResource } from '../../hooks/useApiResource';
 
 const GroupListPage: React.FC = () => {
-  const [groups, setGroups] = useState<Group[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const fetchGroups = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await groupService.list();
-      setGroups(data);
-    } catch {
-      setError('Error al cargar los grupos');
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    data: groups,
+    loading,
+    error,
+    fetchAll,
+    remove,
+  } = useApiResource<Group, Omit<Group, 'id' | 'created_at' | 'updated_at'>>(groupService);
 
   useEffect(() => {
-    fetchGroups();
-  }, []);
+    fetchAll();
+  }, [fetchAll]);
 
   const handleDelete = async (id: string) => {
-    const success = await groupService.remove(id);
+    const success = await remove(id);
     if (success) {
       message.success('Grupo eliminado correctamente');
-      fetchGroups();
     } else {
       message.error('No se pudo eliminar el grupo');
     }
