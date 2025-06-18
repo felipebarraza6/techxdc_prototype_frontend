@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Input, Button } from 'antd';
 import type { Group } from '../../types/group';
+import { useFormErrors } from '../../hooks/useFormErrors';
 
 interface GroupFormProps {
   initialValues?: Partial<Omit<Group, 'id' | 'created_at' | 'updated_at'>>;
@@ -10,8 +11,14 @@ interface GroupFormProps {
 
 const GroupForm: React.FC<GroupFormProps> = ({ initialValues, onSubmit, isLoading }) => {
   const [form] = Form.useForm<Omit<Group, 'id' | 'created_at' | 'updated_at'>>();
+  const { errors, setFieldError, clearAllErrors } = useFormErrors<Omit<Group, 'id' | 'created_at' | 'updated_at'>>();
 
   const handleFinish = (values: Omit<Group, 'id' | 'created_at' | 'updated_at'>) => {
+    clearAllErrors();
+    if (!values.name) {
+      setFieldError('name', 'Nombre requerido');
+      return;
+    }
     onSubmit(values);
     form.resetFields();
   };
@@ -23,7 +30,13 @@ const GroupForm: React.FC<GroupFormProps> = ({ initialValues, onSubmit, isLoadin
       initialValues={initialValues}
       onFinish={handleFinish}
     >
-      <Form.Item name="name" label="Nombre" rules={[{ required: true, message: 'Nombre requerido' }]}>
+      <Form.Item
+        name="name"
+        label="Nombre"
+        validateStatus={errors.name ? 'error' : ''}
+        help={errors.name}
+        rules={[{ required: true, message: 'Nombre requerido' }]}
+      >
         <Input />
       </Form.Item>
       <Form.Item name="description" label="Descripción">

@@ -4,6 +4,7 @@ import { LoginOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
 import { useFormContext } from '../../hooks/useFormContext';
 import { useAuthPayload } from '../../hooks/useAuthPayload';
+import { useFormErrors } from '../../hooks/useFormErrors';
 import styles from './LoginForm.module.css';
 
 interface LoginFormValues {
@@ -18,10 +19,25 @@ interface LoginFormProps {
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
   const [form] = Form.useForm();
-  const { setFieldValue, setFieldError, resetForm } = useFormContext();
+  const { setFieldValue, resetForm } = useFormContext();
   const { getLoginPayload } = useAuthPayload();
+  const { errors, setFieldError, clearAllErrors } = useFormErrors<LoginFormValues>();
 
-  const onFinish = (values: LoginFormValues) => {
+  const onFinish: FormProps<LoginFormValues>['onFinish'] = (values) => {
+    clearAllErrors();
+    let hasError = false;
+    if (!values.email) {
+      setFieldError('email', 'Verifica tu email');
+      hasError = true;
+    }
+    if (!values.password) {
+      setFieldError('password', 'Verifica tu contraseña');
+      hasError = true;
+    }
+    if (hasError) {
+      message.error('Por favor, completa todos los campos requeridos correctamente.');
+      return;
+    }
     setFieldValue('email', values.email);
     setFieldValue('password', values.password);
     const payload = getLoginPayload();
@@ -42,6 +58,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
   const handleClear = () => {
     form.resetFields();
     resetForm();
+    clearAllErrors();
   };
 
   return (
@@ -56,6 +73,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
     >
       <Form.Item
         name="email"
+        validateStatus={errors.email ? 'error' : ''}
+        help={errors.email}
         rules={[
           { required: true, message: '¡Por favor, ingresa tu email!' },
           { type: 'email', message: '¡El formato del email no es válido!' },
@@ -70,6 +89,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
 
       <Form.Item
         name="password"
+        validateStatus={errors.password ? 'error' : ''}
+        help={errors.password}
         rules={[{ required: true, message: '¡Por favor, ingresa tu contraseña!' }]}
       >
         <Input.Password

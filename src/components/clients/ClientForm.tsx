@@ -1,6 +1,7 @@
 import React from 'react';
 import { Form, Input, Button } from 'antd';
 import type { Client } from '../../types/client';
+import { useFormErrors } from '../../hooks/useFormErrors';
 
 interface ClientFormProps {
   initialValues?: Partial<Omit<Client, 'id' | 'created_at' | 'updated_at'>>;
@@ -10,8 +11,20 @@ interface ClientFormProps {
 
 const ClientForm: React.FC<ClientFormProps> = ({ initialValues, onSubmit, isLoading }) => {
   const [form] = Form.useForm<Omit<Client, 'id' | 'created_at' | 'updated_at'>>();
+  const { errors, setFieldError, clearAllErrors } = useFormErrors<Omit<Client, 'id' | 'created_at' | 'updated_at'>>();
 
   const handleFinish = (values: Omit<Client, 'id' | 'created_at' | 'updated_at'>) => {
+    clearAllErrors();
+    let hasError = false;
+    if (!values.name) {
+      setFieldError('name', 'Nombre requerido');
+      hasError = true;
+    }
+    if (!values.email) {
+      setFieldError('email', 'Email válido requerido');
+      hasError = true;
+    }
+    if (hasError) return;
     onSubmit(values);
     form.resetFields();
   };
@@ -23,10 +36,22 @@ const ClientForm: React.FC<ClientFormProps> = ({ initialValues, onSubmit, isLoad
       initialValues={initialValues}
       onFinish={handleFinish}
     >
-      <Form.Item name="name" label="Nombre" rules={[{ required: true, message: 'Nombre requerido' }]}>
+      <Form.Item
+        name="name"
+        label="Nombre"
+        validateStatus={errors.name ? 'error' : ''}
+        help={errors.name}
+        rules={[{ required: true, message: 'Nombre requerido' }]}
+      >
         <Input />
       </Form.Item>
-      <Form.Item name="email" label="Email" rules={[{ required: true, type: 'email', message: 'Email válido requerido' }]}>
+      <Form.Item
+        name="email"
+        label="Email"
+        validateStatus={errors.email ? 'error' : ''}
+        help={errors.email}
+        rules={[{ required: true, type: 'email', message: 'Email válido requerido' }]}
+      >
         <Input />
       </Form.Item>
       <Form.Item name="phone" label="Teléfono">
