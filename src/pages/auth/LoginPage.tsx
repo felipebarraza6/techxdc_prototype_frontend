@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 import LoginForm from '../../components/auth/LoginForm';
-import authService from '../../api/authService';
 import { FormProvider } from '../../context/Form/FormContext';
+import { useUser } from '../../hooks/useUser';
 import styles from './LoginPage.module.css';
 import logoIkolu from '../../assets/img/28af0370e8dff1ff9a5425f2c0c073a186072776.png';
 import logoSmartHydro from '../../assets/img/aa7df3241adfdd64e28732b13db3b6d3da44e47a.png';
 
 const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { loginUser } = useUser();
 
   const handleLogin = async (values: { email: string; password: string }) => {
     setIsLoading(true);
-    const result = await authService.login(values.email, values.password);
+    const success = await loginUser(values);
     setIsLoading(false);
 
-    if (result.success) {
-      console.log('Login exitoso (simulado):', result.message);
+    if (success) {
+      console.log('Login exitoso');
     } else {
-      console.error('Login fallido (simulado):', result.message);
+      console.error('Login fallido');
     }
   };
 
