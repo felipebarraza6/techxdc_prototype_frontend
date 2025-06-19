@@ -3,7 +3,7 @@ import './App.css';
 import { UserProvider } from './context/UserState';
 import { FormProvider } from './context/Form/FormContext';
 import AppRouter from './Routes';
-import ErrorBoundary from './components/common/ErrorBoundary';
+import ErrorBoundary from './components/common/ErrorBoundary'; 
 
 function App() {
   return (
