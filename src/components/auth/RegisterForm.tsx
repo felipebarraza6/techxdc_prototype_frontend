@@ -4,6 +4,7 @@ import { UserOutlined, MailOutlined, LockOutlined, IdcardOutlined } from '@ant-d
 import type { FormProps } from 'antd';
 import { useFormContext } from '../../hooks/useFormContext';
 import { useAuthPayload } from '../../hooks/useAuthPayload';
+import { useFormErrors } from '../../hooks/useFormErrors';
 
 export interface RegisterFormValues {
   username: string;
@@ -21,16 +22,34 @@ interface RegisterFormProps {
 
 const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading }) => {
   const [form] = Form.useForm();
-  const { setFieldValue, setFieldError, resetForm } = useFormContext();
+  const { setFieldValue, resetForm } = useFormContext();
   const { getRegisterPayload } = useAuthPayload();
+  const { errors, setFieldError, clearAllErrors } = useFormErrors<RegisterFormValues>();
 
-  const onFinish = (values: RegisterFormValues) => {
+  const onFinish: FormProps<RegisterFormValues>['onFinish'] = (values) => {
+    clearAllErrors();
+    let hasError = false;
+    if (!values.email) {
+      setFieldError('email', 'Verifica tu email');
+      hasError = true;
+    }
+    if (!values.password) {
+      setFieldError('password', 'Verifica tu contraseña');
+      hasError = true;
+    }
+    if (values.password !== values.confirm) {
+      setFieldError('confirm', 'Las contraseñas no coinciden');
+      hasError = true;
+    }
+    if (hasError) {
+      message.error('Por favor, completa todos los campos requeridos correctamente.');
+      return;
+    }
     setFieldValue('username', values.username);
     setFieldValue('email', values.email);
     setFieldValue('first_name', values.first_name);
     setFieldValue('last_name', values.last_name);
     setFieldValue('password', values.password);
-    // No enviamos 'confirm' al backend, solo lo usamos para validación local
 
     const payload = getRegisterPayload();
     onSubmit({
@@ -71,6 +90,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading }) => {
 
       <Form.Item
         name="email"
+        validateStatus={errors.email ? 'error' : ''}
+        help={errors.email}
         rules={[
           { required: true, message: '¡Por favor, ingresa tu email!' },
           { type: 'email', message: '¡El formato del email no es válido!' },
@@ -105,6 +126,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading }) => {
 
       <Form.Item
         name="password"
+        validateStatus={errors.password ? 'error' : ''}
+        help={errors.password}
         rules={[
           { required: true, message: '¡Por favor, ingresa tu contraseña!' },
           { min: 6, message: 'La contraseña debe tener al menos 6 caracteres.' },
@@ -119,6 +142,8 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ onSubmit, isLoading }) => {
 
       <Form.Item
         name="confirm"
+        validateStatus={errors.confirm ? 'error' : ''}
+        help={errors.confirm}
         dependencies={['password']}
         hasFeedback
         rules={[

@@ -3,6 +3,7 @@ import './App.css';
 import { UserProvider } from './context/UserState';
 import { FormProvider } from './context/Form/FormContext';
 import AppRouter from './Routes';
+import ErrorBoundary from './components/common/ErrorBoundary';
 
 function App() {
   return (
@@ -15,9 +16,11 @@ function App() {
             },
           }}
         >
-          <div className="app">
-            <AppRouter />
-          </div>
+          <ErrorBoundary>
+            <div className="app">
+              <AppRouter />
+            </div>
+          </ErrorBoundary>
         </ConfigProvider>
       </FormProvider>
     </UserProvider>
