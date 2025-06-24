@@ -1,6 +1,5 @@
 import React from 'react';
 import { Form, Input, Button, message } from 'antd';
-import { LoginOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { FormProps } from 'antd';
 import { useFormContext } from '../../hooks/useFormContext';
 import { useAuthPayload } from '../../hooks/useAuthPayload';
@@ -55,12 +54,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
     message.error('Por favor, completa todos los campos requeridos correctamente.');
   };
 
-  const handleClear = () => {
-    form.resetFields();
-    resetForm();
-    clearAllErrors();
-  };
-
   return (
     <Form
       form={form}
@@ -82,7 +75,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
       >
         <Input
           className={styles.input}
-          placeholder="Usuario"
+          placeholder="usuario"
           type="email"
         />
       </Form.Item>
@@ -95,28 +88,23 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
       >
         <Input.Password
           className={styles.input}
-          placeholder="Clave"
+          placeholder="contraseña"
         />
       </Form.Item>
+      <div className={styles.info}>
+        ¿Olvidaste tu contraseña? Comunícate con SmartHydro.
+      </div>
 
       <div className={styles.buttonRow}>
         <Button
           className={styles.loginButton}
-          icon={<LoginOutlined />}
           htmlType="submit"
           loading={isLoading}
         >
           Ingresar
         </Button>
-        <Button
-          className={styles.clearButton}
-          icon={<DeleteOutlined />}
-          htmlType="button"
-          onClick={handleClear}
-        >
-          Limpiar
-        </Button>
       </div>
+      
     </Form>
   );
 };

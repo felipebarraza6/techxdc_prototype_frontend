@@ -1,0 +1,145 @@
+/* Estilos Globales para el Layout */
+.mainLayout {
+    min-height: 100vh;
+}
+
+/* Estilos para el Header */
+.header {
+    background-color: #FFFFFF;
+    height: 105px;
+    border-bottom: 1px solid #D1D5DB;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    z-index: 10;
+}
+
+.headerContentArea {
+    width: 1123px;
+    height: 56px;
+    /* Considera si este div necesita ser centrado o alineado de alguna manera dentro del Header */
+    /* Por ahora, solo tiene las dimensiones */
+}
+
+/* Estilos para el Sider (barra lateral) */
+.sider {
+    background-color: #1C355F;
+    overflow: auto;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    padding-top: 105px; /* Espacio para el header fijo */
+    z-index: 9;
+    /* No tiene borde derecho explícito según lo que me indicaste */
+}
+
+/* Estilos para la sección superior del Sider (Logo y nombre de la app) */
+.ikoluAppSection {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 92px;
+    height: 106px;
+    position: absolute;
+    left: calc(50% - 92px / 2 + 0.5px);
+    top: 23px;
+    padding: 0px; /* Según tu especificación */
+}
+
+.ikoluLogo {
+    width: 54px;
+    height: 68px;
+}
+
+.ikoluAppName {
+    font-family: 'Roboto';
+    font-size: 22px;
+    line-height: 28px;
+    font-weight: 400;
+    color: #FFFFFF;
+    width: 92px;
+    height: 28px;
+    display: flex; /* Para centrar texto verticalmente si se requiere */
+    align-items: center;
+    justify-content: center; /* Para centrar texto horizontalmente */
+}
+
+/* Estilos para el Selector de PO */
+.poSelectorContainer {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px 5px 16px;
+    gap: 8px;
+    position: absolute;
+    width: 215px;
+    height: 32px;
+    left: 11px;
+    top: 152px;
+    background: #3B5484;
+    border: 1px solid #3B5484;
+    border-radius: 6px;
+}
+
+.poSelectorText {
+    color: white;
+}
+
+/* Estilos para el componente Select de Ant Design */
+/* Puede que necesites anular estilos más específicos de Ant Design */
+.poSelectComponent {
+    flex-grow: 1; /* Ocupa el espacio restante */
+    color: white; /* Color del texto del valor seleccionado */
+}
+
+/* Estilos para el Menú principal (Menu de Ant Design) */
+.mainMenu {
+    height: 100%;
+    border-right: 0;
+    background: transparent; /* Para que el color del Sider sea visible */
+    margin-top: 200px; /* Placeholder: Ajusta este valor */
+    /* Los estilos de los ítems del menú (colores, padding, etc.) irán aquí o en overrides de Ant Design */
+}
+
+/* Estilos para el pie del Sider (Usuario y SmartHydro Logo) */
+.siderFooter {
+    padding: 16px;
+    border-top: 1px solid #f0f0f0; /* Placeholder */
+    margin-top: auto; /* Empuja al final del Sider si el Sider es flex column */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #FFFFFF; /* Color de texto del footer */
+}
+
+.siderFooterText {
+    margin-bottom: 8px;
+}
+
+.smartHydroLogoPlaceholder {
+    /* Aquí iría la imagen del logo real */
+    width: 100px; /* Ejemplo */
+    height: auto; /* Ejemplo */
+    color: #FFF; /* Para que se vea el texto placeholder */
+    font-size: 12px;
+    text-align: center;
+}
+
+/* Estilos para el Layout del Contenido (a la derecha del Sider) */
+.contentLayout {
+    margin-left: 237px; /* Debe coincidir con el ancho del Sider fijo */
+    padding: 0 24px 24px; /* Padding alrededor del Content */
+}
+
+/* Estilos para el área de contenido principal */
+.contentArea {
+    padding: 24px;
+    margin: 0;
+    min-height: 280px;
+    background-color: #f0f2f5; /* Color de fondo por defecto de Ant Design o lo que necesites */
+    border-radius: 8px; /* Ejemplo de border-radius */
+}

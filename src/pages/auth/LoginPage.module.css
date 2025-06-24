@@ -2,78 +2,53 @@
   min-height: 100vh;
   width: 100vw;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: transparent;
-}
-
-.loginCard {
-  width: 339px;
-  min-height: 335px; 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 32px 0 0 0;
+  background-image: url('../../assets/img/982f0fa9b613ad5c7c999e439123f8b07b8fb1ef.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
 }
 
 .header {
-  width: 339px;
-  height: 98px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.logo {
-  width: 54px;
-  height: 68px;
-  margin: 0;
-  padding-bottom: 40px;
-  display: block;
-
-}
-
-.title {
-  width: 172px;
-  height: 46px;
-  display: flex;
-  align-items: center;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  font-weight: 700;
-  font-size: 37.28px;
-  line-height: 46px;
-  color: #fff;
-  margin: 0;
-  text-align: center;
-}
-
-.info {
-  box-sizing: border-box;
-  width: 314px;
-  min-height: 58px;
-  background: #1F3461;
-  border: 1px solid #FFFFFF;
-  border-radius: 10px;
-  color: #FFFFFF;
-  font-family: 'Segoe UI', Arial, sans-serif;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 12.19px;
-  line-height: 18px;
-  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 11px 20px;
-  margin: 24px 0 0 0;
+  margin-bottom: 32px;
+}
+
+.logo {
+  width: 198px;
+  height: 250.5px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.title {
+  font-family: 'Roboto', sans-serif;
+  font-size: 40px;
+  color: #fff;
+  margin: 0 0 24px 0;
+  text-align: center;
+}
+
+
+.footer {
+  margin-top: 48px;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: static;
 }
 
 .companyLogo {
-  width: 200px;
-  height: 77px;
-  margin: 32px 0 0 0;
+  width: 224px;
+  height: 87px;
+  object-fit: contain;
+  margin-bottom: 8px;
 }
-

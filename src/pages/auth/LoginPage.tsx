@@ -24,18 +24,14 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.loginCard}>
-        <div className={styles.header}>
-          <img src={logoIkolu} alt="Ikolu Logo" className={styles.logo} />
-          <span className={styles.title}>Ikolu App</span>
-        </div>
-        <FormProvider>
-          <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
-        </FormProvider>
-        <div className={styles.info}>
-          Para mayor información o problemas de acceso<br />
-          envíanos un correo a <b>soporte@smarthydo.cl</b>
-        </div>
+      <div className={styles.header}>
+        <img src={logoIkolu} alt="Ikolu Logo" className={styles.logo} />
+        <span className={styles.title}>Ikolu App</span>
+      </div>
+      <FormProvider>
+        <LoginForm onSubmit={handleLogin} isLoading={isLoading} />
+      </FormProvider>
+      <div className={styles.footer}>
         <img src={logoSmartHydro} alt="Smart Hydro" className={styles.companyLogo} />
       </div>
     </div>
