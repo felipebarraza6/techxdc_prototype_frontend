@@ -21,6 +21,9 @@ import GroupListPage from "./pages/groups/GroupListPage";
 import GroupCreatePage from "./pages/groups/GroupCreatePage";
 import GroupEditPage from "./pages/groups/GroupEditPage";
 
+// DGA
+import DgaConfigCatchment from "./pages/dga/DgaConfigCatchment";
+
 
 const AppRouter: React.FC = () => {
   return (
@@ -50,6 +53,8 @@ const AppRouter: React.FC = () => {
         <Route path="/groups/create" element={<GroupCreatePage />} />
         <Route path="/groups/:id/edit" element={<GroupEditPage />} />
 
+        {/* DGA */}
+        <Route path="/dga" element={<DgaConfigCatchment />} />
   
         {/* 404 */}
         <Route path="*" element={<div>404 - Página no encontrada</div>} />

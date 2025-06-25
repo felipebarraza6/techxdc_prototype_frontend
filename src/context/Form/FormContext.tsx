@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 import { FormContext } from './FormContextContext';
 
 export interface FormValues {
-  [key: string]: string | number | boolean | undefined;
+  [key: string]: string | number | boolean | undefined | null;
 }
 
 export interface FormState<T extends FormValues = FormValues> {
@@ -12,6 +12,7 @@ export interface FormState<T extends FormValues = FormValues> {
   setFieldValue: (field: string, value: T[string]) => void;
   setFieldError: (field: string, error: string) => void;
   resetForm: () => void;
+  setFormData: (data: Partial<T>) => void;
 }
 
 export const FormProvider = ({ children }: { children: ReactNode }) => {
@@ -28,9 +29,12 @@ export const FormProvider = ({ children }: { children: ReactNode }) => {
     setValues({});
     setErrors({});
   };
+  const setFormData: FormState['setFormData'] = (data) => {
+    setValues(v => ({ ...v, ...data }));
+  };
 
   return (
-    <FormContext.Provider value={{ values, errors, setFieldValue, setFieldError, resetForm }}>
+    <FormContext.Provider value={{ values, errors, setFieldValue, setFieldError, resetForm, setFormData }}>
       {children}
     </FormContext.Provider>
   );
