@@ -1,0 +1,14 @@
+.homeContainer {
+  width: 100%;
+  padding: 24px;
+  box-sizing: border-box;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+  .homeContainer {
+    padding: 16px;
+  }
+}

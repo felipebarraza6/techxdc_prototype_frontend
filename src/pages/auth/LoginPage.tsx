@@ -3,8 +3,8 @@ import LoginForm from '../../components/auth/LoginForm';
 import { FormProvider } from '../../context/Form/FormContext';
 import { useUser } from '../../hooks/useUser';
 import styles from './LoginPage.module.css';
-import logoIkolu from '../../assets/img/28af0370e8dff1ff9a5425f2c0c073a186072776.png';
-import logoSmartHydro from '../../assets/img/aa7df3241adfdd64e28732b13db3b6d3da44e47a.png';
+import logoIkolu from '../../assets/img/logoikolu.png';
+import logoSmartHydro from '../../assets/img/logoempresa.png';
 
 const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);

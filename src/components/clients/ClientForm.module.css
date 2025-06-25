@@ -1,0 +1,65 @@
+.clientForm {
+  width: 100%;
+}
+
+.formHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.headerIcon {
+  margin-right: 12px;
+}
+
+.headerTitle {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.formColumns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.clientForm :global(.ant-form-item-label > label) {
+  font-weight: 500;
+  color: #555;
+}
+
+.clientForm :global(.ant-input),
+.clientForm :global(.ant-picker) {
+  border-radius: 6px;
+  border: 1px solid #d9d9d9;
+}
+
+.clientForm :global(.ant-checkbox-wrapper) {
+  margin-bottom: 8px;
+}
+
+.formButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .formColumns {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .formColumns {
+    grid-template-columns: 1fr;
+  }
+}
