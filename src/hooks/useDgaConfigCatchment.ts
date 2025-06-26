@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useApi } from './useApi';
 import axios from '../api/config';
 
@@ -28,25 +28,24 @@ export const useDgaConfigCatchment = () => {
   const [dgaConfigs, setDgaConfigs] = useState<DgaDataConfig[]>([]);
   const [currentDgaConfig, setCurrentDgaConfig] = useState<DgaDataConfig | null>(null);
 
-  const getAllDgaConfigs = async () => {
+  const getAllDgaConfigs = useCallback(async () => {
     const data = await fetchData<{
       count: number;
       next: string | null;
       previous: string | null;
       results: DgaDataConfig[];
     }>('/api/dga_data_config_catchment/');
-
     if (data) setDgaConfigs(data.results);
     return data;
-  };
+  }, [fetchData]);
 
-  const getDgaConfigById = async (id: number) => {
+  const getDgaConfigById = useCallback(async (id: number) => {
     const data = await fetchData<DgaDataConfig>(`/api/dga_data_config_catchment/${id}/`);
     if (data) setCurrentDgaConfig(data);
     return data;
-  };
+  }, [fetchData]);
 
-  const createDgaConfig = async (data: NewDgaDataConfig) => {
+  const createDgaConfig = useCallback(async (data: NewDgaDataConfig) => {
     try {
       const response = await axios.post<DgaDataConfig>('/api/dga_data_config_catchment/', data);
       setDgaConfigs(prev => [...prev, response.data]);
@@ -55,9 +54,9 @@ export const useDgaConfigCatchment = () => {
       console.error(err);
       return null;
     }
-  };
+  }, []);
 
-  const updateDgaConfig = async (id: number, data: Partial<NewDgaDataConfig>) => {
+  const updateDgaConfig = useCallback(async (id: number, data: Partial<NewDgaDataConfig>) => {
     try {
       const response = await axios.put<DgaDataConfig>(`/api/dga_data_config_catchment/${id}/`, data);
       setDgaConfigs(prev => prev.map(cfg => (cfg.id === id ? response.data : cfg)));
@@ -67,9 +66,9 @@ export const useDgaConfigCatchment = () => {
       console.error(err);
       return null;
     }
-  };
+  }, []);
 
-  const patchDgaConfig = async (id: number, data: Partial<NewDgaDataConfig>) => {
+  const patchDgaConfig = useCallback(async (id: number, data: Partial<NewDgaDataConfig>) => {
     try {
       const response = await axios.patch<DgaDataConfig>(`/api/dga_data_config_catchment/${id}/`, data);
       setDgaConfigs(prev => prev.map(cfg => (cfg.id === id ? response.data : cfg)));
@@ -79,9 +78,9 @@ export const useDgaConfigCatchment = () => {
       console.error(err);
       return null;
     }
-  };
+  }, []);
 
-  const deleteDgaConfig = async (id: number) => {
+  const deleteDgaConfig = useCallback(async (id: number) => {
     try {
       await axios.delete(`/api/dga_data_config_catchment/${id}/`);
       setDgaConfigs(prev => prev.filter(cfg => cfg.id !== id));
@@ -91,7 +90,7 @@ export const useDgaConfigCatchment = () => {
       console.error(err);
       return false;
     }
-  };
+  }, [currentDgaConfig]);
 
   return {
     loading,

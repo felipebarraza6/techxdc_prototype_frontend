@@ -22,6 +22,9 @@ import GroupCreatePage from "./pages/groups/GroupCreatePage";
 import GroupEditPage from "./pages/groups/GroupEditPage";
 import AppLayout from "./components/layout/AppLayout";
 
+// DGA
+import DgaConfigCatchment from "./pages/dga/DgaConfigCatchment";
+
 const ProtectedLayout: React.FC = () => (
   <AppLayout>
     <Outlet />
@@ -36,6 +39,7 @@ const AppRouter: React.FC = () => {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/recover-password" element={<RecoverPasswordPage />} />
+
 
         {/* Rutas protegidas (con layout global) */}
         <Route element={<ProtectedLayout />}>
@@ -53,7 +57,10 @@ const AppRouter: React.FC = () => {
           <Route path="/groups" element={<GroupListPage />} />
           <Route path="/groups/create" element={<GroupCreatePage />} />
           <Route path="/groups/:id/edit" element={<GroupEditPage />} />
+          {/* DGA */}
+        <Route path="/dga" element={<DgaConfigCatchment />} />
         </Route>
+        
         {/* 404 */}
         <Route path="*" element={<div>404 - Página no encontrada</div>} />
       </Routes>
