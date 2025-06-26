@@ -1,14 +1,17 @@
 .formContainer {
-  width: 467px;
+  width: 100%;
+  max-width: 467px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   align-items: center;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .input {
-  width: 467px;
-  height: 64px;
+  width: 100% !important;
+  height: 64px !important;
   border-radius: 10px;
   border: none;
   background: #FFFFFF;
@@ -26,17 +29,14 @@
 }
 
 .buttonRow {
-  width: 100%;
+  width: 467px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
   margin-top: 16px;
-  padding-left: 491px;
-    
 }
 
 .info {
   width: 459px;
-  max-width: 90vw;
   height: 26px;
   margin: 12px auto 0 auto;
   font-family: 'Roboto', sans-serif;
@@ -49,11 +49,13 @@
   text-decoration-line: underline;
   color: #FFFFFF;
   text-align: center;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .loginButton {
-  width: 222px;
-  height: 64px;
+  width: 222px !important;
+  height: 64px !important;
   background: #568E2B;
   border-radius: 10px;
   border: none;
@@ -69,4 +71,94 @@
 
 .loginButton:hover {
   background: #6aaa38;
+}
+
+
+.formContainer :global(.ant-form-item) {
+  width: 100%; 
+  margin-bottom: 0 !important; 
+}
+
+.formContainer :global(.ant-form-item-control-input-content) {
+  width: 100% !important; 
+}
+
+.formContainer :global(.ant-form-item-label) {
+  width: 100%;
+  text-align: center;
+}
+
+.formContainer :global(.ant-form-item-explain-error) {
+  width: 100%;
+  text-align: center;
+}
+
+@media (max-width: 500px) {
+  .formContainer {
+    width: 100%;
+    padding: 0 16px;
+    box-sizing: border-box;
+  }
+
+  
+  .formContainer :global(.ant-form-item) {
+    width: 100% !important;
+  }
+
+  .input, .buttonRow {
+    width: 100% !important;
+    max-width: 467px;
+  }
+  
+  .input {
+    height: 50px !important;
+    font-size: 16px;
+    padding: 12px 20px;
+  }
+
+  .buttonRow {
+    justify-content: center;
+  }
+  
+  .info {
+    width: 100%;
+    max-width: 459px;
+    font-size: 14px;
+    height: auto;
+  }
+
+  .loginButton {
+    width: 100% !important;
+    max-width: 200px !important;
+    height: 50px !important;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 380px) {
+  .input {
+    font-size: 15px;
+    padding: 10px 15px;
+    height: 45px !important;
+  }
+  .loginButton {
+    font-size: 16px;
+    height: 45px !important;
+    max-width: 180px !important;
+  }
+  .info {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    max-width: 150px;
+  }
+}
+
+@media (max-width: 380px) {
+  .logo {
+    max-width: 120px;
+  }
 }
