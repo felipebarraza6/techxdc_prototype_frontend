@@ -1,0 +1,40 @@
+.pageContainer {
+    width: 100%;
+    min-height: calc(100vh - var(--header-height, 64px) - var(--content-padding-top, 24px) - var(--content-padding-bottom, 24px));
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: transparent;
+    padding-top: 32px;
+    padding-bottom: 32px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.formCard {
+    width: auto;
+    max-width: 1200px;
+    min-width: 320px;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    box-sizing: border-box;
+    flex-grow: 1;
+    margin: 0 24px;
+}
+
+@media (max-width: 1200px) {
+  .formCard {
+    max-width: 900px; 
+  }
+}
+
+@media (max-width: 768px) {
+  .formCard {
+    max-width: 100%; 
+    margin: 0 16px; 
+    padding: 20px;
+  }
+}
