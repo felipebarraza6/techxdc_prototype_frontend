@@ -1,6 +1,6 @@
 .container {
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -11,6 +11,8 @@
   background-repeat: no-repeat;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
+  padding: 20px;
 }
 
 .header {
@@ -18,11 +20,14 @@
   flex-direction: column;
   align-items: center;
   margin-bottom: 32px;
+  width: 100%;
+  max-width: 300px;
 }
 
 .logo {
-  width: 198px;
-  height: 250.5px;
+  width: 100%;
+  max-width: 198px;
+  height: auto;
   object-fit: contain;
   margin-bottom: 8px;
 }
@@ -33,22 +38,43 @@
   color: #fff;
   margin: 0 0 24px 0;
   text-align: center;
+  word-wrap: break-word;
+  word-break: break-word;
 }
-
 
 .footer {
   margin-top: 48px;
-  width: 100vw;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
   position: static;
+  max-width: 300px;
 }
 
 .companyLogo {
-  width: 224px;
-  height: 87px;
+  width: 100%;
+  max-width: 224px;
+  height: auto;
   object-fit: contain;
   margin-bottom: 8px;
+}
+
+@media (max-width: 480px) {
+  .logo {
+    max-width: 150px;
+  }
+
+  .title {
+    font-size: 32px;
+  }
+
+  .companyLogo {
+    max-width: 180px;
+  }
+  .header, .footer {
+    margin-bottom: 24px;
+    margin-top: 24px;
+  }
 }

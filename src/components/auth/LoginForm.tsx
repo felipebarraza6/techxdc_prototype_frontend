@@ -104,8 +104,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
           Ingresar
         </Button>
       </div>
-      
-    </Form>
+    </Form >
   );
 };
 
