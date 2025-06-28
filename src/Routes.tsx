@@ -23,7 +23,7 @@ import GroupEditPage from "./pages/groups/GroupEditPage";
 import AppLayout from "./components/layout/AppLayout";
 
 // DGA
-import DgaConfigCatchment from "./pages/dga/DgaConfigCatchment";
+import DgaMEE from "./pages/dga/DGA_MEE";
 
 
 const ProtectedLayout: React.FC = () => (
@@ -61,7 +61,7 @@ const AppRouter: React.FC = () => {
           {/* Perfil */}
           <Route path="/profile" element={<UserProfile />} />
           {/* DGA */}
-          <Route path="/dga" element={<DgaConfigCatchment />} />
+          <Route path="/dga" element={<DgaMEE />} />
         </Route>
         {/* 404 */}
         <Route path="*" element={<div>404 - Página no encontrada</div>} />
