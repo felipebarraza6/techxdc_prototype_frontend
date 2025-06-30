@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Dropdown } from "antd";
 import {
   DashboardOutlined,
   UsergroupAddOutlined,
@@ -11,12 +11,15 @@ import {
   FileProtectOutlined,
   FileUnknownOutlined,
   CustomerServiceOutlined,
-  UserOutlined
+  UserOutlined,
+  DownOutlined
 } from "@ant-design/icons";
 import styles from "./AppLayout.module.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import logoIkolu from "../../assets/img/logoikolu.png";
 import logoEmpresa from "../../assets/img/logoempresa.png";
+import { projectService } from "../../api/projectService";
+import type { Project } from "../../api/projectService";
 
 const { Sider, Header, Content } = Layout;
 
@@ -36,8 +39,16 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const header = headerMap[location.pathname] || { title: "", subtitle: "" };
+  const [projects, setProjects] = React.useState<Project[]>([]);
+  const [selectedProject, setSelectedProject] = React.useState<Project | null>(null);
 
-  // Determinar el menú seleccionado
+  React.useEffect(() => {
+    projectService.getAll().then((data) => {
+      setProjects(data);
+      setSelectedProject(data[0] || null);
+    });
+  }, []);
+
   const selectedKeys = React.useMemo(() => {
     if (location.pathname.startsWith("/clients")) return ["clients"];
     if (location.pathname.startsWith("/catchment")) return ["catchment"];
@@ -46,6 +57,22 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return ["dashboard"];
   }, [location.pathname]);
 
+  const handleMenuClick = (e: any) => {
+    const project = projects.find((p) => p.id === Number(e.key));
+    if (project) setSelectedProject(project);
+  };
+
+  const projectMenu = (
+    <Menu className={styles.projectDropdownMenu} onClick={handleMenuClick}>
+      {projects.map((project) => (
+        <Menu.Item key={project.id} className={styles.projectDropdownItem}>
+          <span>{`P${project.id}`}</span>
+          <span className={styles.projectCode}>{project.code}</span>
+        </Menu.Item>
+      ))}
+    </Menu>
+  );
+
   return (
     <Layout className={styles.appLayout}>
       <Sider
@@ -53,16 +80,41 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         className={styles.sidebar}
         style={{ background: "#1C355F", position: "fixed", left: 0, top: 0, height: "100vh", zIndex: 100, display: 'flex', flexDirection: 'column' }}
       >
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <div className={styles.logoSection}>
-            <img src={logoIkolu} alt="Ikolu App logo" className={styles.logoIkolu} />
-            <span className={styles.logoText}>Ikolu App</span>
-          </div>
+        <div className={styles.logoSection}>
+          <img src={logoIkolu} alt="Ikolu App logo" className={styles.logoIkolu} />
+          <span className={styles.logoText}>Ikolu App</span>
+        </div>
+        <Dropdown overlay={projectMenu} trigger={["click"]} placement="bottomLeft" disabled={projects.length === 0} overlayClassName={styles.projectDropdownMenu}>
           <div className={styles.projectSection}>
-            <span className={styles.statusIndicator} />
-            <span className={styles.statusText}>P2</span>
-            <div className={styles.projectButton}>OB-0902-77</div>
+            <span style={{
+              width: 34,
+              height: 22,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 9,
+            }}>
+              <span className={styles.statusIndicator} />
+              <span className={styles.statusText}>{selectedProject ? `P${selectedProject.id}` : ""}</span>
+            </span>
+            <span style={{
+              width: 108,
+              height: 20,
+              background: '#3368AB',
+              color: '#fff',
+              borderRadius: 4,
+              padding: '2px 10px',
+              fontSize: 13,
+              fontWeight: 500,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0,
+            }}>
+              {selectedProject ? selectedProject.code : ""}
+              <DownOutlined style={{ width: 10, height: 11.25, color: '#fff', fontSize: 12, marginLeft: 7 }} />
+            </span>
           </div>
+        </Dropdown>
+        <div style={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
           <Menu
             theme="dark"
             mode="inline"
