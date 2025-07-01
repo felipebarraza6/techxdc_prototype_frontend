@@ -153,7 +153,6 @@ const Home = () => {
       {/* Métricas e imagen */}
       <Row gutter={16}>
         <Col span={6} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <MetricCard {...dashboardData.currentMeasurement} />
           <MetricCard
             icon={<DashboardTwoTone twoToneColor="#1677ff" style={{ fontSize: 22 }} />}
             title="Caudal actual"
