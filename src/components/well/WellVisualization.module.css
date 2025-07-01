@@ -1,0 +1,161 @@
+/* components/well/WellVisualization.module.css */
+.container {
+  width: 588px;
+  height: 623px;
+  margin: 40px auto 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #D1D5DB;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 0 0 18px;
+}
+
+.title {
+  font-family: 'Roboto', 'Arial', sans-serif;
+  color: #1C355F;
+  font-weight: 700;
+  margin: 0;
+  font-size: 1.18rem;
+}
+
+.subtitle {
+  font-family: 'Roboto', 'Arial', sans-serif;
+  color: #64748B;
+  font-size: 0.98rem;
+  margin-left: 18px;
+  margin-bottom: 0.5rem;
+}
+
+.svg {
+  display: block;
+  margin: 0 auto;
+  background: transparent;
+  width: 260px;
+  height: 260px;
+  border-radius: 12px;
+}
+
+.spin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 180px;
+}
+
+.error {
+  margin: 12px 0;
+}
+
+.ground { fill: #785E46; }
+.waterBody { fill: #1A2B4C; }
+.wellTube { fill: #B0C4DE; stroke: #D1A582; }
+.wellWater { fill: #4682B4; }
+.pumpPipe { fill: #333333; }
+
+.depthText,
+.flowRateText,
+.volumeText {
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+}
+
+@keyframes bubbleWaterMove {
+  0% {
+    transform: translate(var(--dx, 0px), 0px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(var(--dx, 0px), -20px);
+    opacity: 0;
+  }
+}
+
+@keyframes bubblePipeMove {
+  0% {
+    transform: translateY(0px) translateX(var(--dx, 0px));
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(var(--dy, -50px)) translateX(var(--dx, 0px));
+    opacity: 0;
+  }
+}
+
+.bubbleWater {
+  animation-name: bubbleWaterMove;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.bubblePipe {
+  animation-name: bubblePipeMove;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@media (max-width: 400px) {
+  .svg {
+    width: 100vw;
+    height: auto;
+    min-width: 0;
+  }
+  .container {
+    max-width: 100vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+    min-height: 400px;
+  }
+  .title {
+    font-size: 1.1rem !important;
+  }
+  .subtitle {
+    font-size: 0.8rem !important;
+    padding-left: 20px;
+  }
+  .svg {
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+    min-height: 350px;
+  }
+  .title {
+    font-size: 1.0rem !important;
+  }
+  .subtitle {
+    font-size: 0.75rem !important;
+    padding-left: 15px;
+  }
+  .flowRateText, .volumeText {
+    font-size: 12px;
+  }
+  .depthText {
+    font-size: 10px;
+  }
+}

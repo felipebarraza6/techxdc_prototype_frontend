@@ -1,0 +1,6 @@
+body, html, #root {
+  font-family: 'Roboto', Arial, sans-serif;
+  color: #1E293B;
+}
+
+/* Mantener reglas de peso, tamaño, etc. si existen, pero nunca sobrescribir la familia ni el color */

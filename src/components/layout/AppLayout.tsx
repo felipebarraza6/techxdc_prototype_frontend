@@ -156,12 +156,14 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </div>
       </Sider>
       <Layout className={styles.mainLayout} style={{ marginLeft: 237 }}>
-        <Header className={styles.header} style={{ background: "#fff", padding: 0, height: 105, minHeight: 105, borderBottom: '1px solid #D1D5DB', zIndex: 10 }}>
-          <div className={styles.headerContent}>
-            <h1 className={styles.title}>{header.title}</h1>
-            {header.subtitle && <span className={styles.subtitle}>{header.subtitle}</span>}
-          </div>
-        </Header>
+        {location.pathname !== '/' && (
+          <Header className={styles.header} style={{ background: "#fff", padding: 0, height: 105, minHeight: 105, borderBottom: '1px solid #D1D5DB', zIndex: 10 }}>
+            <div className={styles.headerContent}>
+              <h1 className={styles.title}>{header.title}</h1>
+              {header.subtitle && <span className={styles.subtitle}>{header.subtitle}</span>}
+            </div>
+          </Header>
+        )}
         <Content className={styles.content}>{children}</Content>
       </Layout>
     </Layout>

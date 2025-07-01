@@ -46,6 +46,8 @@
   padding: 0 32px;
   box-sizing: border-box;
   z-index: 10;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  color: #1C355F !important;
 }
 
 .headerContent {
@@ -62,7 +64,7 @@
   font-weight: 600;
   margin: 0;
   color:  #2C3D66;
-  ;
+
 }
 
 .subtitle {
@@ -82,6 +84,8 @@
   padding: 24px;
   box-sizing: border-box;
   margin-top: 0;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  color: #1C355F !important;
 }
 
 .logoIkolu {
@@ -99,6 +103,10 @@
   margin-left: auto;
   margin-right: auto;
   margin-top: 25px;
+}
+
+.logoText {
+  color: #FFFFFF !important;
 }
 
 .menuList .ant-menu-item {
@@ -386,5 +394,13 @@
 
 .projectDropdownMenu .ant-dropdown-menu-item:hover, .projectDropdownMenu .ant-dropdown-menu-item-active {
   background: rgba(255,255,255,0.18) !important;
+  color: #fff !important;
+}
+
+.mainLayout, .header, .content {
+  color: #1C355F !important;
+}
+
+.sidebar, .menuList {
   color: #fff !important;
 }
