@@ -32,7 +32,7 @@ const headerMap: Record<string, { title: string; subtitle: string }> = {
   "/catchment": { title: "Puntos de Captación", subtitle: "Listado de puntos" },
   "/catchment/new": { title: "Nuevo Punto de Captación", subtitle: "Crear punto" },
   "/clients": { title: "Clientes", subtitle: "Proyectos Recientes" },
-  "/clients/create": { title: "Nuevo Cliente", subtitle: "Crear cliente" },
+  "/clients/create": { title: "Crear nuevo cliente", subtitle: "Agregar información" },
   "/groups": { title: "Grupos", subtitle: "Listado de grupos" },
   "/groups/create": { title: "Nuevo Grupo", subtitle: "Crear grupo" },
   "/smart-analysis": { title: "Smart Analysis", subtitle: "Análisis inteligente" },

@@ -22,8 +22,22 @@ const ClientCreatePage: React.FC = () => {
   };
 
   return (
-    <div className={styles.pageContainer}>
-      <Card className={styles.formCard}>
+    <div className={styles.pageContainer} style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', minHeight: '80vh', background: 'transparent' }}>
+      <Card
+        className={styles.formCard}
+        bordered={true}
+        style={{
+          background: '#fff',
+          borderRadius: 16,
+          boxShadow: '0 2px 12px 0 rgba(44,61,102,0.07)',
+          border: '1px solid #E5E7EB',
+          padding: 0,
+          maxWidth: 1100,
+          width: '100%',
+          margin: '0 auto',
+        }}
+        bodyStyle={{ padding: 32 }}
+      >
         <ClientForm onSubmit={handleSubmit} isLoading={loading} />
       </Card>
     </div>
