@@ -13,7 +13,8 @@ import {
   CustomerServiceOutlined,
   UserOutlined,
   DownOutlined,
-  MenuOutlined
+  MenuOutlined,
+  CloseOutlined
 } from "@ant-design/icons";
 import styles from "./AppLayout.module.css";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -21,7 +22,7 @@ import logoIkolu from "../../assets/img/logoikolu.png";
 import logoEmpresa from "../../assets/img/logoempresa.png";
 import { projectService } from "../../api/projectService";
 import type { Project } from "../../api/projectService";
-import { useIsMobile } from '../../hooks/useIsMobile';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 const { Sider, Header, Content } = Layout;
 
@@ -37,13 +38,31 @@ const headerMap: Record<string, { title: string; subtitle: string }> = {
   "/smart-analysis": { title: "Smart Analysis", subtitle: "Análisis inteligente" },
 };
 
+const LogoSection = ({ onClose }: { onClose?: () => void }) => (
+  <div className={styles.logoSection} style={{ position: 'relative', width: '100%' }}>
+    {onClose && (
+      <button
+        onClick={onClose}
+        style={{ position: 'absolute', top: 0, left: 0, background: 'transparent', border: 'none', cursor: 'pointer', zIndex: 2, padding: 8 }}
+        aria-label="Cerrar menú"
+      >
+        <CloseOutlined style={{ fontSize: 24, color: '#fff' }} />
+      </button>
+    )}
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+      <img src={logoIkolu} alt="Ikolu App logo" className={styles.logoIkolu} />
+      <span className={styles.logoText}>Ikolu App</span>
+    </div>
+  </div>
+);
+
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const header = headerMap[location.pathname] || { title: "", subtitle: "" };
   const [projects, setProjects] = React.useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = React.useState<Project | null>(null);
-  const isMobile = useIsMobile();
+  const { isMobile } = useBreakpoint();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -109,10 +128,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           className={styles.sidebar}
           style={{ background: "#1C355F", position: "fixed", left: 0, top: 0, height: "100vh", zIndex: 100, display: 'flex', flexDirection: 'column' }}
         >
-          <div className={styles.logoSection}>
-            <img src={logoIkolu} alt="Ikolu App logo" className={styles.logoIkolu} />
-            <span className={styles.logoText}>Ikolu App</span>
-          </div>
+          <LogoSection />
           <Dropdown overlay={projectMenu} trigger={["click"]} placement="bottomLeft" disabled={projects.length === 0} overlayClassName={styles.projectDropdownMenu}>
             <div className={styles.projectSection}>
               <span style={{
@@ -168,20 +184,18 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       )}
       {isMobile && (
         <Drawer
-          title={
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <img src={logoIkolu} alt="Ikolu App logo" style={{ width: 54, height: 68, objectFit: 'contain', marginBottom: 2 }} />
-              <span style={{ color: '#FFFFFF', fontWeight: 600 }}>Ikolu App</span>
-            </div>
-          }
+          title={null}
           placement="left"
-          closable={true}
+          closable={false}
           onClose={() => setDrawerOpen(false)}
           open={drawerOpen}
           bodyStyle={{ padding: 0, background: '#1C355F', minHeight: '100vh', display: 'flex', flexDirection: 'column', width: 237 }}
           width={237}
-          headerStyle={{ background: '#1C355F', borderBottom: '1px solid #3B5484', padding: '16px 0 4px 0' }}
+          headerStyle={{ background: '#1C355F', borderBottom: '1px solid #3B5484', padding: '0' }}
         >
+          <div style={{ padding: '16px 0 4px 0', background: '#1C355F', borderBottom: '1px solid #3B5484', position: 'relative' }}>
+            <LogoSection onClose={() => setDrawerOpen(false)} />
+          </div>
           <Dropdown overlay={projectMenu} trigger={["click"]} placement="bottomLeft" disabled={projects.length === 0} overlayClassName={styles.projectDropdownMenu}>
             <div className={styles.projectSection}>
               <span style={{

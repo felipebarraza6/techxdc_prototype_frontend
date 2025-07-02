@@ -352,6 +352,7 @@
   }
 }
 
+/*
 @media (max-width: 600px) {
   .ant-drawer-content {
     width: 180px !important;
@@ -398,44 +399,41 @@
     font-size: 13px !important;
     padding: 4px 8px 4px 8px !important;
     min-height: 0 !important;
-    height: auto !important;
   }
   .menuIcon {
     font-size: 16px !important;
     margin-right: 6px !important;
   }
   .supportSection {
-    font-size: 11px !important;
     padding: 6px 6px !important;
   }
   .supportIcon {
-    font-size: 15px !important;
+    font-size: 16px !important;
   }
   .userSection {
-    padding: 6px 8px 0 8px !important;
-    gap: 3px !important;
+    padding: 8px 8px 0 8px !important;
   }
   .avatar {
-    width: 18px !important;
-    height: 18px !important;
+    width: 20px !important;
+    height: 20px !important;
   }
   .avatarIcon {
-    width: 18px !important;
-    height: 18px !important;
-    font-size: 12px !important;
+    width: 20px !important;
+    height: 20px !important;
   }
   .userName {
-    font-size: 10px !important;
+    font-size: 11px !important;
   }
   .userRole {
-    font-size: 8px !important;
+    font-size: 9px !important;
   }
   .logoEmpresa {
-    width: 70px !important;
-    height: 24px !important;
-    margin-top: 8px !important;
+    width: 90px !important;
+    height: 32px !important;
+    margin-top: 10px !important;
   }
 }
+*/
 
 .projectDropdownMenu {
   background: #fff;

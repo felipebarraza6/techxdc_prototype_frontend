@@ -10,7 +10,7 @@ import {
 import WellVisualization from '../components/well/WellVisualization';
 import { fetchWellData } from '../api/wellService';
 import type { WellData } from '../api/wellService';
-import { useResponsivePozoScale } from '../hooks/useResponsivePozoScale';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const { Title, Text } = Typography;
 
@@ -70,7 +70,7 @@ const Home = () => {
   const [wellData, setWellData] = useState<WellData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const pozoScale = useResponsivePozoScale();
+  const { pozoScale } = useBreakpoint();
   
 
   useEffect(() => {
