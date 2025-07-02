@@ -67,11 +67,11 @@ const WellVisualization: React.FC<{
       <div className={styles.subtitle}>Representación en tiempo real del estado del pozo</div>
       <div
         className={styles.pozoBox}
-        style={{ justifyContent: 'center', alignItems: 'center', ...pozoBoxStyle }}
+        style={{ justifyContent: 'center', alignItems: 'center', overflow: 'visible', width: '100%', ...pozoBoxStyle }}
       >
         <div
           className={styles.pozoScale}
-          style={{ transform: `scale(${pozoScale})`, transformOrigin: 'center center' }}
+          style={{ transform: `scale(${pozoScale})`, transformOrigin: 'center center', overflow: 'visible', width: '100%' }}
         >
           <div className={styles.pozo + (error ? ' ' + styles.pozoError : '')}>
             <div className={styles.superficie}></div>

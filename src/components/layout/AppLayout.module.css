@@ -326,6 +326,19 @@
   .sidebar.open {
     transform: translateX(0);
   }
+
+  .header {
+    padding: 0 8px !important;
+    min-width: 0;
+    width: 100vw;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+  }
+  .headerContent {
+    padding-left: 8px;
+    padding-top: 10px;
+  }
 }
 
 @media (max-width: 700px) {
@@ -336,6 +349,91 @@
     margin: 0;
     padding: 10px;
     border-radius: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .ant-drawer-content {
+    width: 180px !important;
+    min-width: 0 !important;
+    max-width: 100vw !important;
+  }
+  .sidebar, .ant-drawer-body {
+    width: 180px !important;
+    min-width: 0 !important;
+    max-width: 100vw !important;
+    padding: 0 !important;
+  }
+  .logoIkolu {
+    width: 36px !important;
+    height: 44px !important;
+    margin-bottom: 1px !important;
+  }
+  .logoText {
+    font-size: 15px !important;
+  }
+  .projectSection {
+    width: 140px !important;
+    height: 24px !important;
+    font-size: 12px !important;
+    padding: 2px 4px !important;
+    margin-bottom: 8px !important;
+  }
+  .statusIndicator {
+    width: 7px !important;
+    height: 7px !important;
+  }
+  .statusText {
+    font-size: 10px !important;
+  }
+  .projectDropdownItem {
+    font-size: 12px !important;
+    padding: 4px 8px !important;
+  }
+  .projectDropdownItem .projectCode {
+    font-size: 10px !important;
+    padding: 1px 6px !important;
+  }
+  .menuList .ant-menu-item, .menuList .ant-menu-submenu-title {
+    font-size: 13px !important;
+    padding: 4px 8px 4px 8px !important;
+    min-height: 0 !important;
+    height: auto !important;
+  }
+  .menuIcon {
+    font-size: 16px !important;
+    margin-right: 6px !important;
+  }
+  .supportSection {
+    font-size: 11px !important;
+    padding: 6px 6px !important;
+  }
+  .supportIcon {
+    font-size: 15px !important;
+  }
+  .userSection {
+    padding: 6px 8px 0 8px !important;
+    gap: 3px !important;
+  }
+  .avatar {
+    width: 18px !important;
+    height: 18px !important;
+  }
+  .avatarIcon {
+    width: 18px !important;
+    height: 18px !important;
+    font-size: 12px !important;
+  }
+  .userName {
+    font-size: 10px !important;
+  }
+  .userRole {
+    font-size: 8px !important;
+  }
+  .logoEmpresa {
+    width: 70px !important;
+    height: 24px !important;
+    margin-top: 8px !important;
   }
 }
 

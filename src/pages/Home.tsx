@@ -106,31 +106,31 @@ const Home = () => {
         Bienvenido, {loading ? '--' : error ? '--' : wellData && wellData.clientName ? wellData.clientName : '--'}
       </Title>
       {/* Panel de controles */}
-      <Row gutter={16} align="middle" style={{ marginBottom: 32, width: '100%' }}>
-        <Col xs={24} sm={24} md={12} lg={6} xl={6} style={{ display: 'flex', justifyContent: 'center' }}>
-          <Card bordered bodyStyle={{ padding: '1px 8px', height: 36, display: 'flex', alignItems: 'center' }} style={{ width: 224, height: 36, borderRadius: 8, borderWidth: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ display: 'flex', width: '100%', alignItems: 'center', height: 36, gap: 16, justifyContent: 'space-between' }}>
-              <Text style={{ fontWeight: 500, flex: 1, color: '#1C355F' }}>Estado servicio</Text>
+      <Row gutter={[8, 8]} align="middle" style={{ marginBottom: 24, width: '100%' }}>
+        <Col xs={12} sm={12} md={12} lg={6} xl={6} style={{ display: 'flex', justifyContent: 'center' }}>
+          <Card bordered bodyStyle={{ padding: '1px 8px', height: 36, display: 'flex', alignItems: 'center' }} style={{ width: '100%', minWidth: 120, maxWidth: 224, height: 36, borderRadius: 8, borderWidth: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', width: '100%', alignItems: 'center', height: 36, gap: 8, justifyContent: 'space-between' }}>
+              <Text style={{ fontWeight: 500, flex: 1, color: '#1C355F', fontSize: 14 }}>Estado servicio</Text>
               <div style={{ flex: 'none' }}>
                 <Switch checked={serviceStatus} onChange={setServiceStatus} size="small" />
               </div>
             </div>
           </Card>
         </Col>
-        <Col xs={24} sm={24} md={12} lg={6} xl={6} style={{ display: 'flex', justifyContent: 'center' }}>
-          <Card bordered bodyStyle={{ padding: '1px 8px', height: 36, display: 'flex', alignItems: 'center' }} style={{ width: 224, height: 36, borderRadius: 8, borderWidth: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <div style={{ display: 'flex', width: '100%', alignItems: 'center', height: 36, gap: 16, justifyContent: 'space-between' }}>
-              <Text style={{ fontWeight: 500, flex: 1, color: '#1C355F' }}>Extracción MEE</Text>
+        <Col xs={12} sm={12} md={12} lg={6} xl={6} style={{ display: 'flex', justifyContent: 'center' }}>
+          <Card bordered bodyStyle={{ padding: '1px 8px', height: 36, display: 'flex', alignItems: 'center' }} style={{ width: '100%', minWidth: 120, maxWidth: 224, height: 36, borderRadius: 8, borderWidth: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', width: '100%', alignItems: 'center', height: 36, gap: 8, justifyContent: 'space-between' }}>
+              <Text style={{ fontWeight: 500, flex: 1, color: '#1C355F', fontSize: 14 }}>Extracción MEE</Text>
               <div style={{ flex: 'none' }}>
                 <Switch checked={meeExtraction} onChange={setMeeExtraction} size="small" />
               </div>
             </div>
           </Card>
         </Col>
-        <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+        <Col xs={12} sm={12} md={12} lg={6} xl={6} style={{ marginTop: 8 }}>
           <DatePicker value={selectedDate} onChange={setSelectedDate} style={{ width: '100%', height: 40 }} placeholder="Seleccionar fecha" />
         </Col>
-        <Col xs={24} sm={12} md={12} lg={6} xl={6}>
+        <Col xs={12} sm={12} md={12} lg={6} xl={6} style={{ marginTop: 8 }}>
           <Button
             type="default"
             style={{
@@ -153,35 +153,44 @@ const Home = () => {
         </Col>
       </Row>
       {/* Métricas superiores */}
-      <Row gutter={16} style={{ marginBottom: 32, width: '100%' }}>
-        <Col xs={24} sm={24} md={12} lg={8} xl={8}><MetricCard {...dashboardData.lastConnection} value={loading || error ? '--' : dashboardData.lastConnection.value} /></Col>
-        <Col xs={24} sm={24} md={12} lg={8} xl={8}><MetricCard {...dashboardData.lastMeasurement} value={loading || error ? '--' : dashboardData.lastMeasurement.value} /></Col>
-        <Col xs={24} sm={24} md={24} lg={8} xl={8}><MetricCard {...dashboardData.accumulatedSummary} value={loading || error ? '--' : dashboardData.accumulatedSummary.value} /></Col>
+      <Row gutter={[12, 12]} style={{ marginBottom: 24, width: '100%' }}>
+        <Col xs={12} sm={12} md={12} lg={8} xl={8}><MetricCard {...dashboardData.lastConnection} value={loading || error ? '--' : dashboardData.lastConnection.value} /></Col>
+        <Col xs={12} sm={12} md={12} lg={8} xl={8}><MetricCard {...dashboardData.lastMeasurement} value={loading || error ? '--' : dashboardData.lastMeasurement.value} /></Col>
+        <Col xs={12} sm={12} md={24} lg={8} xl={8}><MetricCard {...dashboardData.accumulatedSummary} value={loading || error ? '--' : dashboardData.accumulatedSummary.value} /></Col>
       </Row>
       {/* Métricas e imagen */}
-      <Row gutter={16} style={{ width: '100%' }}>
-        <Col xs={24} sm={24} md={24} lg={6} xl={6} style={{ width: '100%', height: 'auto', display: 'flex', flexDirection: 'column', gap: 0 }}>
-          <MetricCard
-            icon={<DashboardTwoTone twoToneColor="#1677ff" style={{ fontSize: 22 }} />}
-            title="Caudal actual"
-            value={loading || error ? '--' : wellData ? wellData.flowRate.toFixed(2) : '--'}
-            unit="L/s"
-            style={{ width: '100%' }}
-          />
-          <MetricCard
-            icon={<FundTwoTone twoToneColor="#1677ff" style={{ fontSize: 22 }} />}
-            title="Nivel freático"
-            value={loading || error ? '--' : wellData ? wellData.depth.toFixed(2) : '--'}
-            unit="metros"
-            style={{ width: '100%' }}
-          />
-          <MetricCard
-            icon={<DatabaseTwoTone twoToneColor="#1677ff" style={{ fontSize: 22 }} />}
-            title="Acumulado"
-            value={loading || error ? '--' : wellData ? wellData.volume.toFixed(3) : '--'}
-            unit="m³"
-            style={{ width: '100%' }}
-          />
+      <Row gutter={[12, 12]} style={{ width: '100%' }}>
+        {/* En escritorio: cards a la izquierda, pozo a la derecha. En móvil/tablet: todo apilado */}
+        <Col xs={24} sm={24} md={24} lg={6} xl={6}>
+          <Row gutter={[12, 12]}>
+            <Col xs={12} sm={12} md={12} lg={24} xl={24}>
+              <MetricCard
+                icon={<DashboardTwoTone twoToneColor="#1677ff" style={{ fontSize: 22 }} />}
+                title="Caudal actual"
+                value={loading || error ? '--' : wellData ? wellData.flowRate.toFixed(2) : '--'}
+                unit="L/s"
+                style={{ width: '100%' }}
+              />
+            </Col>
+            <Col xs={12} sm={12} md={12} lg={24} xl={24}>
+              <MetricCard
+                icon={<FundTwoTone twoToneColor="#1677ff" style={{ fontSize: 22 }} />}
+                title="Nivel freático"
+                value={loading || error ? '--' : wellData ? wellData.depth.toFixed(2) : '--'}
+                unit="metros"
+                style={{ width: '100%' }}
+              />
+            </Col>
+            <Col xs={12} sm={12} md={12} lg={24} xl={24}>
+              <MetricCard
+                icon={<DatabaseTwoTone twoToneColor="#1677ff" style={{ fontSize: 22 }} />}
+                title="Acumulado"
+                value={loading || error ? '--' : wellData ? wellData.volume.toFixed(3) : '--'}
+                unit="m³"
+                style={{ width: '100%' }}
+              />
+            </Col>
+          </Row>
         </Col>
         <Col xs={24} sm={24} md={24} lg={18} xl={18}>
           <WellVisualization

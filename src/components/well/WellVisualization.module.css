@@ -417,22 +417,36 @@
     padding: 8px 2vw 8px 2vw;
   }
   .pozoBox {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-width: 100%;
-    padding: 0;
+    width: 100% !important;
+    overflow: visible !important;
+    padding: 0 !important;
   }
   .pozoScale {
-    width: 100vw;
-    min-width: 0;
-    padding: 0;
-    justify-content: center;
+    width: 100% !important;
+    overflow: visible !important;
+    padding: 0 !important;
   }
   .pozo {
     width: 90vw;
+    max-width: 300px;
+    min-width: 180px;
+    aspect-ratio: 3/5;
     height: auto;
-    min-width: 0;
-    margin: 0 auto;
+  }
+  .tablero {
+    width: 80%;
+    height: 90%;
+    left: 10%;
+    top: 7%;
+  }
+  .tableroText {
+    font-size: 1em;
+  }
+  .dataloggerLogo {
+    width: 70%;
+  }
+  .datalogger {
+    left: 50% !important;
+    top: 27% !important;
   }
 }

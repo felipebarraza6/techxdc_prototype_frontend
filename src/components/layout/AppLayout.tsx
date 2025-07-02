@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout, Menu, Dropdown } from "antd";
+import { Layout, Menu, Dropdown, Drawer, Button } from "antd";
 import {
   DashboardOutlined,
   UsergroupAddOutlined,
@@ -12,7 +12,8 @@ import {
   FileUnknownOutlined,
   CustomerServiceOutlined,
   UserOutlined,
-  DownOutlined
+  DownOutlined,
+  MenuOutlined
 } from "@ant-design/icons";
 import styles from "./AppLayout.module.css";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -20,6 +21,7 @@ import logoIkolu from "../../assets/img/logoikolu.png";
 import logoEmpresa from "../../assets/img/logoempresa.png";
 import { projectService } from "../../api/projectService";
 import type { Project } from "../../api/projectService";
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 const { Sider, Header, Content } = Layout;
 
@@ -41,6 +43,8 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const header = headerMap[location.pathname] || { title: "", subtitle: "" };
   const [projects, setProjects] = React.useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = React.useState<Project | null>(null);
+  const isMobile = useIsMobile();
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   React.useEffect(() => {
     projectService.getAll().then((data) => {
@@ -73,97 +77,179 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     </Menu>
   );
 
+  const menuContent = (
+    <Menu
+      theme="dark"
+      mode="inline"
+      selectedKeys={selectedKeys}
+      style={{ background: "#1C355F", borderRight: "none" }}
+      className={styles.menuList}
+      onClick={() => isMobile && setDrawerOpen(false)}
+    >
+      <Menu.Item key="dashboard" icon={<DashboardOutlined className={styles.menuIcon} />} onClick={() => navigate("/")}>Dashboard</Menu.Item>
+      <Menu.Item key="clients" icon={<UsergroupAddOutlined className={styles.menuIcon} />} onClick={() => navigate("/clients")}>Clientes</Menu.Item>
+      <Menu.Item key="catchment" icon={<RadarChartOutlined className={styles.menuIcon} />} onClick={() => navigate("/catchment")}>Telemetría</Menu.Item>
+      <Menu.Item key="smart-analysis" icon={<BarChartOutlined className={styles.menuIcon} />} disabled>Smart Análisis</Menu.Item>
+      <Menu.SubMenu key="dga" icon={<FileSearchOutlined className={styles.menuIcon} />} title={<span>DGA</span>}>
+        <Menu.Item key="dga-analisis" icon={<FileProtectOutlined className={styles.menuIcon} />} disabled>DGA Análisis</Menu.Item>
+        <Menu.Item key="dga-waez" icon={<FileUnknownOutlined className={styles.menuIcon} />} disabled>DGA WAEZ</Menu.Item>
+      </Menu.SubMenu>
+      <Menu.SubMenu key="docs" icon={<FileTextOutlined className={styles.menuIcon} />} title={<span>Documentos</span>}>
+        <Menu.Item key="docs-1" icon={<FileTextOutlined className={styles.menuIcon} />} disabled>Documentos 1</Menu.Item>
+      </Menu.SubMenu>
+      <Menu.Item key="alerts" icon={<AlertOutlined className={styles.menuIcon} />} disabled>Alertas</Menu.Item>
+    </Menu>
+  );
+
   return (
     <Layout className={styles.appLayout}>
-      <Sider
-        width={237}
-        className={styles.sidebar}
-        style={{ background: "#1C355F", position: "fixed", left: 0, top: 0, height: "100vh", zIndex: 100, display: 'flex', flexDirection: 'column' }}
-      >
-        <div className={styles.logoSection}>
-          <img src={logoIkolu} alt="Ikolu App logo" className={styles.logoIkolu} />
-          <span className={styles.logoText}>Ikolu App</span>
-        </div>
-        <Dropdown overlay={projectMenu} trigger={["click"]} placement="bottomLeft" disabled={projects.length === 0} overlayClassName={styles.projectDropdownMenu}>
-          <div className={styles.projectSection}>
-            <span style={{
-              width: 34,
-              height: 22,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 9,
-            }}>
-              <span className={styles.statusIndicator} />
-              <span className={styles.statusText}>{selectedProject ? `P${selectedProject.id}` : ""}</span>
-            </span>
-            <span style={{
-              width: 108,
-              height: 20,
-              background: '#3368AB',
-              color: '#fff',
-              borderRadius: 4,
-              padding: '2px 10px',
-              fontSize: 13,
-              fontWeight: 500,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 0,
-            }}>
-              {selectedProject ? selectedProject.code : ""}
-              <DownOutlined style={{ width: 10, height: 11.25, color: '#fff', fontSize: 12, marginLeft: 7 }} />
-            </span>
+      {!isMobile && (
+        <Sider
+          width={237}
+          className={styles.sidebar}
+          style={{ background: "#1C355F", position: "fixed", left: 0, top: 0, height: "100vh", zIndex: 100, display: 'flex', flexDirection: 'column' }}
+        >
+          <div className={styles.logoSection}>
+            <img src={logoIkolu} alt="Ikolu App logo" className={styles.logoIkolu} />
+            <span className={styles.logoText}>Ikolu App</span>
           </div>
-        </Dropdown>
-        <div style={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
-          <Menu
-            theme="dark"
-            mode="inline"
-            selectedKeys={selectedKeys}
-            style={{ background: "#1C355F", borderRight: "none" }}
-            className={styles.menuList}
-          >
-            <Menu.Item key="dashboard" icon={<DashboardOutlined className={styles.menuIcon} />} onClick={() => navigate("/")}>Dashboard</Menu.Item>
-            <Menu.Item key="clients" icon={<UsergroupAddOutlined className={styles.menuIcon} />} onClick={() => navigate("/clients")}>Clientes</Menu.Item>
-            <Menu.Item key="catchment" icon={<RadarChartOutlined className={styles.menuIcon} />} onClick={() => navigate("/catchment")}>Telemetría</Menu.Item>
-            <Menu.Item key="smart-analysis" icon={<BarChartOutlined className={styles.menuIcon} />} disabled>Smart Análisis</Menu.Item>
-            <Menu.SubMenu key="dga" icon={<FileSearchOutlined className={styles.menuIcon} />} title={<span>DGA</span>}>
-              <Menu.Item key="dga-analisis" icon={<FileProtectOutlined className={styles.menuIcon} />} disabled>DGA Análisis</Menu.Item>
-              <Menu.Item key="dga-waez" icon={<FileUnknownOutlined className={styles.menuIcon} />} disabled>DGA WAEZ</Menu.Item>
-            </Menu.SubMenu>
-            <Menu.SubMenu key="docs" icon={<FileTextOutlined className={styles.menuIcon} />} title={<span>Documentos</span>}>
-              <Menu.Item key="docs-1" icon={<FileTextOutlined className={styles.menuIcon} />} disabled>Documentos 1</Menu.Item>
-            </Menu.SubMenu>
-            <Menu.Item key="alerts" icon={<AlertOutlined className={styles.menuIcon} />} disabled>Alertas</Menu.Item>
-          </Menu>
-        </div>
-        <div className={styles.menuSidebarBottom}>
-          <div className={styles.supportSection}>
-            <CustomerServiceOutlined className={styles.supportIcon} />
-            <span className={styles.supportText}>Soporte</span>
-          </div>
-          <div className={styles.userSection}>
-            <div className={styles.avatar}>
-              <UserOutlined className={styles.avatarIcon} />
+          <Dropdown overlay={projectMenu} trigger={["click"]} placement="bottomLeft" disabled={projects.length === 0} overlayClassName={styles.projectDropdownMenu}>
+            <div className={styles.projectSection}>
+              <span style={{
+                width: 34,
+                height: 22,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 9,
+              }}>
+                <span className={styles.statusIndicator} />
+                <span className={styles.statusText}>{selectedProject ? `P${selectedProject.id}` : ""}</span>
+              </span>
+              <span style={{
+                width: 108,
+                height: 20,
+                background: '#3368AB',
+                color: '#fff',
+                borderRadius: 4,
+                padding: '2px 10px',
+                fontSize: 13,
+                fontWeight: 500,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0,
+              }}>
+                {selectedProject ? selectedProject.code : ""}
+                <DownOutlined style={{ width: 10, height: 11.25, color: '#fff', fontSize: 12, marginLeft: 7 }} />
+              </span>
             </div>
-            <div className={styles.userDetails}>
-              <span className={styles.userName}>Usuario</span>
-              <span className={styles.userRole}>Operador</span>
+          </Dropdown>
+          <div style={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
+            {menuContent}
+          </div>
+          <div className={styles.menuSidebarBottom}>
+            <div className={styles.supportSection}>
+              <CustomerServiceOutlined className={styles.supportIcon} />
+              <span className={styles.supportText}>Soporte</span>
+            </div>
+            <div className={styles.userSection}>
+              <div className={styles.avatar}>
+                <UserOutlined className={styles.avatarIcon} />
+              </div>
+              <div className={styles.userDetails}>
+                <span className={styles.userName}>Usuario</span>
+                <span className={styles.userRole}>Operador</span>
+              </div>
+            </div>
+            <div className={styles.logoSection1}>
+              <img src={logoEmpresa} alt="Logo Empresa" className={styles.logoEmpresa} />
             </div>
           </div>
-          <div className={styles.logoSection1}>
-            <img src={logoEmpresa} alt="Logo Empresa" className={styles.logoEmpresa} />
-          </div>
-        </div>
-      </Sider>
-      <Layout className={styles.mainLayout} style={{ marginLeft: 237 }}>
-        {location.pathname !== '/' && (
-          <Header className={styles.header} style={{ background: "#fff", padding: 0, height: 105, minHeight: 105, borderBottom: '1px solid #D1D5DB', zIndex: 10 }}>
-            <div className={styles.headerContent}>
-              <h1 className={styles.title}>{header.title}</h1>
-              {header.subtitle && <span className={styles.subtitle}>{header.subtitle}</span>}
+        </Sider>
+      )}
+      {isMobile && (
+        <Drawer
+          title={
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <img src={logoIkolu} alt="Ikolu App logo" style={{ width: 54, height: 68, objectFit: 'contain', marginBottom: 2 }} />
+              <span style={{ color: '#FFFFFF', fontWeight: 600 }}>Ikolu App</span>
             </div>
-          </Header>
-        )}
+          }
+          placement="left"
+          closable={true}
+          onClose={() => setDrawerOpen(false)}
+          open={drawerOpen}
+          bodyStyle={{ padding: 0, background: '#1C355F', minHeight: '100vh', display: 'flex', flexDirection: 'column', width: 237 }}
+          width={237}
+          headerStyle={{ background: '#1C355F', borderBottom: '1px solid #3B5484', padding: '16px 0 4px 0' }}
+        >
+          <Dropdown overlay={projectMenu} trigger={["click"]} placement="bottomLeft" disabled={projects.length === 0} overlayClassName={styles.projectDropdownMenu}>
+            <div className={styles.projectSection}>
+              <span style={{
+                width: 34,
+                height: 22,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 9,
+              }}>
+                <span className={styles.statusIndicator} />
+                <span className={styles.statusText}>{selectedProject ? `P${selectedProject.id}` : ""}</span>
+              </span>
+              <span style={{
+                width: 108,
+                height: 20,
+                background: '#3368AB',
+                color: '#fff',
+                borderRadius: 4,
+                padding: '2px 10px',
+                fontSize: 13,
+                fontWeight: 500,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0,
+              }}>
+                {selectedProject ? selectedProject.code : ""}
+                <DownOutlined style={{ width: 10, height: 11.25, color: '#fff', fontSize: 12, marginLeft: 7 }} />
+              </span>
+            </div>
+          </Dropdown>
+          <div style={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
+            {menuContent}
+          </div>
+          <div className={styles.menuSidebarBottom}>
+            <div className={styles.supportSection}>
+              <CustomerServiceOutlined className={styles.supportIcon} />
+              <span className={styles.supportText}>Soporte</span>
+            </div>
+            <div className={styles.userSection}>
+              <div className={styles.avatar}>
+                <UserOutlined className={styles.avatarIcon} />
+              </div>
+              <div className={styles.userDetails}>
+                <span className={styles.userName}>Usuario</span>
+                <span className={styles.userRole}>Operador</span>
+              </div>
+            </div>
+            <div className={styles.logoSection1}>
+              <img src={logoEmpresa} alt="Logo Empresa" className={styles.logoEmpresa} />
+            </div>
+          </div>
+        </Drawer>
+      )}
+      <Layout className={styles.mainLayout} style={{ marginLeft: isMobile ? 0 : 237 }}>
+        <Header className={styles.header} style={{ background: "#fff", padding: 0, height: 105, minHeight: 105, borderBottom: '1px solid #D1D5DB', zIndex: 10, display: 'flex', alignItems: 'center' }}>
+          {isMobile && (
+            <Button
+              type="text"
+              icon={<MenuOutlined style={{ fontSize: 28, color: '#1C355F' }} />}
+              onClick={() => setDrawerOpen(true)}
+              style={{ marginLeft: 16, marginRight: 16 }}
+            />
+          )}
+          <div className={styles.headerContent} style={{ flex: 1 }}>
+            {header.title && <h1 className={styles.title}>{header.title}</h1>}
+            {header.subtitle && <span className={styles.subtitle}>{header.subtitle}</span>}
+          </div>
+        </Header>
         <Content className={styles.content}>{children}</Content>
       </Layout>
     </Layout>
