@@ -10,6 +10,7 @@ import {
 import WellVisualization from '../components/well/WellVisualization';
 import { fetchWellData } from '../api/wellService';
 import type { WellData } from '../api/wellService';
+import { useResponsivePozoScale } from '../hooks/useResponsivePozoScale';
 
 const { Title, Text } = Typography;
 
@@ -69,6 +70,7 @@ const Home = () => {
   const [wellData, setWellData] = useState<WellData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const pozoScale = useResponsivePozoScale();
   
 
   useEffect(() => {
@@ -105,7 +107,7 @@ const Home = () => {
       </Title>
       {/* Panel de controles */}
       <Row gutter={16} align="middle" style={{ marginBottom: 32, width: '100%' }}>
-        <Col span={6} style={{ display: 'flex', justifyContent: 'center' }}>
+        <Col xs={24} sm={24} md={12} lg={6} xl={6} style={{ display: 'flex', justifyContent: 'center' }}>
           <Card bordered bodyStyle={{ padding: '1px 8px', height: 36, display: 'flex', alignItems: 'center' }} style={{ width: 224, height: 36, borderRadius: 8, borderWidth: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <div style={{ display: 'flex', width: '100%', alignItems: 'center', height: 36, gap: 16, justifyContent: 'space-between' }}>
               <Text style={{ fontWeight: 500, flex: 1, color: '#1C355F' }}>Estado servicio</Text>
@@ -115,7 +117,7 @@ const Home = () => {
             </div>
           </Card>
         </Col>
-        <Col span={6} style={{ display: 'flex', justifyContent: 'center' }}>
+        <Col xs={24} sm={24} md={12} lg={6} xl={6} style={{ display: 'flex', justifyContent: 'center' }}>
           <Card bordered bodyStyle={{ padding: '1px 8px', height: 36, display: 'flex', alignItems: 'center' }} style={{ width: 224, height: 36, borderRadius: 8, borderWidth: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <div style={{ display: 'flex', width: '100%', alignItems: 'center', height: 36, gap: 16, justifyContent: 'space-between' }}>
               <Text style={{ fontWeight: 500, flex: 1, color: '#1C355F' }}>Extracción MEE</Text>
@@ -125,10 +127,10 @@ const Home = () => {
             </div>
           </Card>
         </Col>
-        <Col span={6}>
+        <Col xs={24} sm={12} md={12} lg={6} xl={6}>
           <DatePicker value={selectedDate} onChange={setSelectedDate} style={{ width: '100%', height: 40 }} placeholder="Seleccionar fecha" />
         </Col>
-        <Col span={6}>
+        <Col xs={24} sm={12} md={12} lg={6} xl={6}>
           <Button
             type="default"
             style={{
@@ -152,13 +154,13 @@ const Home = () => {
       </Row>
       {/* Métricas superiores */}
       <Row gutter={16} style={{ marginBottom: 32, width: '100%' }}>
-        <Col span={8}><MetricCard {...dashboardData.lastConnection} value={loading || error ? '--' : dashboardData.lastConnection.value} /></Col>
-        <Col span={8}><MetricCard {...dashboardData.lastMeasurement} value={loading || error ? '--' : dashboardData.lastMeasurement.value} /></Col>
-        <Col span={8}><MetricCard {...dashboardData.accumulatedSummary} value={loading || error ? '--' : dashboardData.accumulatedSummary.value} /></Col>
+        <Col xs={24} sm={24} md={12} lg={8} xl={8}><MetricCard {...dashboardData.lastConnection} value={loading || error ? '--' : dashboardData.lastConnection.value} /></Col>
+        <Col xs={24} sm={24} md={12} lg={8} xl={8}><MetricCard {...dashboardData.lastMeasurement} value={loading || error ? '--' : dashboardData.lastMeasurement.value} /></Col>
+        <Col xs={24} sm={24} md={24} lg={8} xl={8}><MetricCard {...dashboardData.accumulatedSummary} value={loading || error ? '--' : dashboardData.accumulatedSummary.value} /></Col>
       </Row>
       {/* Métricas e imagen */}
       <Row gutter={16} style={{ width: '100%' }}>
-        <Col span={6} style={{ width: 342, height: 625, display: 'flex', flexDirection: 'column', gap: 0 }}>
+        <Col xs={24} sm={24} md={24} lg={6} xl={6} style={{ width: '100%', height: 'auto', display: 'flex', flexDirection: 'column', gap: 0 }}>
           <MetricCard
             icon={<DashboardTwoTone twoToneColor="#1677ff" style={{ fontSize: 22 }} />}
             title="Caudal actual"
@@ -181,9 +183,9 @@ const Home = () => {
             style={{ width: '100%' }}
           />
         </Col>
-        <Col span={18}>
+        <Col xs={24} sm={24} md={24} lg={18} xl={18}>
           <WellVisualization
-            pozoScale={1.4}
+            pozoScale={pozoScale}
             pozoBoxStyle={{ justifyContent: 'center', alignItems: 'center', position: 'relative', top: -90}}
             error={error}
             wellData={wellData}
