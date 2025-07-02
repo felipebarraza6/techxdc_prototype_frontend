@@ -20,12 +20,13 @@ interface MetricCardProps {
   value: string;
   unit: string;
   timestamp?: string;
+  style?: React.CSSProperties;
 }
 
 const cardTextColor = { color: '#1C355F' };
 
-const MetricCard: React.FC<MetricCardProps> = ({ icon, title, value, unit, timestamp }) => (
-  <Card bordered style={{ height: 140, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...cardTextColor }}>
+const MetricCard: React.FC<MetricCardProps> = ({ icon, title, value, unit, timestamp, style }) => (
+  <Card bordered style={{ height: 140, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', ...cardTextColor, ...style }}>
     <Space align="center" style={{ marginBottom: 8, ...cardTextColor }}>
       {icon}
       <Text style={{ fontWeight: 500, ...cardTextColor }}>{title}</Text>
@@ -93,12 +94,12 @@ const Home = () => {
   }, []);
 
   return (
-    <div style={{ background: '#fff', minHeight: '100vh', padding: 32, color: '#1C355F' }}>
+    <div style={{ background: '#fff', minHeight: '100vh', padding: 16, color: '#1C355F', width: '100%' }}>
       <Title level={2} style={{ color: '#1C355F', marginBottom: 32 }}>
         Bienvenido, {loading ? '--' : wellData && wellData.clientName ? wellData.clientName : '--'}
       </Title>
       {/* Panel de controles */}
-      <Row gutter={16} align="middle" style={{ marginBottom: 32 }}>
+      <Row gutter={16} align="middle" style={{ marginBottom: 32, width: '100%' }}>
         <Col span={6} style={{ display: 'flex', justifyContent: 'center' }}>
           <Card bordered bodyStyle={{ padding: '1px 8px', height: 36, display: 'flex', alignItems: 'center' }} style={{ width: 224, height: 36, borderRadius: 8, borderWidth: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <div style={{ display: 'flex', width: '100%', alignItems: 'center', height: 36, gap: 16, justifyContent: 'space-between' }}>
@@ -145,38 +146,43 @@ const Home = () => {
         </Col>
       </Row>
       {/* Métricas superiores */}
-      <Row gutter={16} style={{ marginBottom: 32 }}>
+      <Row gutter={16} style={{ marginBottom: 32, width: '100%' }}>
         <Col span={8}><MetricCard {...dashboardData.lastConnection} /></Col>
         <Col span={8}><MetricCard {...dashboardData.lastMeasurement} /></Col>
         <Col span={8}><MetricCard {...dashboardData.accumulatedSummary} /></Col>
       </Row>
       {/* Métricas e imagen */}
-      <Row gutter={16}>
-        <Col span={6} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <Row gutter={16} style={{ width: '100%' }}>
+        <Col span={6} style={{ width: 342, height: 625, display: 'flex', flexDirection: 'column', gap: 0 }}>
           <MetricCard
             icon={<DashboardTwoTone twoToneColor="#1677ff" style={{ fontSize: 22 }} />}
             title="Caudal actual"
             value={loading ? '--' : wellData ? wellData.flowRate.toFixed(2) : '--'}
             unit="L/s"
+            style={{ width: '100%' }}
           />
           <MetricCard
             icon={<FundTwoTone twoToneColor="#1677ff" style={{ fontSize: 22 }} />}
             title="Nivel freático"
             value={loading ? '--' : wellData ? wellData.depth.toFixed(2) : '--'}
             unit="metros"
+            style={{ width: '100%' }}
           />
           <MetricCard
             icon={<DatabaseTwoTone twoToneColor="#1677ff" style={{ fontSize: 22 }} />}
             title="Acumulado"
             value={loading ? '--' : wellData ? wellData.volume.toFixed(3) : '--'}
             unit="m³"
+            style={{ width: '100%' }}
           />
         </Col>
         <Col span={18}>
-          <WellVisualization />
+          <WellVisualization
+            pozoScale={1.4}
+            pozoBoxStyle={{ justifyContent: 'center', alignItems: 'center', position: 'relative', top: -90}}
+          />
         </Col>
       </Row>
-      {error && <div style={{ color: 'red', marginTop: 16 }}>{error}</div>}
     </div>
   );
 };

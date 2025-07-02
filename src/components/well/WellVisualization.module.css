@@ -1,20 +1,26 @@
 /* WellVisualization.module.css */
 .container {
-  width: 588px;
-  height: 623px;
-  margin: 40px auto 0 auto;
+  width: 100%;
+  max-width: 1000px;
+  min-height: 623px;
+  margin: 20px auto 20 auto;
   background: #fff;
   border-radius: 8px;
   border: 1px solid #D1D5DB;
   box-sizing: border-box;
-  padding: 0;
+  padding: 32px 32px 32px 32px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .header {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 18px 0 0 18px;
+  padding: 0;
 }
 
 .title {
@@ -29,43 +35,8 @@
   font-family: 'Roboto', sans-serif;
   color: #64748B;
   font-size: 14px;
-  margin-left: 18px;
-  margin-bottom: 24px;
-}
-
-.exactVisualization {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-  padding: 20px;
-}
-
-.dataDisplay {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  width: 100%;
-  padding-left: 40px;
-}
-
-.dataRow {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-
-.dataNumber {
-  font-family: 'Roboto Mono', monospace;
-  font-size: 24px;
-  color: #1C355F;
-  font-weight: 500;
-}
-
-.dataUnit {
-  font-family: 'Roboto', sans-serif;
-  font-size: 16px;
-  color: #64748B;
+  margin-left: 0;
+  margin-bottom: 0;
 }
 
 .wellRepresentation {
@@ -73,15 +44,6 @@
   width: 200px;
   height: 180px;
   margin-top: 20px;
-}
-
-.ground {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 40px;
-  background: #5D4037;
-  border-radius: 0 0 8px 8px;
 }
 
 .well {
@@ -133,18 +95,12 @@
   font-family: 'Roboto', sans-serif;
 }
 
-.pozoContainer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
 .pozo {
-  margin: auto;
   position: relative;
-  width: 270px;
+  width: 300px;
   height: 500px;
+  display: block;
+  margin: 0;
 }
 
 .tierra {
@@ -157,7 +113,6 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center -27px;
-  
 }
 
 .aguaInferior {
@@ -190,7 +145,6 @@
   border-radius: 50%;
   opacity: 0.7;
   animation: flotacion-vertical 5s infinite linear;
-  
 }
 
 @keyframes flotacion-horizontal {
@@ -263,7 +217,7 @@
   position: absolute;
   border-radius: 10px;
   top: 44%;
-  left: 54%;
+  left: 50%;
   transform: translateX(-50%);
 }
 
@@ -314,16 +268,40 @@
   position: absolute;
   top: 25%;
   left: 75%;
+  z-index: 1;
+}
+
+.dataloggerLogo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 70%;
+  height: auto;
+  opacity: 0.5;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none;
 }
 
 .tablero {
+  position: relative;
   width: 80%;
   height: 90%;
   background: linear-gradient(169deg, rgba(232, 229, 229, 0) 0%, rgba(209, 209, 209, 1) 99%, rgba(60, 87, 93, 1) 100%);
-  position: absolute;
   top: 7%;
   left: 10%;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.tableroText {
+  position: relative;
+  z-index: 2;
+  font-size: 1em;
 }
 
 .pataIzquierda,
@@ -383,32 +361,35 @@
   100% { transform: translateY(0); }
 }
 
-.transmisionContainer {
-  position: absolute;
-  top: 25%;
-  left: 10%;
+.pozoBox {
   display: flex;
-  flex-direction: column;
-  gap: 0px;
-  pointer-events: none;
-}
-
-.transmisionRow {
-  display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
 }
 
-.linea {
-  width: 90px;
-  height: 2px;
-  background-color: #1f5361;
-  position: relative;
-  margin-right: 8px;
+.pozoScale {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.logoPlataforma {
-  width: 35px;
-  height: auto;
-  margin-left: 10px;
+.errorNotification {
+  margin-left: 70px;
+  color: #fff;
+  background: #ff4d4f;
+  border-radius: 4px;
+  padding: 4px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 1px solid #ffb3b3;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
