@@ -68,7 +68,8 @@ const Home = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [wellData, setWellData] = useState<WellData | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(false);
+  
 
   useEffect(() => {
     setLoading(true);
@@ -76,8 +77,12 @@ const Home = () => {
       .then(data => {
         setWellData(data);
         setLoading(false);
+        setError(false);
       })
-      .catch(e => { setError(e.message); setLoading(false); });
+      .catch(() => {
+        setLoading(false);
+        setError(true);
+      });
   }, []);
 
   useEffect(() => {
@@ -96,7 +101,7 @@ const Home = () => {
   return (
     <div style={{ background: '#fff', minHeight: '100vh', padding: 16, color: '#1C355F', width: '100%' }}>
       <Title level={2} style={{ color: '#1C355F', marginBottom: 32 }}>
-        Bienvenido, {loading ? '--' : wellData && wellData.clientName ? wellData.clientName : '--'}
+        Bienvenido, {loading ? '--' : error ? '--' : wellData && wellData.clientName ? wellData.clientName : '--'}
       </Title>
       {/* Panel de controles */}
       <Row gutter={16} align="middle" style={{ marginBottom: 32, width: '100%' }}>
@@ -147,9 +152,9 @@ const Home = () => {
       </Row>
       {/* Métricas superiores */}
       <Row gutter={16} style={{ marginBottom: 32, width: '100%' }}>
-        <Col span={8}><MetricCard {...dashboardData.lastConnection} /></Col>
-        <Col span={8}><MetricCard {...dashboardData.lastMeasurement} /></Col>
-        <Col span={8}><MetricCard {...dashboardData.accumulatedSummary} /></Col>
+        <Col span={8}><MetricCard {...dashboardData.lastConnection} value={loading || error ? '--' : dashboardData.lastConnection.value} /></Col>
+        <Col span={8}><MetricCard {...dashboardData.lastMeasurement} value={loading || error ? '--' : dashboardData.lastMeasurement.value} /></Col>
+        <Col span={8}><MetricCard {...dashboardData.accumulatedSummary} value={loading || error ? '--' : dashboardData.accumulatedSummary.value} /></Col>
       </Row>
       {/* Métricas e imagen */}
       <Row gutter={16} style={{ width: '100%' }}>
@@ -157,21 +162,21 @@ const Home = () => {
           <MetricCard
             icon={<DashboardTwoTone twoToneColor="#1677ff" style={{ fontSize: 22 }} />}
             title="Caudal actual"
-            value={loading ? '--' : wellData ? wellData.flowRate.toFixed(2) : '--'}
+            value={loading || error ? '--' : wellData ? wellData.flowRate.toFixed(2) : '--'}
             unit="L/s"
             style={{ width: '100%' }}
           />
           <MetricCard
             icon={<FundTwoTone twoToneColor="#1677ff" style={{ fontSize: 22 }} />}
             title="Nivel freático"
-            value={loading ? '--' : wellData ? wellData.depth.toFixed(2) : '--'}
+            value={loading || error ? '--' : wellData ? wellData.depth.toFixed(2) : '--'}
             unit="metros"
             style={{ width: '100%' }}
           />
           <MetricCard
             icon={<DatabaseTwoTone twoToneColor="#1677ff" style={{ fontSize: 22 }} />}
             title="Acumulado"
-            value={loading ? '--' : wellData ? wellData.volume.toFixed(3) : '--'}
+            value={loading || error ? '--' : wellData ? wellData.volume.toFixed(3) : '--'}
             unit="m³"
             style={{ width: '100%' }}
           />
@@ -180,6 +185,9 @@ const Home = () => {
           <WellVisualization
             pozoScale={1.4}
             pozoBoxStyle={{ justifyContent: 'center', alignItems: 'center', position: 'relative', top: -90}}
+            error={error}
+            wellData={wellData}
+            loading={loading}
           />
         </Col>
       </Row>

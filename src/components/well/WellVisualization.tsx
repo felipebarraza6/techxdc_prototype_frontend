@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styles from './WellVisualization.module.css';
-import { fetchWellData } from '../../api/wellService';
-import type { WellData } from '../../api/wellService';
 import { Typography, Spin } from 'antd';
 import logoDatalogger from '../../assets/img/logo.jpg';
 
@@ -48,25 +46,12 @@ const generateRandomBubblesForTube = (): Bubble[] => {
 const WellVisualization: React.FC<{
   pozoBoxStyle?: React.CSSProperties;
   pozoScale?: number;
-}> = ({ pozoBoxStyle = {}, pozoScale = 1.0 }) => {
-  const [wellData, setWellData] = useState<WellData | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [bubbles, setBubbles] = useState<Bubble[]>([]);
-  const [tubeBubbles, setTubeBubbles] = useState<Bubble[]>([]);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setLoading(true);
-    fetchWellData()
-      .then(data => { setWellData(data); setLoading(false); })
-      .catch(() => {
-        setLoading(false);
-        setError('Error al obtener datos del pozo');
-        setTimeout(() => setError(null), 4000);
-      });
-    setBubbles(generateRandomBubbles());
-    setTubeBubbles(generateRandomBubblesForTube());
-  }, []);
+  error?: boolean;
+  wellData?: any;
+  loading?: boolean;
+}> = ({ pozoBoxStyle = {}, pozoScale = 1.0, error = false, wellData = null, loading = false }) => {
+  const [bubbles] = React.useState<Bubble[]>(generateRandomBubbles());
+  const [tubeBubbles] = React.useState<Bubble[]>(generateRandomBubblesForTube());
 
   return (
     <div className={styles.container}>
@@ -76,7 +61,7 @@ const WellVisualization: React.FC<{
         </svg>
         <span className={styles.title}>Visualización del Pozo</span>
         {error && (
-          <span className={styles.errorNotification}>{error}</span>
+          <span className={styles.errorNotification}>Error al obtener datos del pozo</span>
         )}
       </div>
       <div className={styles.subtitle}>Representación en tiempo real del estado del pozo</div>
@@ -88,7 +73,7 @@ const WellVisualization: React.FC<{
           className={styles.pozoScale}
           style={{ transform: `scale(${pozoScale})`, transformOrigin: 'center center' }}
         >
-          <div className={styles.pozo}>
+          <div className={styles.pozo + (error ? ' ' + styles.pozoError : '')}>
             <div className={styles.superficie}></div>
             <div className={styles.pavimento}></div>
             <div className={styles.nivelAgua}>
@@ -129,7 +114,7 @@ const WellVisualization: React.FC<{
             </div>
             <div className={styles.sensor}>
               <div className={styles.punta}>
-                <Text style={{ color: 'white' }}>{loading || !wellData ? '--' : `${wellData.depth.toFixed(2)} m`}</Text>
+                <Text style={{ color: 'white' }}>{loading || error ? '--' : wellData ? `${wellData.depth.toFixed(2)} m` : '--'}</Text>
               </div>
             </div>
             <div className={styles.lineaLogger}></div>
@@ -139,7 +124,7 @@ const WellVisualization: React.FC<{
                 <img src={logoDatalogger} alt="Logo datalogger" className={styles.dataloggerLogo} />
                 <center>
                   <Text className={styles.tableroText} style={{ color: 'black', fontWeight: 500, fontSize: '1.0em' }}>
-                    {loading || !wellData ? '--' : wellData.volume.toLocaleString('es-CL', { maximumFractionDigits: 3 })}
+                    {loading || error ? '--' : wellData ? wellData.volume.toLocaleString('es-CL', { maximumFractionDigits: 3 }) : '--'}
                     <br /> m³
                   </Text>
                 </center>
@@ -149,7 +134,7 @@ const WellVisualization: React.FC<{
             </div>
             <div className={styles.caudalimetro}>
               <Text className={styles.caudalimetroText}>
-                {loading || !wellData ? '--' : `${wellData.flowRate.toFixed(2)} lt/s`}
+                {loading || error ? '--' : wellData ? `${wellData.flowRate.toFixed(2)} lt/s` : '--'}
               </Text>
             </div>
           </div>
