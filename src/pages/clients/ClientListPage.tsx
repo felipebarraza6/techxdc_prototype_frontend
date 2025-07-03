@@ -9,13 +9,15 @@ import { useApiResource } from '../../hooks/useApiResource';
 import { useHeaderActions } from '../../context/HeaderActionsContext';
 import { clientsMock } from '../../mocks/clientsMock';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { SelectedClientProvider, useSelectedClient } from '../../context/SelectedClientContext';
 
-const ClientListPage: React.FC = () => {
+const ClientListContent: React.FC = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [visibleCount, setVisibleCount] = useState(9);
   const { setHeaderActions } = useHeaderActions();
   const breakpoint = useBreakpoint();
+  const { selectedClient, setSelectedClient } = useSelectedClient();
 
   const {
     data: clients,
@@ -101,7 +103,11 @@ const ClientListPage: React.FC = () => {
         <Row gutter={[16, 24]}>
           {visibleClients.map(client => (
             <Col key={client.id} xs={24} sm={12} md={12} lg={8} xl={8} style={{ display: 'flex', justifyContent: 'center' }}>
-              <ClientCard client={client} />
+              <ClientCard
+                client={client}
+                selected={selectedClient?.id === client.id}
+                onClick={() => setSelectedClient(client)}
+              />
             </Col>
           ))}
         </Row>
@@ -133,5 +139,11 @@ const ClientListPage: React.FC = () => {
     </div>
   );
 };
+
+const ClientListPage: React.FC = () => (
+  <SelectedClientProvider>
+    <ClientListContent />
+  </SelectedClientProvider>
+);
 
 export default ClientListPage;

@@ -7,9 +7,11 @@ import styles from './ClientCard.module.css';
 
 interface ClientCardProps {
   client: Client;
+  selected?: boolean;
+  onClick?: () => void;
 }
 
-const ClientCard: React.FC<ClientCardProps> = ({ client }) => {
+const ClientCard: React.FC<ClientCardProps> = ({ client, selected, onClick }) => {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -32,17 +34,22 @@ const ClientCard: React.FC<ClientCardProps> = ({ client }) => {
       <div
         className={styles.responsiveCard}
         style={{
-          border: '1px solid #E5E7EB',
+          border: selected ? '1.5px solid #1890FF' : '1px solid #E5E7EB',
           borderRadius: 12,
           background: '#fff',
-          boxShadow: '0 2px 8px 0 rgba(44,61,102,0.04)',
+          boxShadow: selected
+            ? '0 4px 16px 0 rgba(24,144,255,0.10)'
+            : '0 2px 8px 0 rgba(44,61,102,0.04)',
           padding: 20,
           minHeight: 200,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'flex-start',
           marginBottom: 16,
+          cursor: onClick ? 'pointer' : 'default',
+          transition: 'border 0.2s, box-shadow 0.2s',
         }}
+        onClick={onClick}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
           <UserOutlined style={{ fontSize: 32, color: '#1C355F' }} />

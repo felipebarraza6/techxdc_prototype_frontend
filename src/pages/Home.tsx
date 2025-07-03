@@ -11,6 +11,7 @@ import WellVisualization from '../components/well/WellVisualization';
 import { fetchWellData } from '../api/wellService';
 import type { WellData } from '../api/wellService';
 import { useBreakpoint } from '../hooks/useBreakpoint';
+import { useSelectedClient, SelectedClientProvider } from '../context/SelectedClientContext';
 
 const { Title, Text } = Typography;
 
@@ -71,6 +72,7 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const { pozoScale } = useBreakpoint();
+  const { selectedClient } = useSelectedClient();
   
 
   useEffect(() => {
@@ -103,7 +105,7 @@ const Home = () => {
   return (
     <div style={{ background: '#fff', minHeight: '100vh', padding: 16, color: '#1C355F', width: '100%' }}>
       <Title level={2} style={{ color: '#1C355F', marginBottom: 32 }}>
-        Bienvenido, {loading ? '--' : error ? '--' : wellData && wellData.clientName ? wellData.clientName : '--'}
+        Bienvenido, {selectedClient ? selectedClient.name : (loading ? '--' : error ? '--' : wellData && wellData.clientName ? wellData.clientName : '--')}
       </Title>
       {/* Panel de controles */}
       <Row gutter={[8, 8]} align="middle" style={{ marginBottom: 24, width: '100%' }}>
@@ -206,4 +208,10 @@ const Home = () => {
   );
 };
 
-export default Home;
+const HomeWithProvider = () => (
+  <SelectedClientProvider>
+    <Home />
+  </SelectedClientProvider>
+);
+
+export default HomeWithProvider;
