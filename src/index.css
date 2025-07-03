@@ -116,3 +116,36 @@ body, html, #root, .mainLayout, .header, .content {
 .ant-checkbox-checked .ant-checkbox-input:focus + .ant-checkbox-inner {
   border-color: #1890FF !important;
 }
+
+.ant-input[placeholder="Buscar Cliente"],
+.ant-input[placeholder="Buscar Cliente"]::placeholder {
+  color: #fff !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  font-style: italic !important;
+}
+
+button[type="primary"],
+button[ant-click-animating-without-extra-node] {
+  color: #fff !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  font-style: italic !important;
+}
+
+.cliente-busqueda-input .ant-input,
+.cliente-busqueda-input .ant-input::placeholder {
+  color: #fff !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+}
+.cliente-crear-btn.ant-btn,
+.cliente-crear-btn.ant-btn span {
+  color: #fff !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+}
+.cliente-header-actions .ant-space {
+  display: flex !important;
+  align-items: stretch !important;
+}

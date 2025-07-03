@@ -23,6 +23,7 @@ import logoEmpresa from "../../assets/img/logoempresa.png";
 import { projectService } from "../../api/projectService";
 import type { Project } from "../../api/projectService";
 import { useBreakpoint } from '../../hooks/useBreakpoint';
+import { useHeaderActions } from '../../context/HeaderActionsContext';
 
 const { Sider, Header, Content } = Layout;
 
@@ -64,6 +65,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [selectedProject, setSelectedProject] = React.useState<Project | null>(null);
   const { isMobile } = useBreakpoint();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const { headerActions } = useHeaderActions();
 
   React.useEffect(() => {
     projectService.getAll().then((data) => {
@@ -263,6 +265,11 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             {header.title && <h1 className={styles.title}>{header.title}</h1>}
             {header.subtitle && <span className={styles.subtitle}>{header.subtitle}</span>}
           </div>
+          {headerActions && (
+            <div className={styles.headerActions} style={{ marginRight: isMobile ? 8 : 32, display: 'flex', alignItems: 'center', gap: 16 }}>
+              {headerActions}
+            </div>
+          )}
         </Header>
         <Content className={styles.content}>{children}</Content>
       </Layout>
