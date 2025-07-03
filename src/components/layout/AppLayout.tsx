@@ -113,7 +113,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <Menu.Item key="smart-analysis" icon={<BarChartOutlined className={styles.menuIcon} />} disabled>Smart Análisis</Menu.Item>
       <Menu.SubMenu key="dga" icon={<FileSearchOutlined className={styles.menuIcon} />} title={<span>DGA</span>}>
         <Menu.Item key="dga-analisis" icon={<FileProtectOutlined className={styles.menuIcon} />} disabled>DGA Análisis</Menu.Item>
-        <Menu.Item key="dga-waez" icon={<FileUnknownOutlined className={styles.menuIcon} />} disabled>DGA WAEZ</Menu.Item>
+        <Menu.Item key="dga-waez" icon={<FileUnknownOutlined className={styles.menuIcon} />} disabled>DGA MEE</Menu.Item>
       </Menu.SubMenu>
       <Menu.SubMenu key="docs" icon={<FileTextOutlined className={styles.menuIcon} />} title={<span>Documentos</span>}>
         <Menu.Item key="docs-1" icon={<FileTextOutlined className={styles.menuIcon} />} disabled>Documentos 1</Menu.Item>
@@ -132,20 +132,12 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         >
           <LogoSection />
           <Dropdown overlay={projectMenu} trigger={["click"]} placement="bottomLeft" disabled={projects.length === 0} overlayClassName={styles.projectDropdownMenu}>
-            <div className={styles.projectSection}>
-              <span style={{
-                width: 34,
-                height: 22,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 9,
-              }}>
+            <div className={styles.projectSection} style={{ display: 'flex', alignItems: 'center', gap: 8, height: 32 }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span className={styles.statusIndicator} />
                 <span className={styles.statusText}>{selectedProject ? `P${selectedProject.id}` : ""}</span>
               </span>
               <span style={{
-                width: 108,
-                height: 20,
                 background: '#3368AB',
                 color: '#fff',
                 borderRadius: 4,
@@ -155,6 +147,9 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: 0,
+                minWidth: 80,
+                justifyContent: 'center',
+                marginRight: 8,
               }}>
                 {selectedProject ? selectedProject.code : ""}
                 <DownOutlined style={{ width: 10, height: 11.25, color: '#fff', fontSize: 12, marginLeft: 7 }} />
@@ -199,20 +194,12 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <LogoSection onClose={() => setDrawerOpen(false)} />
           </div>
           <Dropdown overlay={projectMenu} trigger={["click"]} placement="bottomLeft" disabled={projects.length === 0} overlayClassName={styles.projectDropdownMenu}>
-            <div className={styles.projectSection}>
-              <span style={{
-                width: 34,
-                height: 22,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 9,
-              }}>
+            <div className={styles.projectSection} style={{ display: 'flex', alignItems: 'center', gap: 8, height: 32 }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span className={styles.statusIndicator} />
                 <span className={styles.statusText}>{selectedProject ? `P${selectedProject.id}` : ""}</span>
               </span>
               <span style={{
-                width: 108,
-                height: 20,
                 background: '#3368AB',
                 color: '#fff',
                 borderRadius: 4,
@@ -222,6 +209,9 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: 0,
+                minWidth: 80,
+                justifyContent: 'center',
+                marginRight: 8,
               }}>
                 {selectedProject ? selectedProject.code : ""}
                 <DownOutlined style={{ width: 10, height: 11.25, color: '#fff', fontSize: 12, marginLeft: 7 }} />
@@ -254,12 +244,17 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <Layout className={styles.mainLayout} style={{ marginLeft: isMobile ? 0 : 237 }}>
         <Header className={styles.header} style={{ background: "#fff", padding: 0, height: 105, minHeight: 105, borderBottom: '1px solid #D1D5DB', zIndex: 10, display: 'flex', alignItems: 'center' }}>
           {isMobile && (
-            <Button
-              type="text"
-              icon={<MenuOutlined style={{ fontSize: 28, color: '#1C355F' }} />}
-              onClick={() => setDrawerOpen(true)}
-              style={{ marginLeft: 16, marginRight: 16 }}
-            />
+            <div className={styles.hamburgerContainer}>
+              <Button
+                type="text"
+                icon={
+                  <MenuOutlined className={styles.hamburgerIcon} />
+                }
+                onClick={() => setDrawerOpen(true)}
+                className={styles.hamburgerButton}
+                style={{ marginLeft: 0, marginRight: 0 }}
+              />
+            </div>
           )}
           <div className={styles.headerContent} style={{ flex: 1 }}>
             {header.title && <h1 className={styles.title}>{header.title}</h1>}

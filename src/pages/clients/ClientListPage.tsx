@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button, Spin, Alert, Row, Col, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { PlusOutlined, SearchOutlined, DownOutlined } from '@ant-design/icons';
@@ -10,6 +10,7 @@ import { useHeaderActions } from '../../context/HeaderActionsContext';
 import { clientsMock } from '../../mocks/clientsMock';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { SelectedClientProvider, useSelectedClient } from '../../context/SelectedClientContext';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const ClientListContent: React.FC = () => {
   const navigate = useNavigate();
@@ -18,6 +19,9 @@ const ClientListContent: React.FC = () => {
   const { setHeaderActions } = useHeaderActions();
   const breakpoint = useBreakpoint();
   const { selectedClient, setSelectedClient } = useSelectedClient();
+  const [lastAction, setLastAction] = useState<'more' | 'less' | null>(null);
+  const [animatedIds, setAnimatedIds] = useState<string[]>([]);
+  const prevVisibleCount = useRef(visibleCount);
 
   const {
     data: clients,
@@ -92,6 +96,15 @@ const ClientListContent: React.FC = () => {
   const displayClients = (clients.length === 0 ? clientsMock : filteredClients);
   const visibleClients = displayClients.slice(0, visibleCount);
 
+  const handleShowMore = () => {
+    setLastAction('more');
+    setVisibleCount(c => c + 9);
+  };
+  const handleShowLess = () => {
+    setLastAction('less');
+    setVisibleCount(9);
+  };
+
   return (
     <div style={{ maxWidth: 1200, margin: '0 auto', padding: 24 }}>
       {/* Grid de cards */}
@@ -101,23 +114,36 @@ const ClientListContent: React.FC = () => {
         <Alert type="error" message={error} />
       ) : (
         <Row gutter={[16, 24]}>
-          {visibleClients.map(client => (
-            <Col key={client.id} xs={24} sm={12} md={12} lg={8} xl={8} style={{ display: 'flex', justifyContent: 'center' }}>
-              <ClientCard
-                client={client}
-                selected={selectedClient?.id === client.id}
-                onClick={() => setSelectedClient(client)}
-              />
-            </Col>
-          ))}
+          <AnimatePresence initial={false}>
+            {visibleClients.map(client => (
+              <Col
+                key={client.id}
+                xs={24} sm={12} md={12} lg={8} xl={8}
+                style={{ display: 'flex', justifyContent: 'center' }}
+              >
+                <motion.div
+                  initial={{ opacity: 0, y: -40 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -40 }}
+                  transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                  style={{ width: '100%' }}
+                >
+                  <ClientCard
+                    client={client}
+                    selected={selectedClient?.id === client.id}
+                    onClick={() => setSelectedClient(client)}
+                  />
+                </motion.div>
+              </Col>
+            ))}
+          </AnimatePresence>
         </Row>
       )}
-
       {/* Botón Ver más / Ver menos */}
       {visibleCount < displayClients.length && (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 32 }}>
           <Button
-            onClick={() => setVisibleCount(c => c + 9)}
+            onClick={handleShowMore}
             style={{ borderRadius: 8, fontWeight: 600, background: '#568E2B', color: '#fff', minWidth: 160, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             icon={<DownOutlined />}
           >
@@ -128,7 +154,7 @@ const ClientListContent: React.FC = () => {
       {visibleCount > 9 && (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 32 }}>
           <Button
-            onClick={() => setVisibleCount(9)}
+            onClick={handleShowLess}
             style={{ borderRadius: 8, fontWeight: 600, background: '#1C355F', color: '#fff', minWidth: 160, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             icon={<DownOutlined rotate={180} />}
           >
