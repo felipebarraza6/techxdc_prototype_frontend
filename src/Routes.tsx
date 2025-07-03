@@ -26,6 +26,8 @@ import { HeaderActionsProvider } from "./context/HeaderActionsContext";
 // DGA
 import DgaConfigCatchment from "./pages/dga/DgaConfigCatchment";
 
+// Telemetry
+import Telemetry from "./pages/telemetry/Telemetry";
 
 const ProtectedLayout: React.FC = () => (
   <HeaderActionsProvider>
@@ -65,6 +67,8 @@ const AppRouter: React.FC = () => {
           <Route path="/profile" element={<UserProfile />} />
           {/* DGA */}
           <Route path="/dga" element={<DgaConfigCatchment />} />
+          {/* Telemetría */}
+          <Route path="/telemetry" element={<Telemetry />} />
         </Route>
         {/* 404 */}
         <Route path="*" element={<div>404 - Página no encontrada</div>} />

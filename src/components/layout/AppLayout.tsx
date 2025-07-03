@@ -60,7 +60,6 @@ const LogoSection = ({ onClose }: { onClose?: () => void }) => (
 const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const header = headerMap[location.pathname] || { title: "", subtitle: "" };
   const [projects, setProjects] = React.useState<Project[]>([]);
   const [selectedProject, setSelectedProject] = React.useState<Project | null>(null);
   const { isMobile } = useBreakpoint();
@@ -109,7 +108,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     >
       <Menu.Item key="dashboard" icon={<DashboardOutlined className={styles.menuIcon} />} onClick={() => navigate("/")}>Dashboard</Menu.Item>
       <Menu.Item key="clients" icon={<UsergroupAddOutlined className={styles.menuIcon} />} onClick={() => navigate("/clients")}>Clientes</Menu.Item>
-      <Menu.Item key="catchment" icon={<RadarChartOutlined className={styles.menuIcon} />} onClick={() => navigate("/catchment")}>Telemetría</Menu.Item>
+      <Menu.Item key="telemetry" icon={<RadarChartOutlined className={styles.menuIcon} />} onClick={() => navigate("/telemetry")}>Telemetría</Menu.Item>
       <Menu.Item key="smart-analysis" icon={<BarChartOutlined className={styles.menuIcon} />} disabled>Smart Análisis</Menu.Item>
       <Menu.SubMenu key="dga" icon={<FileSearchOutlined className={styles.menuIcon} />} title={<span>DGA</span>}>
         <Menu.Item key="dga-analisis" icon={<FileProtectOutlined className={styles.menuIcon} />} disabled>DGA Análisis</Menu.Item>
@@ -121,6 +120,15 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <Menu.Item key="alerts" icon={<AlertOutlined className={styles.menuIcon} />} disabled>Alertas</Menu.Item>
     </Menu>
   );
+
+  // Header dinámico para Telemetría
+  let header = headerMap[location.pathname] || { title: '', subtitle: '' };
+  if (location.pathname === '/telemetry') {
+    header = {
+      title: 'Telemetría',
+      subtitle: selectedProject ? `Monitoreo en tiempo real del pozo P${selectedProject.id}` : 'Monitoreo en tiempo real del pozo',
+    };
+  }
 
   return (
     <Layout className={styles.appLayout}>

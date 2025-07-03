@@ -195,13 +195,15 @@ const Home = () => {
           </Row>
         </Col>
         <Col xs={24} sm={24} md={24} lg={18} xl={18}>
-          <WellVisualization
-            pozoScale={pozoScale}
-            pozoBoxStyle={{ justifyContent: 'center', alignItems: 'center', position: 'relative', top: -90}}
-            error={error}
-            wellData={wellData}
-            loading={loading}
-          />
+          <Card bordered style={{ borderRadius: 16, minHeight: 480, display: 'flex', flexDirection: 'column', padding: 20 }}>
+            <div style={{ marginBottom: 4 }}>
+              <Title level={4} style={{ color: '#1C355F', margin: 0, textAlign: 'left', fontSize: 20, lineHeight: 1.4 }}>Visualización del Pozo</Title>
+              <Text type="secondary" style={{ color: '#1C355F', display: 'block', textAlign: 'left', fontSize: 14, lineHeight: 1.2, margin: 0 }}>Representación en tiempo real del estado del pozo</Text>
+            </div>
+            <div style={{ flex: 2, width: '100%', height: '100%', display: 'contents', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+              <WellVisualization pozoScale={1.5} wellData={wellData} loading={loading} error={error} pozoBoxStyle={{ position: 'relative', top: -100, left: 0 }} />
+            </div>
+          </Card>
         </Col>
       </Row>
     </div>
