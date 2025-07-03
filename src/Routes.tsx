@@ -21,15 +21,18 @@ import GroupListPage from "./pages/groups/GroupListPage";
 import GroupCreatePage from "./pages/groups/GroupCreatePage";
 import GroupEditPage from "./pages/groups/GroupEditPage";
 import AppLayout from "./components/layout/AppLayout";
+import { HeaderActionsProvider } from "./context/HeaderActionsContext";
 
 // DGA
 import DgaConfigCatchment from "./pages/dga/DgaConfigCatchment";
 
 
 const ProtectedLayout: React.FC = () => (
-  <AppLayout>
-    <Outlet />
-  </AppLayout>
+  <HeaderActionsProvider>
+    <AppLayout>
+      <Outlet />
+    </AppLayout>
+  </HeaderActionsProvider>
 );
 
 

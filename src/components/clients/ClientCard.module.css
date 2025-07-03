@@ -1,0 +1,12 @@
+.responsiveCard {
+  width: 100%;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 1200px) {
+  .responsiveCard {
+    max-width: 380px;
+  }
+} 

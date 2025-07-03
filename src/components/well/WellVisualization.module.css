@@ -1,161 +1,452 @@
-/* components/well/WellVisualization.module.css */
+/* WellVisualization.module.css */
 .container {
-  width: 588px;
-  height: 623px;
-  margin: 40px auto 0 auto;
+  width: 100%;
+  max-width: 1000px;
+  min-height: 623px;
+  margin: 20px auto 20 auto;
   background: #fff;
   border-radius: 8px;
   border: 1px solid #D1D5DB;
   box-sizing: border-box;
-  padding: 0;
+  padding: 32px 32px 32px 32px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .header {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 18px 0 0 18px;
+  padding: 0;
 }
 
 .title {
-  font-family: 'Roboto', 'Arial', sans-serif;
+  font-family: 'Roboto', sans-serif;
   color: #1C355F;
   font-weight: 700;
+  font-size: 18px;
   margin: 0;
-  font-size: 1.18rem;
 }
 
 .subtitle {
-  font-family: 'Roboto', 'Arial', sans-serif;
+  font-family: 'Roboto', sans-serif;
   color: #64748B;
-  font-size: 0.98rem;
-  margin-left: 18px;
-  margin-bottom: 0.5rem;
+  font-size: 14px;
+  margin-left: 0;
+  margin-bottom: 0;
 }
 
-.svg {
-  display: block;
-  margin: 0 auto;
-  background: transparent;
-  width: 260px;
-  height: 260px;
-  border-radius: 12px;
+.wellRepresentation {
+  position: relative;
+  width: 200px;
+  height: 180px;
+  margin-top: 20px;
+}
+
+.well {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 140px;
+  background: #E3F2FD;
+  border: 2px solid #1C355F;
+  border-bottom: none;
+  overflow: hidden;
+}
+
+.waterLevel {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: #0288D1;
+  transition: height 0.5s ease;
+}
+
+.depthMarker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  color: #1C355F;
+  border: 1px dashed #1C355F;
 }
 
 .spin {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 180px;
+  height: 300px;
 }
 
 .error {
-  margin: 12px 0;
-}
-
-.ground { fill: #785E46; }
-.waterBody { fill: #1A2B4C; }
-.wellTube { fill: #B0C4DE; stroke: #D1A582; }
-.wellWater { fill: #4682B4; }
-.pumpPipe { fill: #333333; }
-
-.depthText,
-.flowRateText,
-.volumeText {
+  color: #ff4d4f;
+  text-align: center;
+  margin-top: 100px;
   font-family: 'Roboto', sans-serif;
-  font-weight: bold;
 }
 
-@keyframes bubbleWaterMove {
-  0% {
-    transform: translate(var(--dx, 0px), 0px);
-    opacity: 0;
+.pozo {
+  position: relative;
+  width: 300px;
+  height: 500px;
+  display: block;
+  margin: 0;
+}
+
+.tierra {
+  position: absolute;
+  width: 120%;
+  height: 110%;
+  background-image: url('../../assets/img/terreno1.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center -30px;
+}
+
+.aguaInferior {
+  position: absolute;
+  bottom: 0;
+  border-radius: 0px 0px 10px 10px;
+  width: 120%;
+  height: 35%;
+  background-color: rgb(33, 54, 101);
+  background-size: cover;
+  overflow: hidden;
+  animation: movimiento-agua 5s infinite linear;
+}
+
+.burbuja {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border: 2px solid #1f5361;
+  border-radius: 50%;
+  opacity: 0.7;
+  animation: flotacion-horizontal 10s infinite linear;
+}
+
+.burbujaTubo {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border: 1px solid #fff;
+  border-radius: 50%;
+  opacity: 0.7;
+  animation: flotacion-vertical 5s infinite linear;
+}
+
+@keyframes flotacion-horizontal {
+  0% { left: -10%; opacity: 0.7; }
+  50% { opacity: 1; }
+  100% { left: 110%; opacity: 0.7; }
+}
+
+@keyframes flotacion-vertical {
+  0% { bottom: 0; opacity: 0.7; }
+  90% { opacity: 1; }
+  100% { bottom: calc(100% - 10px); opacity: 0; }
+}
+
+.superficie {
+  position: absolute;
+  top: 48%;
+  width: 120%;
+  height: 11px;
+  background-color: #628157;
+}
+
+.nivelAgua {
+  position: absolute;
+  top: 51%;
+  width: 100%;
+  height: 49%;
+  background-color: transparent;
+}
+
+.tuboPozo {
+  position: absolute;
+  border-left: 3px solid #a95628;
+  border-right: 3px solid #a95628;
+  border-bottom: 3px solid #a95628;
+  top: 0;
+  margin-top: -15px;
+  width: 50px;
+  border-radius: 10px 10px 10px 10px;
+  height: 90%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(to bottom, #36454a 70%, #8aafb1 30%);
+  overflow: hidden;
+}
+
+.nivel {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 70%;
+  border-radius: 0px 0px 10px 10px;
+  background-color: #8aafb1;
+  background-size: cover;
+  animation: ondulacion-nivel 2s infinite;
+}
+
+.pavimento {
+  position: absolute;
+  top: 50%;
+  width: 120%;
+  height: 10px;
+  background-color: #9f9678;
+}
+
+.sensor {
+  width: 3.3%;
+  height: 40%;
+  background-color: #202b2c;
+  position: absolute;
+  border-radius: 10px;
+  top: 44%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.punta {
+  width: 50px;
+  height: 20px;
+  right: -360%;
+  border-radius: 3px;
+  background-color: #475c61;
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  bottom: 0;
+  animation: parpadeo-sensor 1.5s infinite;
+}
+
+@keyframes parpadeo-sensor {
+  0% { opacity: 1; }
+  50% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
+.lineaLogger {
+  width: 95%;
+  height: 1.5px;
+  background-color: red;
+  position: absolute;
+  top: 43%;
+  right: 0px;
+  overflow: hidden;
+}
+
+.lineaCaudalimetro {
+  width: 46.5%;
+  height: 2.2%;
+  background-color: #222b2c;
+  border-radius: 5px;
+  position: absolute;
+  top: 44%;
+  left: 4%;
+}
+
+.datalogger {
+  width: 120px;
+  border-radius: 5px;
+  height: 22%;
+  background-color: #274881;
+  position: absolute;
+  top: 25%;
+  left: 75%;
+  z-index: 1;
+}
+
+.dataloggerLogo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 70%;
+  height: auto;
+  opacity: 0.5;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.tablero {
+  position: relative;
+  width: 80%;
+  height: 90%;
+  background: linear-gradient(169deg, rgba(232, 229, 229, 0) 0%, rgba(209, 209, 209, 1) 99%, rgba(60, 87, 93, 1) 100%);
+  top: 7%;
+  left: 10%;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.tableroText {
+  position: relative;
+  z-index: 2;
+  font-size: 1em;
+}
+
+.pataIzquierda,
+.pataDerecha {
+  width: 10px;
+  height: 10px;
+  background-color: #274881;
+  position: absolute;
+  bottom: -10px;
+}
+
+.pataIzquierda {
+  left: 5px;
+}
+
+.pataDerecha {
+  right: 5px;
+}
+
+.caudalimetro {
+  width: 50px;
+  border-radius: 8px;
+  border: 2px solid #4b5c61;
+  height: 23px;
+  background-color: #637f84;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 42%;
+  left: 0;
+  margin: auto;
+  animation: rotacion-caudalimetro 5s infinite linear;
+}
+
+.caudalimetroText {
+  color: #fff;
+  font-size: 0.95em;
+  font-weight: 600;
+  width: 100%;
+  text-align: center;
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@keyframes rotacion-caudalimetro {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(5px) rotate(10deg); }
+  75% { transform: translateX(-5px) rotate(-10deg); }
+}
+
+@keyframes ondulacion-nivel {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+  100% { transform: translateY(0); }
+}
+
+.pozoBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.pozoScale {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.errorNotification {
+  margin-left: 70px;
+  color: #fff;
+  background: #ff4d4f;
+  border-radius: 4px;
+  padding: 4px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 1px solid #ffb3b3;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.pozoError {
+  filter: grayscale(1) brightness(0.8) !important;
+  opacity: 0.7;
+  transition: filter 0.3s, opacity 0.3s;
+}
+
+@media (max-width: 1000px) {
+  .container {
+    max-width: 98vw;
+    min-height: 400px;
+    padding: 16px 4vw 16px 4vw;
   }
-  10% {
-    opacity: 0.8;
-  }
-  90% {
-    opacity: 0.8;
-  }
-  100% {
-    transform: translate(var(--dx, 0px), -20px);
-    opacity: 0;
+  .pozo {
+    width: 220px;
+    height: 350px;
   }
 }
 
-@keyframes bubblePipeMove {
-  0% {
-    transform: translateY(0px) translateX(var(--dx, 0px));
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(var(--dy, -50px)) translateX(var(--dx, 0px));
-    opacity: 0;
-  }
-}
-
-.bubbleWater {
-  animation-name: bubbleWaterMove;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-.bubblePipe {
-  animation-name: bubblePipeMove;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-@media (max-width: 400px) {
-  .svg {
-    width: 100vw;
-    height: auto;
-    min-width: 0;
-  }
+@media (max-width: 600px) {
   .container {
     max-width: 100vw;
+    min-height: 220px;
+    padding: 8px 2vw 8px 2vw;
   }
-}
-
-@media (max-width: 768px) {
-  .container {
-    padding: 16px;
-    min-height: 400px;
+  .pozoBox {
+    width: 100% !important;
+    overflow: visible !important;
+    padding: 0 !important;
   }
-  .title {
-    font-size: 1.1rem !important;
+  .pozoScale {
+    width: 100% !important;
+    overflow: visible !important;
+    padding: 0 !important;
   }
-  .subtitle {
-    font-size: 0.8rem !important;
-    padding-left: 20px;
+  .pozo {
+    width: 90vw;
+    max-width: 300px;
+    min-width: 180px;
+    aspect-ratio: 3/5;
+    height: auto;
   }
-  .svg {
-    margin-top: 10px;
+  .tablero {
+    width: 80%;
+    height: 90%;
+    left: 10%;
+    top: 7%;
   }
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 10px;
-    min-height: 350px;
+  .tableroText {
+    font-size: 1em;
   }
-  .title {
-    font-size: 1.0rem !important;
+  .dataloggerLogo {
+    width: 70%;
   }
-  .subtitle {
-    font-size: 0.75rem !important;
-    padding-left: 15px;
-  }
-  .flowRateText, .volumeText {
-    font-size: 12px;
-  }
-  .depthText {
-    font-size: 10px;
+  .datalogger {
+    left: 75% !important;
+    top: 24% !important;
   }
 }

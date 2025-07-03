@@ -5,6 +5,7 @@
 .formHeader {
   display: flex;
   align-items: center;
+  gap: 8px;
   margin-bottom: 24px;
 }
 
@@ -19,15 +20,15 @@
 }
 
 .formColumns {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-bottom: 24px;
+  width: 100%;
+  margin: 0 auto;
+  margin-bottom: 0;
 }
 
 .column {
   display: flex;
   flex-direction: column;
+  gap: 18px;
 }
 
 .clientForm :global(.ant-form-item-label > label) {
@@ -45,11 +46,22 @@
   margin-bottom: 8px;
 }
 
+.ant-form-item {
+  margin-bottom: 18px !important;
+}
+
 .formButtons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 16px;
+  display: flex !important;
+  justify-content: center !important;
   width: 100%;
+  margin-top: 24px !important;
+  gap: 20px;
+}
+
+@media (min-width: 1200px) {
+  .formButtons {
+    margin-top: -30px !important;
+  }
 }
 
 @media (max-width: 1200px) {
