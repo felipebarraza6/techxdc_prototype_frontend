@@ -24,6 +24,7 @@ import AppLayout from "./components/layout/AppLayout";
 
 // DGA
 import DgaMEE from "./pages/dga/DGA_MEE";
+import DgaAnalisisChart from "./components/dga/DgaAnalisisChart";
 
 
 const ProtectedLayout: React.FC = () => (
@@ -62,6 +63,7 @@ const AppRouter: React.FC = () => {
           <Route path="/profile" element={<UserProfile />} />
           {/* DGA */}
           <Route path="/dga" element={<DgaMEE />} />
+          <Route path="/dga/analisis" element={<DgaAnalisisChart />} />
         </Route>
         {/* 404 */}
         <Route path="*" element={<div>404 - Página no encontrada</div>} />

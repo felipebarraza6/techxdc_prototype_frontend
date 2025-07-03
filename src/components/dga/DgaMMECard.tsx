@@ -17,7 +17,7 @@ const DgaMEECard: React.FC<CardComponentProps> = ({ date_time_medition, flow, to
     <Card className="custom-card">
       <div className="card-header">
         <Text strong style={{ fontSize: 14 }}>Fecha/Hora Medición</Text>
-        <p style={{ fontSize: 12 }}>{date_time_medition}</p>
+        <p style={{ fontSize: 12 }}>{date_time_medition.split('T')[0]}</p>
       </div>
 
       <div className='card-line'></div>
@@ -27,21 +27,21 @@ const DgaMEECard: React.FC<CardComponentProps> = ({ date_time_medition, flow, to
           <div className="metric-label-container">
             <Text className="metric-label">Caudal</Text>
           </div>
-          <p className="metric-value">{flow}</p>
+          <p className="metric-value">{Number(flow).toLocaleString('es-CL')}</p>
         </div>
 
         <div className="metric-item">
           <div className="metric-label-container">
             <Text className="metric-label">Total</Text>
           </div>
-          <p className="metric-value">{total}</p>
+          <p className="metric-value">{total.toLocaleString('es-CL')}</p>
         </div>
 
         <div className="metric-item">
           <div className="metric-label-container">
             <Text className="metric-label">Nivel Freático</Text>
           </div>
-          <p className="metric-value">{water_table}</p>
+          <p className="metric-value">{Number(water_table).toLocaleString('es-CL')}</p>
         </div>
       </div>
 

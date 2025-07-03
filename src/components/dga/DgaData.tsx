@@ -7,19 +7,34 @@ import './DgaData.css';
 interface RowData {
   key: string;
   label: string;
-  value: string | number | null;
+  value: string | number | null | boolean;
 }
 
-const DgaData: React.FC = () => {
+const DgaData: React.FC<{ id: number, lastFlow: number, lastTotal: number, onDgaCode?: (dgaCode: string) => void, onTotalUsage?:(totalUsage:number) => void}> = ({ id, lastFlow, lastTotal, onDgaCode, onTotalUsage }) => {
   const { loading, error, getDgaConfigById, currentDgaConfig } = useDgaConfigCatchment();
 
   useEffect(() => {
-    getDgaConfigById(9);
+    getDgaConfigById(id);
   }, []);
 
   useEffect(() => {
-    console.log(currentDgaConfig)
+    if (currentDgaConfig) {
+      if (onDgaCode) {
+        onDgaCode(currentDgaConfig.code_dga ?? '');
+      }
+      if (onTotalUsage) {
+        onTotalUsage(currentDgaConfig.total_granted_dga ?? 0);
+      }
+    }
   }, [currentDgaConfig]);
+
+  const getFlowPercent = (flowGranted: number) => {
+    return ((lastFlow /flowGranted) * 100);
+  }
+
+  const getTotalPercent = (totalGranted: number) => {
+    return ((lastTotal / totalGranted) * 100);
+  }
 
   if (loading) {
     return (
@@ -35,22 +50,18 @@ const DgaData: React.FC = () => {
 
   if (!currentDgaConfig) return null;
 
-  const percentUsage =
-  currentDgaConfig.flow_granted_dga && currentDgaConfig.total_granted_dga
-    ? (Number(currentDgaConfig.flow_granted_dga) / Number(currentDgaConfig.total_granted_dga)) * 100
-    : null;
-
   const rows: RowData[] = [
-    { key: 'code_dga', label: 'Código de obra', value: currentDgaConfig.code_dga },
+    { key: 'send_dga', label: 'Estado de servicio', value: currentDgaConfig.send_dga == null? 'No activo' : 'Activado' },
+    { key: 'code_dga', label: 'Código de obra', value: currentDgaConfig.date_created_code ? `${currentDgaConfig.code_dga} (${currentDgaConfig.date_created_code})` : currentDgaConfig.code_dga },
     { key: 'standard', label: 'Estándar', value: currentDgaConfig.standard },
-    { key: 'created', label: 'Creado', value: currentDgaConfig.created },
+    { key: 'created',  label: 'Creado', value: currentDgaConfig.created ? currentDgaConfig.created.split('T')[0] : ''},
     { key: 'type_dga', label: 'Tipo de captación', value: currentDgaConfig.type_dga },
-    { key: 'flow_granted_dga', label: 'Caudal autorizado', value: currentDgaConfig.flow_granted_dga },
-    { key: 'percentUsage', label: '% Caudal en uso', value: '--'},
-    { key: 'total_granted_dga', label: 'Total autorizado', value: currentDgaConfig.total_granted_dga },
-    { key: 'percentTotal', label: '% Total autorizado', value: percentUsage !== null ? `${percentUsage.toFixed(2)}%` : '—' },
+    { key: 'flow_granted_dga', label: 'Caudal autorizado', value: Number(currentDgaConfig.flow_granted_dga).toLocaleString('es-CL') },
+    { key: 'percentUsage', label: '% Caudal en uso', value: `${getFlowPercent(Number(currentDgaConfig.flow_granted_dga)).toLocaleString('es-CL', { maximumFractionDigits: 2 })}%`},
+    { key: 'total_granted_dga', label: 'Total autorizado', value: Number(currentDgaConfig.total_granted_dga).toLocaleString('es-CL') },
+    { key: 'percentTotal', label: '% Total autorizado', value: `${getTotalPercent(Number(currentDgaConfig.total_granted_dga)).toLocaleString('es-CL', { maximumFractionDigits: 2 })}%` },
     { key: 'shac', label: 'SHAC', value: currentDgaConfig.shac },
-    { key: 'date_start_compliance', label: 'Fecha inicio cumplimiento', value: currentDgaConfig.date_start_compliance },
+    { key: 'date_start_compliance', label: 'Cumplimiento MEE', value: currentDgaConfig.date_start_compliance },
 
 
     // { key: 'modified', label: 'Modificado', value: currentDgaConfig.modified },

@@ -39,10 +39,24 @@ export const useInteractionDetails = () => {
     return data;
   }, [fetchData]);
 
+  const getInteractionsByCatchmentPoint = useCallback(async (catchmentPoint: number) => {
+    const url = `/api/interaction_detail_json?catchment_point=${catchmentPoint}`;
+    const data = await fetchData<{
+      count: number;
+      next: string | null;
+      previous: string | null;
+      results: InteractionDetail[];
+    }>(url);
+
+    if (data) setInteractions(data.results);
+    return data;
+  }, [fetchData]);
+
   return {
     loading,
     error,
     interactions,
     getAllInteractions,
+    getInteractionsByCatchmentPoint
   };
 };
