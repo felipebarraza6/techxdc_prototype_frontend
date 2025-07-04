@@ -1,12 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+/* Consolidación de referencias y estilos globales */
+html, body {
+  height: 100%;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  font-family: 'Roboto', Arial, sans-serif;
+  color: #1C355F;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
   background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -20,11 +38,6 @@ a {
 }
 a:hover {
   color: #535bf2;
-}
-
-body {
-  margin: 0;
-  min-height: 100vh;
 }
 
 h1 {
@@ -62,4 +75,77 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* Consolidar color global para layout principales */
+body, html, #root, .mainLayout, .header, .content {
+  color: #1C355F;
+}
+
+/* Colores globales para formularios y cards */
+.ant-form-item-label > label {
+  color: #1E293B !important;
+  font-weight: 600 !important;
+}
+
+.ant-input, .ant-input-number, .ant-picker-input > input {
+  color: #1E293B !important;
+  font-weight: 600 !important;
+}
+
+.ant-checkbox-wrapper, .ant-switch + span, .ant-checkbox + span {
+  color: #1E293B !important;
+  font-weight: 600 !important;
+}
+
+/* Switch color para clientes */
+.ant-switch-checked {
+  background-color: #1890FF !important;
+}
+
+/* Checkbox color para clientes */
+.ant-checkbox-checked .ant-checkbox-inner {
+  background-color: #1890FF !important;
+  border-color: #1890FF !important;
+}
+
+.ant-checkbox-checked .ant-checkbox-inner:after {
+  border-color: #fff !important;
+}
+
+.ant-checkbox-checked .ant-checkbox-input:focus + .ant-checkbox-inner {
+  border-color: #1890FF !important;
+}
+
+.ant-input[placeholder="Buscar Cliente"],
+.ant-input[placeholder="Buscar Cliente"]::placeholder {
+  color: #fff !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  font-style: italic !important;
+}
+
+button[type="primary"],
+button[ant-click-animating-without-extra-node] {
+  color: #fff !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  font-style: italic !important;
+}
+
+.cliente-busqueda-input .ant-input,
+.cliente-busqueda-input .ant-input::placeholder {
+  color: #fff !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+}
+.cliente-crear-btn.ant-btn,
+.cliente-crear-btn.ant-btn span {
+  color: #fff !important;
+  font-family: 'Roboto', Arial, sans-serif !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+}
+.cliente-header-actions .ant-space {
+  display: flex !important;
+  align-items: stretch !important;
 }

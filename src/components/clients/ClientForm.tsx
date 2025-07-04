@@ -1,5 +1,6 @@
 import React from 'react';
-import { Form, Input, Button, Typography, Checkbox, DatePicker } from 'antd';
+import { Form, Input, Button, Typography, Checkbox, DatePicker, Row, Col, Switch, Card } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import type { Client } from '../../types/client';
 import { useFormErrors } from '../../hooks/useFormErrors';
 import styles from './ClientForm.module.css';
@@ -41,19 +42,13 @@ const ClientForm: React.FC<ClientFormProps> = ({ initialValues, onSubmit, isLoad
       className={styles.clientForm}
     >
       <div className={styles.formHeader}>
-        <div className={styles.headerIcon}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 5C13.66 5 15 6.34 15 8C15 9.66 13.66 11 12 11C10.34 11 9 9.66 9 8C9 6.34 10.34 5 12 5ZM12 19.2C9.5 19.2 7.29 17.92 6 15.96C6.03 13.99 10 12.9 12 12.9C14 12.9 17.97 13.99 18 15.96C16.71 17.92 14.5 19.2 12 19.2Z" fill="#333" />
-          </svg>
-        </div>
-        <Title level={4} className={styles.headerTitle}>Crear nuevo cliente</Title>
-
+        <UserOutlined style={{ fontSize: 24, color: '#1C355F', marginRight: 8 }} />
+        <Title level={4} className={styles.headerTitle} style={{ color: '#1C355F', fontWeight: 600, margin: 0 }}>Nombre de Cliente</Title>
       </div>
-
-      <div className={styles.formColumns}>
-        <div className={styles.column}>
-          <Form.Item name="name" label="Nombre de punto" validateStatus={errors.name ? 'error' : ''} help={errors.name} rules={[{ required: true, message: 'Nombre requerido' }]}>
-            <Input />
+      <Row gutter={[24, 24]} className={styles.formColumns}>
+        <Col xs={24} sm={12} md={8} lg={8}>
+          <Form.Item name="name" label={<span style={{ color: '#1E293B', fontWeight: 600 }}>Nombre de punto</span>} validateStatus={errors.name ? 'error' : ''} help={errors.name} rules={[{ required: true, message: 'Nombre requerido' }]}> 
+            <Input style={{ color: '#1E293B', fontWeight: 600 }} />
           </Form.Item>
           <Form.Item name="token_servicio" label="Token de servicio">
             <Input />
@@ -70,15 +65,22 @@ const ClientForm: React.FC<ClientFormProps> = ({ initialValues, onSubmit, isLoad
           <Form.Item name="diametro_ducto_salida" label="Diámetro ducto salida bomba (pulg)">
             <Input />
           </Form.Item>
-          <Form.Item name="activar_telemetria" valuePropName="checked">
-            <Checkbox>Activar telemetría</Checkbox>
-          </Form.Item>
-          <Form.Item name="activar_cumplimiento" valuePropName="checked">
-            <Checkbox>Activar cumplimiento</Checkbox>
-          </Form.Item>
-        </div>
-
-        <div className={styles.column}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: 8 }}>
+            <Form.Item name="activar_telemetria" valuePropName="checked" style={{ marginBottom: 0 }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <Switch />
+                <span style={{ color: '#1E293B', fontWeight: 600 }}>Activar telemetría</span>
+              </span>
+            </Form.Item>
+            <Form.Item name="activar_cumplimiento" valuePropName="checked" style={{ marginBottom: 0 }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <Switch />
+                <span style={{ color: '#1E293B', fontWeight: 600 }}>Activar cumplimiento</span>
+              </span>
+            </Form.Item>
+          </div>
+        </Col>
+        <Col xs={24} sm={12} md={8} lg={8}>
           <Form.Item name="diametro_flujometro" label="Diámetro flujometro (pulg)">
             <Input />
           </Form.Item>
@@ -97,23 +99,26 @@ const ClientForm: React.FC<ClientFormProps> = ({ initialValues, onSubmit, isLoad
           <Form.Item name="diametro_ducto_salida_bomba_2" label="Diámetro ducto salida bomba (pulg)">
             <Input />
           </Form.Item>
-        </div>
-
-        <div className={styles.column}>
-          <Form.Item name="estandar" label="Estándar">
-            <Checkbox.Group>
-              <Checkbox value="mayor">Mayor</Checkbox>
-              <Checkbox value="medio">Medio</Checkbox>
-              <Checkbox value="menor">Menor</Checkbox>
-              <Checkbox value="muy_pequeno">Caudal muy pequeño</Checkbox>
-            </Checkbox.Group>
-          </Form.Item>
-          <Form.Item name="tipo_captacion" label="Tipo de captación">
-            <Checkbox.Group>
-              <Checkbox value="superficial">Superficial</Checkbox>
-              <Checkbox value="subterranea">Subterránea</Checkbox>
-            </Checkbox.Group>
-          </Form.Item>
+        </Col>
+        <Col xs={24} sm={24} md={8} lg={8}>
+          <Card bordered style={{ marginBottom: 16, borderRadius: 12, border: '1px solid #E5E7EB', boxShadow: '0 2px 8px 0 rgba(44,61,102,0.04)', background: '#fff', padding: 16, width: '100%' }} bodyStyle={{ padding: 0 }}>
+            <Form.Item name="estandar" label="Estándar">
+              <Checkbox.Group style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <Checkbox value="mayor">Mayor</Checkbox>
+                <Checkbox value="medio">Medio</Checkbox>
+                <Checkbox value="menor">Menor</Checkbox>
+                <Checkbox value="muy_pequeno">Caudal muy pequeño</Checkbox>
+              </Checkbox.Group>
+            </Form.Item>
+          </Card>
+          <Card bordered style={{ borderRadius: 12, border: '1px solid #E5E7EB', boxShadow: '0 2px 8px 0 rgba(44,61,102,0.04)', background: '#fff', padding: 16, width: '100%' }} bodyStyle={{ padding: 0 }}>
+            <Form.Item name="tipo_captacion" label="Tipo de captación">
+              <Checkbox.Group style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <Checkbox value="superficial">Superficial</Checkbox>
+                <Checkbox value="subterranea">Subterránea</Checkbox>
+              </Checkbox.Group>
+            </Form.Item>
+          </Card>
           <Form.Item name="fecha_creacion_dga" label="Fecha código de creación DGA">
             <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
           </Form.Item>
@@ -123,18 +128,25 @@ const ClientForm: React.FC<ClientFormProps> = ({ initialValues, onSubmit, isLoad
           <Form.Item name="fecha_inicio_telemetria" label="Fecha inicio telemetría">
             <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
           </Form.Item>
-          <Form.Item name="fecha_acta_entrega" label="Fecha acta de entrega">
-            <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
-          </Form.Item>
-        </div>
-      </div>
-
-      <Form.Item className={styles.formButtons}>
-        <Button onClick={() => form.resetFields()}>Cancelar</Button>
-        <Button type="primary" htmlType="submit" loading={isLoading}>
-          Guardar
-        </Button>
-      </Form.Item>
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: 16, width: '100%' }}>
+            <Form.Item name="fecha_acta_entrega" label="Fecha acta de entrega" style={{ flex: 1, marginBottom: 0 }}>
+              <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
+            </Form.Item>
+          </div>
+        </Col>
+      </Row>
+      <Row>
+        <Col xs={24}>
+          <div className={styles.formButtons}>
+            <Button onClick={() => form.resetFields()} style={{ background: '#1C355F', color: '#fff',border: 'none' }}>
+              Cancelar
+            </Button>
+            <Button type="primary" htmlType="submit" loading={isLoading} style={{ background: '#568E2B', border: 'none' }}>
+              Guardar
+            </Button>
+          </div>
+        </Col>
+      </Row>
     </Form>
   );
 };
