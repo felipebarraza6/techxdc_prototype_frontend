@@ -9,7 +9,6 @@ const DgaConfigCatchmentList: React.FC = () => {
 
   useEffect(() => {
     getAllDgaConfigs();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleEdit = (id: number) => {
