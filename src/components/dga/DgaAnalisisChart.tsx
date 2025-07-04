@@ -129,20 +129,6 @@ const DgaAnalisisChart: React.FC = () => {
                     >
                         Nivel freático
                     </Button>
-                    <Button
-                        style={{
-                            fontSize: 12,
-                            marginBottom: 16,
-                            marginRight: 8,
-                            background: '#425176',
-                            color: '#fff',
-                            border: 'none',
-                            outline: 'none', 
-                        }}
-                        
-                    >
-                        Datos
-                    </Button>
                 </Flex>
             </Flex>
             <Line {...config} />

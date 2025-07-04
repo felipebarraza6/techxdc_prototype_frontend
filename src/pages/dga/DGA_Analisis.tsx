@@ -3,6 +3,14 @@ import DgaAnalisisChart from '../../components/dga/DgaAnalisisChart';
 import { Card, Flex, Spin, Typography } from 'antd';
 import { useInteractionDetails } from '../../hooks/useInteractionDetails';
 
+interface Interaction {
+    n_voucher: string | null;
+    date_time_medition: string;
+    flow: string | null;
+    total: number | null;
+    water_table: string | null;
+}
+
 const DGA_Analisis: React.FC = () => {
     const { interactions, getInteractionsByCatchmentPoint, loading } = useInteractionDetails();
     const { Text } = Typography;
@@ -22,11 +30,11 @@ const DGA_Analisis: React.FC = () => {
         );
     }
 
-    function getFirstVoucherAndHora(interactions: any[]): {
+    function getFirstVoucherAndHora(interactions: Interaction[]): {
     n_voucher: string;
     hora: string;
     flow: string;
-    total: string;
+    total: number | string;
     water_table: string;
     } {
     const found = interactions.find(item => item.n_voucher != null);
@@ -35,17 +43,17 @@ const DGA_Analisis: React.FC = () => {
         n_voucher: 'Sin dato',
         hora: 'Sin dato',
         flow: 'Sin dato',
-        total: 'Sin dato',
+        total: 0,
         water_table: 'Sin dato',
         };
     }
     return {
-        n_voucher: found.n_voucher,
+        n_voucher: found.n_voucher ?? 'Sin dato', 
         hora: new Date(found.date_time_medition).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }),
         flow: found.flow?.toString() ?? 'Sin dato',
-        total: found.total?.toString() ?? 'Sin dato',
+        total: found.total ?? 'Sin dato',
         water_table: found.water_table?.toString() ?? 'Sin dato',
-    };
+        };
     }
 
     const { n_voucher, hora, flow, total, water_table } = getFirstVoucherAndHora(interactions);
