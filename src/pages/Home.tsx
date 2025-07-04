@@ -9,21 +9,10 @@ import {
 } from '@ant-design/icons';
 import WellVisualization from '../components/well/WellVisualization';
 import { fetchWellData } from '../api/wellService';
-import type { WellData } from '../api/wellService';
-import { useBreakpoint } from '../hooks/useBreakpoint';
+import type { WellData, MetricCardProps } from '../types/well';
 import { useSelectedClient, SelectedClientProvider } from '../context/SelectedClientContext';
 
 const { Title, Text } = Typography;
-
-// Tipado explícito para las props de MetricCard
-interface MetricCardProps {
-  icon: React.ReactNode;
-  title: string;
-  value: string;
-  unit: string;
-  timestamp?: string;
-  style?: React.CSSProperties;
-}
 
 const cardTextColor = { color: '#1C355F' };
 
@@ -71,9 +60,9 @@ const Home = () => {
   const [wellData, setWellData] = useState<WellData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const { pozoScale } = useBreakpoint();
+
   const { selectedClient } = useSelectedClient();
-  
+
 
   useEffect(() => {
     setLoading(true);
@@ -201,7 +190,7 @@ const Home = () => {
               <Text type="secondary" style={{ color: '#1C355F', display: 'block', textAlign: 'left', fontSize: 14, lineHeight: 1.2, margin: 0 }}>Representación en tiempo real del estado del pozo</Text>
             </div>
             <div style={{ flex: 2, width: '100%', height: '100%', display: 'contents', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
-              <WellVisualization pozoScale={1.5} wellData={wellData} loading={loading} error={error} pozoBoxStyle={{ position: 'relative', top: -100, left: 0 }} />
+              <WellVisualization pozoScale={1.5} wellData={wellData} loading={loading} error={error} pozoBoxStyle={{ position: 'relative', top: -100, left: -70 }} />
             </div>
           </Card>
         </Col>

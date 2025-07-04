@@ -24,6 +24,7 @@ import { projectService } from "../../api/projectService";
 import type { Project } from "../../api/projectService";
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useHeaderActions } from '../../context/HeaderActionsContext';
+import { SelectedProjectProvider, useSelectedProject } from '../../context/SelectedProjectContext';
 
 const { Sider, Header, Content } = Layout;
 
@@ -57,11 +58,11 @@ const LogoSection = ({ onClose }: { onClose?: () => void }) => (
   </div>
 );
 
-const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const AppLayoutInner: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [projects, setProjects] = React.useState<Project[]>([]);
-  const [selectedProject, setSelectedProject] = React.useState<Project | null>(null);
+  const { selectedProject, setSelectedProject } = useSelectedProject();
   const { isMobile } = useBreakpoint();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const { headerActions } = useHeaderActions();
@@ -69,7 +70,6 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   React.useEffect(() => {
     projectService.getAll().then((data) => {
       setProjects(data);
-      setSelectedProject(data[0] || null);
     });
   }, []);
 
@@ -78,6 +78,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     if (location.pathname.startsWith("/catchment")) return ["catchment"];
     if (location.pathname.startsWith("/groups")) return ["groups"];
     if (location.pathname.startsWith("/smart-analysis")) return ["smart-analysis"];
+    if (location.pathname.startsWith("/telemetry")) return ["telemetry"];
     return ["dashboard"];
   }, [location.pathname]);
 
@@ -279,5 +280,11 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     </Layout>
   );
 };
+
+const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <SelectedProjectProvider>
+    <AppLayoutInner>{children}</AppLayoutInner>
+  </SelectedProjectProvider>
+);
 
 export default AppLayout;

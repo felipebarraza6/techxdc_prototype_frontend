@@ -1,23 +1,17 @@
 import React from 'react';
-import { Row, Col, Card, Typography, Space, Progress } from 'antd';
+import { Row, Col, Card, Typography, Space } from 'antd';
 import WellVisualization from '../../components/well/WellVisualization';
-import { ClockCircleTwoTone, DashboardTwoTone, DatabaseTwoTone, FundTwoTone, InfoCircleTwoTone, HistoryOutlined } from '@ant-design/icons';
+import { ClockCircleTwoTone, DashboardTwoTone, DatabaseTwoTone, FundTwoTone, InfoCircleTwoTone, InfoCircleOutlined, FileTextOutlined } from '@ant-design/icons';
 import dgaLogo from '../../assets/img/dganuevo.jpg';
-import { useBreakpoint } from '../../hooks/useBreakpoint';
+import type { MetricCardProps, WellData } from '../../types/well';
+import { fetchWellData } from '../../api/wellService';
+import { useSelectedProject } from '../../context/SelectedProjectContext';
 
 const { Title, Text } = Typography;
 
-interface MetricCardProps {
-  icon: React.ReactNode;
-  title: string;
-  value: string;
-  unit: string;
-  timestamp?: string;
-}
-
 // Componente reutilizable para métricas
-const MetricCard: React.FC<MetricCardProps> = ({ icon, title, value, unit, timestamp }) => (
-  <Card bordered style={{ height: 120, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', color: '#1C355F', borderRadius: 12 }}>
+const MetricCard: React.FC<MetricCardProps> = ({ icon, title, value, unit, timestamp, style }) => (
+  <Card bordered style={{ height: 120, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', color: '#1C355F', borderRadius: 12, ...style }}>
     <Space align="center" style={{ marginBottom: 8, color: '#1C355F' }}>
       {icon}
       <Text style={{ fontWeight: 500, color: '#1C355F' }}>{title}</Text>
@@ -30,7 +24,24 @@ const MetricCard: React.FC<MetricCardProps> = ({ icon, title, value, unit, times
 );
 
 const Telemetry = () => {
-  const { pozoScale } = useBreakpoint();
+  const [wellData, setWellData] = React.useState<WellData | null>(null);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState(false);
+  const { selectedProject } = useSelectedProject();
+
+  React.useEffect(() => {
+    setLoading(true);
+    fetchWellData()
+      .then(data => {
+        setWellData(data);
+        setLoading(false);
+        setError(false);
+      })
+      .catch(() => {
+        setLoading(false);
+        setError(true);
+      });
+  }, []);
 
   return (
     <div style={{ background: '#F7FAFC', minHeight: '100vh', padding: 24, color: '#1C355F', width: '100%' }}>
@@ -46,58 +57,106 @@ const Telemetry = () => {
           </Space>
         </Col>
         {/* Columna central: Visualización del Pozo */}
-        <Col xs={24} md={14}>
-          <Card bordered style={{ borderRadius: 16, minHeight: 410, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-            <div style={{ width: '100%', maxWidth: 520, minHeight: 370, display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
-              <WellVisualization pozoScale={1.18} pozoBoxStyle={{ position: 'relative', top: 0, width: '100%', height: 370, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'visible' }} />
+        <Col xs={24} md={12}>
+          <Card bordered style={{ borderRadius: 16, minHeight: 480, display: 'flex', flexDirection: 'column', padding: 20 }}>
+            <div style={{ marginBottom: 4 }}>
+              <Title level={4} style={{ color: '#1C355F', margin: 0, textAlign: 'left', fontSize: 20, lineHeight: 1.4 }}>Visualización del Pozo</Title>
+              <Text type="secondary" style={{ color: '#1C355F', display: 'block', textAlign: 'left', fontSize: 14, lineHeight: 1.2, margin: 0 }}>Representación en tiempo real del estado del pozo</Text>
             </div>
-            {/* Frecuencia de medición */}
-            <Card bordered style={{ borderRadius: 16, marginTop: 16, padding: 16 }}>
-              <Text style={{ color: '#1C355F', fontWeight: 500 }}>Frecuencia de Medición</Text>
-              <div style={{ display: 'flex', alignItems: 'center', marginTop: 8 }}>
-                <Text style={{ color: '#1C355F', marginRight: 16 }}>60min</Text>
-                <Progress percent={80} showInfo={false} strokeColor="#568E2B" style={{ flex: 1 }} />
-                <Text style={{ color: '#1C355F', marginLeft: 16 }}>00:27:57</Text>
-              </div>
-            </Card>
+            <div style={{ flex: 1, width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+              <WellVisualization pozoScale={1.34} pozoBoxStyle={{ position: 'relative', top: -83, left: 0 }} wellData={wellData} loading={loading} error={error} />
+            </div>
           </Card>
         </Col>
         {/* Columna derecha: Detalles técnicos, historial y franja azul */}
-        <Col xs={24} md={5}>
+        <Col xs={24} md={7}>
           <Space direction="vertical" size={16} style={{ width: '100%' }}>
             {/* Detalles técnicos */}
-            <Card bordered style={{ borderRadius: 12 }}>
-              <Title level={5} style={{ color: '#1C355F', marginBottom: 8 }}>Detalles Técnicos: PZ</Title>
-              <div style={{ color: '#1C355F', fontSize: 14 }}>
-                <div>Profundidad: <b>81.0 m</b></div>
-                <div>Posicionamientos:</div>
-                <div style={{ marginLeft: 12 }}>Bomba: <b>60.0 m</b></div>
-                <div style={{ marginLeft: 12 }}>Nivel estático: <b>19.5 m</b></div>
-                <div>Diámetro ducto bomba: <b>6.00 pulg</b></div>
-                <div>Caudalímetro: <b>0.00 m³/h</b></div>
-                <div>Autorizado a marcha</div>
+            <Card bordered style={{ borderRadius: 12, padding: 0 }}>
+              <div style={{ padding: '16px 20px 12px 20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: 8 }}>
+                  <InfoCircleOutlined style={{ fontSize: 16, color: '#1C355F', marginRight: 8 }} />
+                  <span style={{ color: '#1C355F', fontWeight: 600, fontSize: 16 }}>Detalles Técnicos:</span>
+                  <span style={{ color: '#4CAF50', fontWeight: 700, marginLeft: 6 }}>{selectedProject ? `P${selectedProject.id}` : 'PZ'}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                  <span style={{ color: '#64748B' }}>Profundidad</span>
+                  <span style={{ fontWeight: 600, color: '#1C355F' }}>81.00 <span style={{ color: '#9CA3AF', fontWeight: 400 }}>m</span></span>
+                </div>
+                <div style={{ borderTop: '1px solid #E5E7EB', margin: '8px 0' }} />
+                <div style={{ color: '#1E293B', fontWeight: 500, marginBottom: 4 }}>Posicionamientos</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
+                  <span style={{ color: '#64748B' }}>Bomba</span>
+                  <span style={{ fontWeight: 600, color: '#1C355F' }}>55.00 <span style={{ color: '#9CA3AF', fontWeight: 400 }}>m</span></span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                  <span style={{ color: '#64748B' }}>Sensor Nivel</span>
+                  <span style={{ fontWeight: 600, color: '#1C355F' }}>48.00 <span style={{ color: '#9CA3AF', fontWeight: 400 }}>m</span></span>
+                </div>
+                <div style={{ borderTop: '1px solid #E5E7EB', margin: '8px 0' }} />
+                <div style={{ color: '#1E293B', fontWeight: 500, marginBottom: 4 }}>Diámetros</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
+                  <span style={{ color: '#64748B' }}>Ducto salida bomba</span>
+                  <span style={{ fontWeight: 600, color: '#1C355F' }}>8.00 <span style={{ color: '#9CA3AF', fontWeight: 400 }}>pulg</span></span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                  <span style={{ color: '#64748B' }}>Flujómetro</span>
+                  <span style={{ fontWeight: 600, color: '#1C355F' }}>6.00 <span style={{ color: '#9CA3AF', fontWeight: 400 }}>pulg</span></span>
+                </div>
+                <div style={{ borderTop: '1px solid #E5E7EB', margin: '8px 0' }} />
+                <div style={{ color: '#1E293B', fontWeight: 500, marginBottom: 4 }}>Caudalímetro</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
+                  <span style={{ color: '#64748B' }}>Puesto en marcha</span>
+                  <span style={{ fontWeight: 600, color: '#1C355F' }}>0.00 <span style={{ color: '#9CA3AF', fontWeight: 400 }}>m³/h</span></span>
+                </div>
               </div>
             </Card>
             {/* Historial reciente */}
-            <Card bordered style={{ borderRadius: 12 }}>
-              <Space align="center" style={{ marginBottom: 8 }}>
-                <HistoryOutlined style={{ color: '#1C355F', fontSize: 18 }} />
-                <Text style={{ color: '#1C355F', fontWeight: 500 }}>Historial reciente <span style={{ color: '#1890FF', fontWeight: 400, fontSize: 13 }}>(mediciones 20h)</span></Text>
-              </Space>
-              <div style={{ color: '#1C355F', fontSize: 14 }}>
-                <div>1061 pl</div>
-                <div>1061 pl</div>
-                <div>1046 pl</div>
+            <Card bordered style={{ borderRadius: 12, padding: 0 }}>
+              <div style={{ padding: '16px 20px 12px 20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, width: '100%', paddingRight: 2 }}>
+                  <span style={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
+                    <InfoCircleOutlined style={{ color: '#1E293B', fontSize: 16, flexShrink: 0 }} />
+                    <span style={{ color: '#1E293B', fontWeight: 700, fontSize: 15, whiteSpace: 'nowrap', marginLeft: 7, overflow: 'hidden', textOverflow: 'ellipsis', flex: 1 }}>
+                      Historial reciente
+                    </span>
+                  </span>
+                  <button style={{ background: '#3B5484', color: '#fff', border: 'none', borderRadius: 7, padding: '0 8px', fontWeight: 600, fontSize: 13, cursor: 'pointer', height: 26, display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: 0, whiteSpace: 'nowrap', marginLeft: 8, flexShrink: 0 }}>
+                    Mediciones (20)
+                  </button>
+                </div>
+                {/* Lista de mediciones mock */}
+                {[{valor: '1061', unidad: 'm³', fecha: '12 de junio', hora: '18:00'}, {valor: '1040', unidad: 'm³', fecha: '11 de junio', hora: '18:00'}].map((item, idx, arr) => (
+                  <React.Fragment key={item.valor+item.fecha}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 0' }}>
+                      <div>
+                        <span style={{ color: '#1E293B', fontWeight: 700, fontSize: 17 }}>{item.valor}</span>
+                        <span style={{ color: '#64748B', fontWeight: 500, fontSize: 15, marginLeft: 4 }}>{item.unidad}</span>
+                        <div style={{ color: '#64748B', fontSize: 14, fontWeight: 500 }}>{item.fecha}</div>
+                      </div>
+                      <div style={{ color: '#64748B', fontSize: 15, fontWeight: 500 }}>{item.hora}</div>
+                    </div>
+                    {idx < arr.length-1 && <div style={{ borderTop: '1px solid #E5E7EB', margin: '0 0 0 0', width: '100%' }} />}
+                  </React.Fragment>
+                ))}
               </div>
             </Card>
             {/* Franja azul con logo DGA */}
-            <div style={{ background: '#1C355F', borderRadius: 12, padding: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 }}>
-              <div>
-                <Text style={{ color: '#fff', fontWeight: 600, fontSize: 18 }}>08-0902-77</Text>
-                <div style={{ color: '#fff', fontSize: 13 }}>MAYOR <span style={{ background: '#568E2B', color: '#fff', borderRadius: 8, padding: '2px 8px', marginLeft: 8 }}>SUBTERRÁNEO</span></div>
+            <Card bordered={false} style={{ borderRadius: 12, padding: 0, background: 'transparent', boxShadow: 'none' }} bodyStyle={{ padding: 0 }}>
+              <div style={{ background: '#2C3D66', borderRadius: '12px 12px 0 0', padding: '18px 20px 16px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                  <span style={{ color: '#fff', fontWeight: 600, fontSize: 20, letterSpacing: 1 }}>{selectedProject ? selectedProject.code : '--'}</span>
+                  <FileTextOutlined style={{ color: '#fff', fontSize: 18, marginLeft: 10 }} />
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 12 }}>
+                  <span style={{ color: '#fff', fontWeight: 500, fontSize: 15 }}>MAYOR</span>
+                  <span style={{ background: '#3B5484', color: '#fff', borderRadius: 16, padding: '2px 16px', fontWeight: 600, fontSize: 15, display: 'inline-block' }}>SUBTERRÁNEO</span>
+                </div>
               </div>
-              <img src={dgaLogo} alt="Logo DGA" style={{ height: 48, marginLeft: 16 }} />
-            </div>
+              <div style={{ background: '#fff', borderRadius: '0 0 12px 12px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '32px 0 24px 0' }}>
+                <img src={dgaLogo} alt="Logo DGA" style={{ height: 70, width: 'auto', margin: '0 auto', display: 'block' }} />
+              </div>
+            </Card>
           </Space>
         </Col>
       </Row>
