@@ -37,6 +37,7 @@ const headerMap: Record<string, { title: string; subtitle: string }> = {
   "/groups": { title: "Grupos", subtitle: "Listado de grupos" },
   "/groups/create": { title: "Nuevo Grupo", subtitle: "Crear grupo" },
   "/smart-analysis": { title: "Smart Analysis", subtitle: "Análisis inteligente" },
+  "/documents": { title: "Documentos", subtitle: "Gestión Documental del Sistema" },
 };
 
 const LogoSection = ({ onClose }: { onClose?: () => void }) => (
@@ -116,7 +117,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         <Menu.Item key="dga-waez" icon={<FileUnknownOutlined className={styles.menuIcon} />} disabled>DGA WAEZ</Menu.Item>
       </Menu.SubMenu>
       <Menu.SubMenu key="docs" icon={<FileTextOutlined className={styles.menuIcon} />} title={<span>Documentos</span>}>
-        <Menu.Item key="docs-1" icon={<FileTextOutlined className={styles.menuIcon} />} disabled>Documentos 1</Menu.Item>
+        <Menu.Item key="documents" icon={<FileTextOutlined className={styles.menuIcon} />} onClick={() => navigate("/documents")}>Documentos</Menu.Item>
       </Menu.SubMenu>
       <Menu.Item key="alerts" icon={<AlertOutlined className={styles.menuIcon} />} disabled>Alertas</Menu.Item>
     </Menu>

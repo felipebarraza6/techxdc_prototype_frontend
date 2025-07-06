@@ -25,6 +25,7 @@ import { HeaderActionsProvider } from "./context/HeaderActionsContext";
 
 // DGA
 import DgaConfigCatchment from "./pages/dga/DgaConfigCatchment";
+import DocumentosPage from "./pages/documents";
 
 
 const ProtectedLayout: React.FC = () => (
@@ -65,6 +66,8 @@ const AppRouter: React.FC = () => {
           <Route path="/profile" element={<UserProfile />} />
           {/* DGA */}
           <Route path="/dga" element={<DgaConfigCatchment />} />
+          {/* Documentos */}
+          <Route path="/documents" element={<DocumentosPage />} />
         </Route>
         {/* 404 */}
         <Route path="*" element={<div>404 - Página no encontrada</div>} />
