@@ -39,6 +39,7 @@ const headerMap: Record<string, { title: string; subtitle: string }> = {
   "/groups/create": { title: "Nuevo Grupo", subtitle: "Crear grupo" },
   "/smart-analysis": { title: "Smart Analysis", subtitle: "Análisis inteligente" },
   "/alerts": { title: "Alertas", subtitle: "Gestión de alertas" },
+  "/alerts/create": { title: "Alertas", subtitle: "Gestión de alertas" },
   "/support": { title: "Soporte", subtitle: "Gestión de tickets y solicitudes de ayudas" },
 };
 

@@ -26,6 +26,7 @@ import DGA_Analisis from "./pages/dga/DGA_Analisis";
 import Telemetry from "./pages/telemetry/Telemetry";
 
 import AlertsPage from './pages/alerts/AlertsPage';
+import AlertCreatePage from './pages/alerts/AlertCreatePage';
 import SupportPage from './pages/support/SupportPage';
 
 const ProtectedLayout: React.FC = () => (
@@ -71,6 +72,7 @@ const AppRouter: React.FC = () => {
 
           {/* Alertas y Soporte */}
           <Route path="/alerts" element={<AlertsPage />} />
+          <Route path="/alerts/create" element={<AlertCreatePage />} />
           <Route path="/support" element={<SupportPage />} />
 
         </Route>
