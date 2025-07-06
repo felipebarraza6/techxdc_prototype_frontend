@@ -46,7 +46,7 @@ const Telemetry = () => {
   }, []);
 
   return (
-    <div style={{ background: '#F7FAFC', minHeight: '100vh', padding: 24, color: '#1C355F', width: '100%' }}>
+    <div style={{ minHeight: '100vh', padding: 24, color: '#1C355F', width: '100%' }}>
       <Row gutter={[16, 16]}>
         {/* Columna izquierda: Métricas */}
         <Col xs={24} md={5}>

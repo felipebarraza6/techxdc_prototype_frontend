@@ -1,0 +1,21 @@
+.row-color td {
+  background-color: #F4F6F8 !important;
+}
+
+.ant-table-tbody > tr > td {
+  border-right: none !important;
+}
+
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid #f0f0f0 !important;
+  padding: 4px 8px !important;
+}
+
+.ant-table {
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+}
+
+.ant-table-tbody > tr > td:first-child {
+  font-weight: bold;
+}

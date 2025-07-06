@@ -38,6 +38,7 @@ const headerMap: Record<string, { title: string; subtitle: string }> = {
   "/groups": { title: "Grupos", subtitle: "Listado de grupos" },
   "/groups/create": { title: "Nuevo Grupo", subtitle: "Crear grupo" },
   "/smart-analysis": { title: "Smart Analysis", subtitle: "Análisis inteligente" },
+  "/dga/analisis": { title: "DGA Análisis", subtitle: "Monitoreo y análisis de mediciones" },
 };
 
 const LogoSection = ({ onClose }: { onClose?: () => void }) => (
