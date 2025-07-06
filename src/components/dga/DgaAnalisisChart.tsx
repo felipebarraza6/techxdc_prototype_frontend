@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Button, Flex, Spin, Typography } from 'antd';
 import { useDgaConfigCatchment } from '../../hooks/useDgaConfigCatchment';
 
+
 const DgaAnalisisChart: React.FC = () => {
     const { interactions, getInteractionsByCatchmentPoint, loading } = useInteractionDetails();
     const { getDgaConfigById, currentDgaConfig } = useDgaConfigCatchment();
@@ -19,6 +20,8 @@ const DgaAnalisisChart: React.FC = () => {
         getDgaConfigById(userId);
       }, []);
 
+    const threshold = Number(currentDgaConfig?.flow_granted_dga ?? 0);
+
     const data = interactions.map((item) => ({
         Hora: new Date(item.date_time_medition).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }),
         Valor:
@@ -29,12 +32,26 @@ const DgaAnalisisChart: React.FC = () => {
                 : dataType === 'nivel'
                 ? Number(item.water_table)
                 : 0,
+        type: 'datos',
     }));
 
+    const thresholdLine =
+        dataType === 'caudal' && threshold
+            ? data.map((d) => ({
+                Hora: d.Hora,
+                Valor: threshold,
+                type: 'umbral',
+            }))
+            : [];
+
+    const finalData = [...data, ...thresholdLine];
+
+
     const config = {
-        data,
+        data: finalData,
         xField: 'Hora',
         yField: 'Valor',
+        seriesField: 'type',
         height: 350,
         xAxis: {
             title: { text: 'Hora', style: { fontWeight: 600 } },
@@ -59,13 +76,19 @@ const DgaAnalisisChart: React.FC = () => {
             shapeField: 'circle',
             sizeField: 4,
         },
+        color: (type: string) => {
+        console.log('COLOR TYPE:', type);
+        return type === 'umbral' ? 'red' : '#1890ff';
+        },
+
+        lineStyle: (type: string) =>
+        type === 'umbral'
+            ? { lineDash: [4, 4], lineWidth: 2 }
+            : { lineWidth: 2 },
         interaction: {
             tooltip: {
                 marker: false,
             },
-        },
-        style: {
-            lineWidth: 2,
         },
     };
 
@@ -131,7 +154,7 @@ const DgaAnalisisChart: React.FC = () => {
                     </Button>
                 </Flex>
             </Flex>
-            <Line {...config} />
+            <Line key={dataType} {...config} />
         </Flex>
     );
 };

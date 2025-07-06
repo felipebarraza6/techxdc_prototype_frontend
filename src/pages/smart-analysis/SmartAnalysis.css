@@ -1,0 +1,62 @@
+.active-button,
+.active-button:hover,
+.active-button:focus,
+.active-button:active {
+    background: #5C88C9 !important;
+    color: #fff !important;
+    width: 156px !important;
+    height: 40px !important;
+}
+
+.inactive-button {
+    background: transparent;
+    color: #000;
+    box-shadow: none;
+    outline: none;
+    margin-right: 8;
+    width: 156px !important;
+    height: 40px !important;
+}
+
+.inactive-button:hover {
+    background: rgba(0, 0, 0, 0.05); /* Gris muy suave */
+    color: #000;
+}
+
+.left-text-active{
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.left-text-inactive{
+    color: #64748B;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.right-text-active{
+    color: #64748B;
+    background-color: #DEE7F4;
+    padding: 0 8px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.right-text-inactive{
+    color: #64748B;
+    background-color: #DEE7F4;
+    padding: 0 8px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}

@@ -9,20 +9,27 @@ interface Interaction {
     flow: string | null;
     total: number | null;
     water_table: string | null;
+    is_error?: boolean;
 }
 
 const DGA_Analisis: React.FC = () => {
-    const { interactions, getInteractionsByCatchmentPoint, loading } = useInteractionDetails();
+    const { interactions, dailyInteractions, getInteractionsByCatchmentPoint, getInteractionDetailOverride, loading } = useInteractionDetails();
     const { Text } = Typography;
     const userId = 2;
-
+    const now = new Date();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
     
     useEffect(() => {
         getInteractionsByCatchmentPoint(userId);
     }, []);
 
+    useEffect(() => {
+        getInteractionDetailOverride(userId, month, (day-1).toString()+','+day.toString());
+    }, []);
 
-    if (loading || interactions.length === 0 ) {
+
+    if (loading || interactions.length === 0 || dailyInteractions.length === 0) {
         return (
             <div style={{ textAlign: 'center', padding: '2rem' }}>
                 <Spin size="large" />
@@ -30,33 +37,59 @@ const DGA_Analisis: React.FC = () => {
         );
     }
 
-    function getFirstVoucherAndHora(interactions: Interaction[]): {
-    n_voucher: string;
-    hora: string;
-    flow: string;
-    total: number | string;
-    water_table: string;
-    } {
-    const found = interactions.find(item => item.n_voucher != null);
-    if (!found) {
+    function getFirstVoucherAndHora(dailyInteractions: Interaction[]): {
+        n_voucher: string;
+        hora: string;
+        flow: string;
+        total: number | string;
+        water_table: string;
+        } {
+        const found = dailyInteractions.find(item => item.n_voucher != null);
+        if (!found) {
+            return {
+            n_voucher: 'Sin dato',
+            hora: 'Sin dato',
+            flow: 'Sin dato',
+            total: 0,
+            water_table: 'Sin dato',
+            };
+        }
         return {
-        n_voucher: 'Sin dato',
-        hora: 'Sin dato',
-        flow: 'Sin dato',
-        total: 0,
-        water_table: 'Sin dato',
-        };
-    }
-    return {
-        n_voucher: found.n_voucher ?? 'Sin dato', 
-        hora: new Date(found.date_time_medition).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }),
-        flow: found.flow?.toString() ?? 'Sin dato',
-        total: found.total ?? 'Sin dato',
-        water_table: found.water_table?.toString() ?? 'Sin dato',
+            n_voucher: found.n_voucher ?? 'Sin dato', 
+            hora: new Date(found.date_time_medition).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }),
+            flow: found.flow?.toString() ?? 'Sin dato',
+            total: found.total ?? 'Sin dato',
+            water_table: found.water_table?.toString() ?? 'Sin dato',
         };
     }
 
-    const { n_voucher, hora, flow, total, water_table } = getFirstVoucherAndHora(interactions);
+    const { n_voucher, hora, flow, total, water_table } = getFirstVoucherAndHora(dailyInteractions);
+
+    function getVoucherStats(dailyInteractions: Interaction[]): {
+        voucherWithData: number;
+        voucherWithoutData: number;
+        withError: number;
+        } {
+        let voucherWithData = 0;
+        let voucherWithoutData = 0;
+        let withError = 0;
+
+        dailyInteractions.forEach(item => {
+            if (item.n_voucher) {
+            voucherWithData++;
+            } else {
+            voucherWithoutData++;
+            }
+            if (item.is_error === true) {
+            withError++;
+            }
+        });
+
+        return { voucherWithData, voucherWithoutData, withError };
+    }
+
+    const { voucherWithData, voucherWithoutData, withError } = getVoucherStats(dailyInteractions);
+
 
     return (
         <Flex vertical={true} style={{ padding: 24 }}>
@@ -135,7 +168,7 @@ const DGA_Analisis: React.FC = () => {
                             marginTop: 16, 
                             height: '25px',
                             borderRadius: 4,
-                            }}>48 Mediciones</Flex>
+                            }}>{voucherWithData} Mediciones</Flex>
                     </Flex>
                 </Card>
                 <Card style={{ width: '295px', marginRight: 16 }}>
@@ -150,7 +183,7 @@ const DGA_Analisis: React.FC = () => {
                             marginTop: 16, 
                             height: '25px',
                             borderRadius: 4,
-                            }}>0 Mediciones</Flex>
+                            }}>{voucherWithoutData} Mediciones</Flex>
                     </Flex>
                 </Card>
                 <Card style={{ width: '295px', marginRight: 16 }}>
@@ -165,7 +198,7 @@ const DGA_Analisis: React.FC = () => {
                             marginTop: 16, 
                             height: '25px',
                             borderRadius: 4,
-                            }}>0 Errores</Flex>
+                            }}>{withError} Errores</Flex>
                     </Flex>
                 </Card>
             </Flex>

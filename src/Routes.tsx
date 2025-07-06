@@ -27,6 +27,9 @@ import { HeaderActionsProvider } from "./context/HeaderActionsContext";
 import DgaMEE from "./pages/dga/DGA_MEE";
 import DGA_Analisis from "./pages/dga/DGA_Analisis";
 
+// Smart Analysis
+import SmartAnalysis from "./pages/smart-analysis/SmartAnalysis";
+
 
 const ProtectedLayout: React.FC = () => (
   <HeaderActionsProvider>
@@ -67,6 +70,8 @@ const AppRouter: React.FC = () => {
           {/* DGA */}
           <Route path="/dga" element={<DgaMEE />} />
           <Route path="/dga/analisis" element={<DGA_Analisis/>} />
+          {/* Smart Analysis */}
+          <Route path="/smart-analysis" element={<SmartAnalysis/>} />
         </Route>
         {/* 404 */}
         <Route path="*" element={<div>404 - Página no encontrada</div>} />
