@@ -6,6 +6,7 @@ import dgaLogo from '../../assets/img/dganuevo.jpg';
 import type { MetricCardProps, WellData } from '../../types/well';
 import { fetchWellData } from '../../api/wellService';
 import { useSelectedProject } from '../../context/SelectedProjectContext';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 const { Title, Text } = Typography;
 
@@ -28,6 +29,7 @@ const Telemetry = () => {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(false);
   const { selectedProject } = useSelectedProject();
+  const { isMobile } = useBreakpoint();
 
   React.useEffect(() => {
     setLoading(true);
@@ -64,7 +66,17 @@ const Telemetry = () => {
               <Text type="secondary" style={{ color: '#1C355F', display: 'block', textAlign: 'left', fontSize: 14, lineHeight: 1.2, margin: 0 }}>Representación en tiempo real del estado del pozo</Text>
             </div>
             <div style={{ flex: 1, width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
-              <WellVisualization pozoScale={1.34} pozoBoxStyle={{ position: 'relative', top: -83, left: 0 }} wellData={wellData} loading={loading} error={error} />
+              <WellVisualization
+                pozoScale={isMobile ? 0.8 : 1.34}
+                pozoBoxStyle={
+                  isMobile
+                    ? { position: 'relative', top: -40, left: -15 }
+                    : { position: 'relative', top: -83, left: 0 }
+                }
+                wellData={wellData}
+                loading={loading}
+                error={error}
+              />
             </div>
           </Card>
         </Col>

@@ -418,13 +418,17 @@
   }
   .pozoBox {
     width: 100% !important;
+    max-width: 100vw !important;
     overflow: visible !important;
     padding: 0 !important;
+    box-sizing: border-box;
   }
   .pozoScale {
     width: 100% !important;
+    max-width: 100vw !important;
     overflow: visible !important;
     padding: 0 !important;
+    box-sizing: border-box;
   }
   .pozo {
     width: 90vw;
