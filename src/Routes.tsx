@@ -25,6 +25,9 @@ import DGA_Analisis from "./pages/dga/DGA_Analisis";
 // Telemetry
 import Telemetry from "./pages/telemetry/Telemetry";
 
+import AlertsPage from './pages/alerts/AlertsPage';
+import SupportPage from './pages/support/SupportPage';
+
 const ProtectedLayout: React.FC = () => (
   <HeaderActionsProvider>
     <AppLayout>
@@ -58,13 +61,17 @@ const AppRouter: React.FC = () => {
           <Route path="/groups/:id/edit" element={<GroupEditPage />} />
           {/* Perfil */}
           <Route path="/profile" element={<UserProfile />} />
-         
+
           {/* Telemetría */}
           <Route path="/telemetry" element={<Telemetry />} />
 
           {/* DGA */}
           <Route path="/dga" element={<DgaMEE />} />
           <Route path="/dga/analisis" element={<DGA_Analisis />} />
+
+          {/* Alertas y Soporte */}
+          <Route path="/alerts" element={<AlertsPage />} />
+          <Route path="/support" element={<SupportPage />} />
 
         </Route>
         {/* 404 */}
