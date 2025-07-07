@@ -148,6 +148,8 @@ const SmartAnalysis: React.FC = () => {
     ) => {
         if (data && data.length > 0) {
         let valores: { x: string; y: number }[] = [];
+        let chartTitle = "";
+        let chartSubTitle = "";
 
         switch (activeButton) {
             case "acumulado":
@@ -155,30 +157,40 @@ const SmartAnalysis: React.FC = () => {
                 x: modoDatos(nombreEjeX, item.date_time_medition),
                 y: item.total / 1000,
             }));
+            chartTitle = "Acumulado (m³)";
+            chartSubTitle = "Comportamiento durante las últimas 24 horas";
             break;
             case "consumoHora":
             valores = data.map(item => ({
                 x: modoDatos(nombreEjeX, item.date_time_medition),
                 y: item.total_diff / 1000,
             }));
+            chartTitle = "Consumo por hora (m³/h)";
+            chartSubTitle = "";
             break;
             case "consumoDia":
             valores = data.map(item => ({
                 x: modoDatos(nombreEjeX, item.date_time_medition),
                 y: item.total_today_diff / 1000,
             }));
+            chartTitle = "Consumo día (m³)";
+            chartSubTitle = "";
             break;
             case "caudal2":
             valores = data.map(item => ({
                 x: modoDatos(nombreEjeX, item.date_time_medition),
                 y: parseFloat(item.flow),
             }));
+            chartTitle = "Caudal (lt/s)";
+            chartSubTitle = "";
             break;
             case "nivel":
             valores = data.map(item => ({
                 x: modoDatos(nombreEjeX, item.date_time_medition),
                 y: parseFloat(item.water_table),
             }));
+            chartTitle = "Nivel freático(m)";
+            chartSubTitle = "";
             break;
             default:
             valores = [];
@@ -188,8 +200,8 @@ const SmartAnalysis: React.FC = () => {
         const promedioY = valores.length > 0 ? sumaY / valores.length : 0;
 
         setChartValues({
-            titulo,
-            subtitulo: "Estación Río Azul",
+            titulo: chartTitle,
+            subtitulo: chartSubTitle,
             nombreEjeX,
             nombreEjeY,
             valores,
@@ -242,7 +254,6 @@ const SmartAnalysis: React.FC = () => {
         { id: 'acumulado', labelLeft: 'Acumulado', labelRight: 'm³' },
         { id: 'consumoHora', labelLeft: 'Consumo hora', labelRight: 'm³/h' },
         { id: 'consumoDia', labelLeft: 'Consumo día', labelRight: 'm³/d' },
-        { id: 'caudal1', labelLeft: 'Caudal', labelRight: 'm³' },
         { id: 'caudal2', labelLeft: 'Caudal', labelRight: 'lt/s' },
         { id: 'nivel', labelLeft: 'Nivel freático', labelRight: 'm' },
         { id: 'datos', labelLeft: 'Datos' },
