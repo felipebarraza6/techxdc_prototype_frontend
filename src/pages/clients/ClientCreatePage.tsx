@@ -39,7 +39,7 @@ const ClientCreatePage: React.FC = () => {
         }}
         bodyStyle={{ padding: 32 }}
       >
-        <ClientForm onSubmit={handleSubmit} isLoading={loading} style={{ width: '100%' }} />
+        <ClientForm onSubmit={handleSubmit} isLoading={loading} />
       </Card>
     </div>
   );

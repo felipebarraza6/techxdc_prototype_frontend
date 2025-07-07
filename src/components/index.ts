@@ -5,8 +5,6 @@ export { default as RecoverPasswordForm } from "./auth/RecoverPasswordForm";
 
 // Layout components
 export { default as AppLayout } from "./layout/AppLayout";
-export { default as MenuSidebar } from "./layout/MenuSidebar";
-export { default as Header } from "./layout/Header";
 
 // Common components
 export { default as ErrorBoundary } from "./common/ErrorBoundary";

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Spin, Alert, Row, Col, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { PlusOutlined, SearchOutlined, DownOutlined } from '@ant-design/icons';
@@ -19,9 +19,6 @@ const ClientListContent: React.FC = () => {
   const { setHeaderActions } = useHeaderActions();
   const breakpoint = useBreakpoint();
   const { selectedClient, setSelectedClient } = useSelectedClient();
-  const [lastAction, setLastAction] = useState<'more' | 'less' | null>(null);
-  const [animatedIds, setAnimatedIds] = useState<string[]>([]);
-  const prevVisibleCount = useRef(visibleCount);
 
   const {
     data: clients,
@@ -97,11 +94,9 @@ const ClientListContent: React.FC = () => {
   const visibleClients = displayClients.slice(0, visibleCount);
 
   const handleShowMore = () => {
-    setLastAction('more');
     setVisibleCount(c => c + 9);
   };
   const handleShowLess = () => {
-    setLastAction('less');
     setVisibleCount(9);
   };
 

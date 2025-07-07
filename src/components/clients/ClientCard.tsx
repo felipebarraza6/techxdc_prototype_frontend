@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Card, Button, Space, Modal } from 'antd';
+import { Modal } from 'antd';
 import type { Client } from '../../types/client';
-import { useNavigate } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
 import styles from './ClientCard.module.css';
 
@@ -12,7 +11,6 @@ interface ClientCardProps {
 }
 
 const ClientCard: React.FC<ClientCardProps> = ({ client, selected, onClick }) => {
-  const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
 
   // Datos mock para mediciones
@@ -22,7 +20,6 @@ const ClientCard: React.FC<ClientCardProps> = ({ client, selected, onClick }) =>
     { valor: '0 m³', hora: '22:00 hrs' },
   ];
 
-  const showDeleteModal = () => setModalOpen(true);
   const handleOk = () => {
     // onDelete(client.id);
     setModalOpen(false);
