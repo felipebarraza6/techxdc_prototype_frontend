@@ -28,6 +28,15 @@ import DGA_Analisis from "./pages/dga/DGA_Analisis";
 //Documents
 import DocumentosPage from "./pages/documents";
 
+// Telemetry
+import Telemetry from "./pages/telemetry/Telemetry";
+
+// Alerts
+import AlertsPage from './pages/alerts/AlertsPage';
+import AlertCreatePage from './pages/alerts/AlertCreatePage';
+import SupportPage from './pages/support/SupportPage';
+
+
 const ProtectedLayout: React.FC = () => (
   <HeaderActionsProvider>
     <AppLayout>
@@ -50,23 +59,35 @@ const AppRouter: React.FC = () => {
         <Route element={<ProtectedLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<UserProfile />} />
+
           {/* Clients */}
           <Route path="/clients" element={<ClientListPage />} />
           <Route path="/clients/create" element={<ClientCreatePage />} />
           <Route path="/clients/:id/edit" element={<ClientEditPage />} />
+          
           {/* Groups */}
           <Route path="/groups" element={<GroupListPage />} />
           <Route path="/groups/create" element={<GroupCreatePage />} />
           <Route path="/groups/:id/edit" element={<GroupEditPage />} />
+          
           {/* Perfil */}
           <Route path="/profile" element={<UserProfile />} />
-          {/* DGA */}
-        <Route path="/dga" element={<DgaMEE />} />
-          <Route path="/dga/analisis" element={<DGA_Analisis/>} />
-          {/* Documentos */}
-          <Route path="/documents" element={<DocumentosPage />} />
 
+          {/* Telemetría */}
+          <Route path="/telemetry" element={<Telemetry />} />
+
+          {/* Documentos */}
+          <Route path="/documents" element={<DocumentosPage />
           
+          {/* DGA */}
+          <Route path="/dga" element={<DgaMEE />} />
+          <Route path="/dga/analisis" element={<DGA_Analisis />} />
+
+          {/* Alertas y Soporte */}
+          <Route path="/alerts" element={<AlertsPage />} />
+          <Route path="/alerts/create" element={<AlertCreatePage />} />
+          <Route path="/support" element={<SupportPage />} />
+
 
         </Route>
         {/* 404 */}
