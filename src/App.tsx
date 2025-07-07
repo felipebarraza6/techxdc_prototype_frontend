@@ -1,5 +1,4 @@
 import { ConfigProvider } from 'antd';
-import './App.css';
 import { UserProvider } from './context/UserState';
 import { FormProvider } from './context/Form/FormContext';
 import AppRouter from './Routes';

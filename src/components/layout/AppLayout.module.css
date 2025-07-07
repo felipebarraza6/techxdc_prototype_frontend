@@ -128,17 +128,27 @@
 
 .menuList .ant-menu-item-selected,
 .menuList .ant-menu-item-active,
-.menuList .ant-menu-item:hover {
+.menuList .ant-menu-item:hover,
+.menuList .ant-menu-submenu .ant-menu-item-selected,
+.menuList .ant-menu-submenu .ant-menu-item-active,
+.menuList .ant-menu-submenu .ant-menu-item:hover {
   background: #568E2B !important;
   color: #fff !important;
-  font-weight: 500;
+  font-weight: 700;
   border-radius: 8px !important;
   margin: 0 4px 0 4px !important;
-  border-right: 3px solid #568E2B !important;
+  border-right: none !important;
+  border-left: none !important;
   padding-left: 14px !important;
   display: flex !important;
   align-items: center !important;
   gap: 6px !important;
+}
+
+.menuList .ant-menu-submenu .ant-menu-item {
+  background: transparent !important;
+  color: #fff !important;
+  font-weight: 400;
 }
 
 .menuList .ant-menu-submenu-title {

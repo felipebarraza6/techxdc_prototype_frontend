@@ -3,18 +3,18 @@ import { Layout, Menu, Dropdown, Drawer, Button } from "antd";
 import {
   DashboardOutlined,
   UsergroupAddOutlined,
-  RadarChartOutlined,
   BarChartOutlined,
-  FileSearchOutlined,
   FileTextOutlined,
   AlertOutlined,
-  FileProtectOutlined,
-  FileUnknownOutlined,
   CustomerServiceOutlined,
   UserOutlined,
   DownOutlined,
   MenuOutlined,
-  CloseOutlined
+  CloseOutlined,
+  LineChartOutlined,
+  SettingOutlined,
+  AppstoreOutlined,
+  ExperimentOutlined
 } from "@ant-design/icons";
 import styles from "./AppLayout.module.css";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -37,10 +37,12 @@ const headerMap: Record<string, { title: string; subtitle: string }> = {
   "/clients/create": { title: "Crear nuevo cliente", subtitle: "Agregar información" },
   "/groups": { title: "Grupos", subtitle: "Listado de grupos" },
   "/groups/create": { title: "Nuevo Grupo", subtitle: "Crear grupo" },
-  "/smart-analysis": { title: "Smart Analysis", subtitle: "Análisis inteligente" },
+  "/smart-analysis": { title: "Smart Análisis", subtitle: "Análisis inteligente" },
   "/alerts": { title: "Alertas", subtitle: "Gestión de alertas" },
   "/alerts/create": { title: "Alertas", subtitle: "Gestión de alertas" },
   "/support": { title: "Soporte", subtitle: "Gestión de tickets y solicitudes de ayudas" },
+  "/dga": { title: "DGA MEE", subtitle: "Extracción de datos MEE" },
+  "/dga/analisis": { title: "DGA Análisis", subtitle: "Monitoreo y análisis de mediciones" },
 };
 
 const LogoSection = ({ onClose }: { onClose?: () => void }) => (
@@ -77,6 +79,8 @@ const AppLayoutInner: React.FC<{ children: React.ReactNode }> = ({ children }) =
   }, []);
 
   const selectedKeys = React.useMemo(() => {
+    if (location.pathname === "/dga") return ["dga-mee"];
+    if (location.pathname === "/dga/analisis") return ["dga-analisis"];
     if (location.pathname.startsWith("/clients")) return ["clients"];
     if (location.pathname.startsWith("/catchment")) return ["catchment"];
     if (location.pathname.startsWith("/groups")) return ["groups"];
@@ -105,7 +109,6 @@ const AppLayoutInner: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
   const menuContent = (
     <Menu
-      theme="dark"
       mode="inline"
       selectedKeys={selectedKeys}
       style={{ background: "#1C355F", borderRight: "none" }}
@@ -114,11 +117,23 @@ const AppLayoutInner: React.FC<{ children: React.ReactNode }> = ({ children }) =
     >
       <Menu.Item key="dashboard" icon={<DashboardOutlined className={styles.menuIcon} />} onClick={() => navigate("/")}>Dashboard</Menu.Item>
       <Menu.Item key="clients" icon={<UsergroupAddOutlined className={styles.menuIcon} />} onClick={() => navigate("/clients")}>Clientes</Menu.Item>
-      <Menu.Item key="telemetry" icon={<RadarChartOutlined className={styles.menuIcon} />} onClick={() => navigate("/telemetry")}>Telemetría</Menu.Item>
-      <Menu.Item key="smart-analysis" icon={<BarChartOutlined className={styles.menuIcon} />} disabled>Smart Análisis</Menu.Item>
-      <Menu.SubMenu key="dga" icon={<FileSearchOutlined className={styles.menuIcon} />} title={<span>DGA</span>}>
-        <Menu.Item key="dga-analisis" icon={<FileProtectOutlined className={styles.menuIcon} />} disabled>DGA Análisis</Menu.Item>
-        <Menu.Item key="dga-waez" icon={<FileUnknownOutlined className={styles.menuIcon} />} disabled>DGA MEE</Menu.Item>
+      <Menu.Item key="telemetry" icon={<ExperimentOutlined className={styles.menuIcon} />} onClick={() => navigate("/telemetry")}>Telemetría</Menu.Item>
+      <Menu.Item key="smart-analysis" icon={<BarChartOutlined className={styles.menuIcon} />} onClick={() => navigate("/smart-analysis")}>Smart Análisis</Menu.Item>
+      <Menu.SubMenu key="dga" icon={<SettingOutlined className={styles.menuIcon} />} title={<span>DGA</span>}>
+        <Menu.Item 
+          key="dga-analisis" 
+          icon={<LineChartOutlined className={styles.menuIcon} />} 
+          onClick={() => navigate("/dga/analisis")}
+        >
+          DGA Análisis
+        </Menu.Item>
+        <Menu.Item 
+          key="dga-mee" 
+          icon={<AppstoreOutlined className={styles.menuIcon} />} 
+          onClick={() => navigate("/dga")}
+        >
+          DGA MEE
+        </Menu.Item>
       </Menu.SubMenu>
       <Menu.SubMenu key="docs" icon={<FileTextOutlined className={styles.menuIcon} />} title={<span>Documentos</span>}>
         <Menu.Item key="docs-1" icon={<FileTextOutlined className={styles.menuIcon} />} disabled>Documentos 1</Menu.Item>
@@ -207,9 +222,11 @@ const AppLayoutInner: React.FC<{ children: React.ReactNode }> = ({ children }) =
           closable={false}
           onClose={() => setDrawerOpen(false)}
           open={drawerOpen}
-          bodyStyle={{ padding: 0, background: '#1C355F', minHeight: '100vh', display: 'flex', flexDirection: 'column', width: 237 }}
           width={237}
-          headerStyle={{ background: '#1C355F', borderBottom: '1px solid #3B5484', padding: '0' }}
+          styles={{
+            body: { padding: 0, background: '#1C355F', minHeight: '100vh', display: 'flex', flexDirection: 'column', width: 237 },
+            header: { background: '#1C355F', borderBottom: '1px solid #3B5484', padding: '0' }
+          }}
         >
           <div style={{ padding: '16px 0 4px 0', background: '#1C355F', borderBottom: '1px solid #3B5484', position: 'relative' }}>
             <LogoSection onClose={() => setDrawerOpen(false)} />
