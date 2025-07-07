@@ -6,11 +6,6 @@ import RegisterPage from "./pages/auth/RegisterPage";
 import RecoverPasswordPage from "./pages/auth/RecoverPasswordPage";
 import UserProfile from "./pages/UserProfile";
 
-// Catchment
-import CatchmentPointListPage from "./pages/catchment/CatchmentPointListPage";
-import CatchmentPointCreatePage from "./pages/catchment/CatchmentPointCreatePage";
-import CatchmentPointEditPage from "./pages/catchment/atchmentPointEditPage";
-
 // Clients
 import ClientListPage from "./pages/clients/ClientListPage";
 import ClientCreatePage from "./pages/clients/ClientCreatePage";
@@ -27,6 +22,8 @@ import { HeaderActionsProvider } from "./context/HeaderActionsContext";
 import DgaMEE from "./pages/dga/DGA_MEE";
 import DGA_Analisis from "./pages/dga/DGA_Analisis";
 
+// Telemetry
+import Telemetry from "./pages/telemetry/Telemetry";
 
 const ProtectedLayout: React.FC = () => (
   <HeaderActionsProvider>
@@ -50,10 +47,7 @@ const AppRouter: React.FC = () => {
         <Route element={<ProtectedLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<UserProfile />} />
-          {/* Catchment Points */}
-          <Route path="/catchment" element={<CatchmentPointListPage />} />
-          <Route path="/catchment/new" element={<CatchmentPointCreatePage />} />
-          <Route path="/catchment/:id/edit" element={<CatchmentPointEditPage />} />
+
           {/* Clients */}
           <Route path="/clients" element={<ClientListPage />} />
           <Route path="/clients/create" element={<ClientCreatePage />} />
@@ -64,9 +58,14 @@ const AppRouter: React.FC = () => {
           <Route path="/groups/:id/edit" element={<GroupEditPage />} />
           {/* Perfil */}
           <Route path="/profile" element={<UserProfile />} />
+         
+          {/* Telemetría */}
+          <Route path="/telemetry" element={<Telemetry />} />
+
           {/* DGA */}
           <Route path="/dga" element={<DgaMEE />} />
-          <Route path="/dga/analisis" element={<DGA_Analisis/>} />
+          <Route path="/dga/analisis" element={<DGA_Analisis />} />
+
         </Route>
         {/* 404 */}
         <Route path="*" element={<div>404 - Página no encontrada</div>} />

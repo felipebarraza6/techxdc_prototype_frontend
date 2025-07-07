@@ -12,14 +12,14 @@
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
-  padding: 20px;
+  padding: 0 8px;
 }
 
 .header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   width: 100%;
   max-width: 300px;
 }
@@ -43,7 +43,7 @@
 }
 
 .footer {
-  margin-top: 48px;
+  margin-top: 32px;
   width: 100%;
   display: flex;
   flex-direction: column;

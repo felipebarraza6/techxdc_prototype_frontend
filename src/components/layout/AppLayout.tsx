@@ -24,6 +24,7 @@ import { projectService } from "../../api/projectService";
 import type { Project } from "../../api/projectService";
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useHeaderActions } from '../../context/HeaderActionsContext';
+import { SelectedProjectProvider, useSelectedProject } from '../../context/SelectedProjectContext';
 
 const { Sider, Header, Content } = Layout;
 
@@ -58,12 +59,11 @@ const LogoSection = ({ onClose }: { onClose?: () => void }) => (
   </div>
 );
 
-const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const AppLayoutInner: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const header = headerMap[location.pathname] || { title: "", subtitle: "" };
   const [projects, setProjects] = React.useState<Project[]>([]);
-  const [selectedProject, setSelectedProject] = React.useState<Project | null>(null);
+  const { selectedProject, setSelectedProject } = useSelectedProject();
   const { isMobile } = useBreakpoint();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
   const { headerActions } = useHeaderActions();
@@ -71,7 +71,6 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   React.useEffect(() => {
     projectService.getAll().then((data) => {
       setProjects(data);
-      setSelectedProject(data[0] || null);
     });
   }, []);
 
@@ -80,6 +79,7 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     if (location.pathname.startsWith("/catchment")) return ["catchment"];
     if (location.pathname.startsWith("/groups")) return ["groups"];
     if (location.pathname.startsWith("/smart-analysis")) return ["smart-analysis"];
+    if (location.pathname.startsWith("/telemetry")) return ["telemetry"];
     return ["dashboard"];
   }, [location.pathname]);
 
@@ -110,11 +110,11 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     >
       <Menu.Item key="dashboard" icon={<DashboardOutlined className={styles.menuIcon} />} onClick={() => navigate("/")}>Dashboard</Menu.Item>
       <Menu.Item key="clients" icon={<UsergroupAddOutlined className={styles.menuIcon} />} onClick={() => navigate("/clients")}>Clientes</Menu.Item>
-      <Menu.Item key="catchment" icon={<RadarChartOutlined className={styles.menuIcon} />} onClick={() => navigate("/catchment")}>Telemetría</Menu.Item>
+      <Menu.Item key="telemetry" icon={<RadarChartOutlined className={styles.menuIcon} />} onClick={() => navigate("/telemetry")}>Telemetría</Menu.Item>
       <Menu.Item key="smart-analysis" icon={<BarChartOutlined className={styles.menuIcon} />} disabled>Smart Análisis</Menu.Item>
       <Menu.SubMenu key="dga" icon={<FileSearchOutlined className={styles.menuIcon} />} title={<span>DGA</span>}>
         <Menu.Item key="dga-analisis" icon={<FileProtectOutlined className={styles.menuIcon} />} disabled>DGA Análisis</Menu.Item>
-        <Menu.Item key="dga-waez" icon={<FileUnknownOutlined className={styles.menuIcon} />} disabled>DGA WAEZ</Menu.Item>
+        <Menu.Item key="dga-waez" icon={<FileUnknownOutlined className={styles.menuIcon} />} disabled>DGA MEE</Menu.Item>
       </Menu.SubMenu>
       <Menu.SubMenu key="docs" icon={<FileTextOutlined className={styles.menuIcon} />} title={<span>Documentos</span>}>
         <Menu.Item key="docs-1" icon={<FileTextOutlined className={styles.menuIcon} />} disabled>Documentos 1</Menu.Item>
@@ -122,6 +122,15 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <Menu.Item key="alerts" icon={<AlertOutlined className={styles.menuIcon} />} disabled>Alertas</Menu.Item>
     </Menu>
   );
+
+  // Header dinámico para Telemetría
+  let header = headerMap[location.pathname] || { title: '', subtitle: '' };
+  if (location.pathname === '/telemetry') {
+    header = {
+      title: 'Telemetría',
+      subtitle: selectedProject ? `Monitoreo en tiempo real del pozo P${selectedProject.id}` : 'Monitoreo en tiempo real del pozo',
+    };
+  }
 
   return (
     <Layout className={styles.appLayout}>
@@ -133,20 +142,12 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         >
           <LogoSection />
           <Dropdown overlay={projectMenu} trigger={["click"]} placement="bottomLeft" disabled={projects.length === 0} overlayClassName={styles.projectDropdownMenu}>
-            <div className={styles.projectSection}>
-              <span style={{
-                width: 34,
-                height: 22,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 9,
-              }}>
+            <div className={styles.projectSection} style={{ display: 'flex', alignItems: 'center', gap: 8, height: 32 }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span className={styles.statusIndicator} />
                 <span className={styles.statusText}>{selectedProject ? `P${selectedProject.id}` : ""}</span>
               </span>
               <span style={{
-                width: 108,
-                height: 20,
                 background: '#3368AB',
                 color: '#fff',
                 borderRadius: 4,
@@ -156,6 +157,9 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: 0,
+                minWidth: 80,
+                justifyContent: 'center',
+                marginRight: 8,
               }}>
                 {selectedProject ? selectedProject.code : ""}
                 <DownOutlined style={{ width: 10, height: 11.25, color: '#fff', fontSize: 12, marginLeft: 7 }} />
@@ -200,20 +204,12 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             <LogoSection onClose={() => setDrawerOpen(false)} />
           </div>
           <Dropdown overlay={projectMenu} trigger={["click"]} placement="bottomLeft" disabled={projects.length === 0} overlayClassName={styles.projectDropdownMenu}>
-            <div className={styles.projectSection}>
-              <span style={{
-                width: 34,
-                height: 22,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 9,
-              }}>
+            <div className={styles.projectSection} style={{ display: 'flex', alignItems: 'center', gap: 8, height: 32 }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span className={styles.statusIndicator} />
                 <span className={styles.statusText}>{selectedProject ? `P${selectedProject.id}` : ""}</span>
               </span>
               <span style={{
-                width: 108,
-                height: 20,
                 background: '#3368AB',
                 color: '#fff',
                 borderRadius: 4,
@@ -223,6 +219,9 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: 0,
+                minWidth: 80,
+                justifyContent: 'center',
+                marginRight: 8,
               }}>
                 {selectedProject ? selectedProject.code : ""}
                 <DownOutlined style={{ width: 10, height: 11.25, color: '#fff', fontSize: 12, marginLeft: 7 }} />
@@ -255,12 +254,17 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <Layout className={styles.mainLayout} style={{ marginLeft: isMobile ? 0 : 237 }}>
         <Header className={styles.header} style={{ background: "#fff", padding: 0, height: 105, minHeight: 105, borderBottom: '1px solid #D1D5DB', zIndex: 10, display: 'flex', alignItems: 'center' }}>
           {isMobile && (
-            <Button
-              type="text"
-              icon={<MenuOutlined style={{ fontSize: 28, color: '#1C355F' }} />}
-              onClick={() => setDrawerOpen(true)}
-              style={{ marginLeft: 16, marginRight: 16 }}
-            />
+            <div className={styles.hamburgerContainer}>
+              <Button
+                type="text"
+                icon={
+                  <MenuOutlined className={styles.hamburgerIcon} />
+                }
+                onClick={() => setDrawerOpen(true)}
+                className={styles.hamburgerButton}
+                style={{ marginLeft: 0, marginRight: 0 }}
+              />
+            </div>
           )}
           <div className={styles.headerContent} style={{ flex: 1 }}>
             {header.title && <h1 className={styles.title}>{header.title}</h1>}
@@ -277,5 +281,11 @@ const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     </Layout>
   );
 };
+
+const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <SelectedProjectProvider>
+    <AppLayoutInner>{children}</AppLayoutInner>
+  </SelectedProjectProvider>
+);
 
 export default AppLayout;

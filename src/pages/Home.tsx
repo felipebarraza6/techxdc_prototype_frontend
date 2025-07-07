@@ -9,21 +9,11 @@ import {
 } from '@ant-design/icons';
 import WellVisualization from '../components/well/WellVisualization';
 import { fetchWellData } from '../api/wellService';
-import type { WellData } from '../api/wellService';
-import { useBreakpoint } from '../hooks/useBreakpoint';
+import type { WellData, MetricCardProps } from '../types/well';
 import { useSelectedClient, SelectedClientProvider } from '../context/SelectedClientContext';
+import { useBreakpoint } from '../hooks/useBreakpoint';
 
 const { Title, Text } = Typography;
-
-// Tipado explícito para las props de MetricCard
-interface MetricCardProps {
-  icon: React.ReactNode;
-  title: string;
-  value: string;
-  unit: string;
-  timestamp?: string;
-  style?: React.CSSProperties;
-}
 
 const cardTextColor = { color: '#1C355F' };
 
@@ -71,9 +61,9 @@ const Home = () => {
   const [wellData, setWellData] = useState<WellData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const { pozoScale } = useBreakpoint();
+
   const { selectedClient } = useSelectedClient();
-  
+  const { isMobile } = useBreakpoint();
 
   useEffect(() => {
     setLoading(true);
@@ -103,7 +93,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div style={{ background: '#fff', minHeight: '100vh', padding: 16, color: '#1C355F', width: '100%' }}>
+    <div style={{ minHeight: '100vh', padding: 16, color: '#1C355F', width: '100%' }}>
       <Title level={2} style={{ color: '#1C355F', marginBottom: 32 }}>
         Bienvenido, {selectedClient ? selectedClient.name : (loading ? '--' : error ? '--' : wellData && wellData.clientName ? wellData.clientName : '--')}
       </Title>
@@ -195,13 +185,25 @@ const Home = () => {
           </Row>
         </Col>
         <Col xs={24} sm={24} md={24} lg={18} xl={18}>
-          <WellVisualization
-            pozoScale={pozoScale}
-            pozoBoxStyle={{ justifyContent: 'center', alignItems: 'center', position: 'relative', top: -90}}
-            error={error}
-            wellData={wellData}
-            loading={loading}
-          />
+          <Card bordered style={{ borderRadius: 16, minHeight: 480, display: 'flex', flexDirection: 'column', padding: 20 }}>
+            <div style={{ marginBottom: 4 }}>
+              <Title level={4} style={{ color: '#1C355F', margin: 0, textAlign: 'left', fontSize: 20, lineHeight: 1.4 }}>Visualización del Pozo</Title>
+              <Text type="secondary" style={{ color: '#1C355F', display: 'block', textAlign: 'left', fontSize: 14, lineHeight: 1.2, margin: 0 }}>Representación en tiempo real del estado del pozo</Text>
+            </div>
+            <div style={{ flex: 2, width: '100%', height: '100%', display: 'contents', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+              <WellVisualization
+                pozoScale={isMobile ? 0.9 : 1.5}
+                wellData={wellData}
+                loading={loading}
+                error={error}
+                pozoBoxStyle={
+                  isMobile
+                    ? { position: 'relative', top: -40, left: -15 }
+                    : { position: 'relative', top: -100, left: -70 }
+                }
+              />
+            </div>
+          </Card>
         </Col>
       </Row>
     </div>
