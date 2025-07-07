@@ -5,6 +5,7 @@ import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import RecoverPasswordPage from "./pages/auth/RecoverPasswordPage";
 import UserProfile from "./pages/UserProfile";
+import AppLayout from "./components/layout/AppLayout";
 
 // Telemetry
 import Telemetry from "./pages/telemetry/Telemetry";
@@ -18,7 +19,6 @@ import ClientEditPage from "./pages/clients/ClientEditPage";
 import GroupListPage from "./pages/groups/GroupListPage";
 import GroupCreatePage from "./pages/groups/GroupCreatePage";
 import GroupEditPage from "./pages/groups/GroupEditPage";
-import AppLayout from "./components/layout/AppLayout";
 import { HeaderActionsProvider } from "./context/HeaderActionsContext";
 
 // DGA
