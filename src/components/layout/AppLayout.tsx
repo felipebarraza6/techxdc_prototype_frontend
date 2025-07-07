@@ -38,7 +38,9 @@ const headerMap: Record<string, { title: string; subtitle: string }> = {
   "/groups": { title: "Grupos", subtitle: "Listado de grupos" },
   "/groups/create": { title: "Nuevo Grupo", subtitle: "Crear grupo" },
   "/smart-analysis": { title: "Smart Analysis", subtitle: "Análisis inteligente" },
-  "/dga/analisis": { title: "DGA Análisis", subtitle: "Monitoreo y análisis de mediciones" },
+  "/alerts": { title: "Alertas", subtitle: "Gestión de alertas" },
+  "/alerts/create": { title: "Alertas", subtitle: "Gestión de alertas" },
+  "/support": { title: "Soporte", subtitle: "Gestión de tickets y solicitudes de ayudas" },
 };
 
 const LogoSection = ({ onClose }: { onClose?: () => void }) => (
@@ -80,6 +82,8 @@ const AppLayoutInner: React.FC<{ children: React.ReactNode }> = ({ children }) =
     if (location.pathname.startsWith("/groups")) return ["groups"];
     if (location.pathname.startsWith("/smart-analysis")) return ["smart-analysis"];
     if (location.pathname.startsWith("/telemetry")) return ["telemetry"];
+    if (location.pathname.startsWith("/alerts")) return ["alerts"];
+    if (location.pathname.startsWith("/support")) return ["support"];
     return ["dashboard"];
   }, [location.pathname]);
 
@@ -119,7 +123,7 @@ const AppLayoutInner: React.FC<{ children: React.ReactNode }> = ({ children }) =
       <Menu.SubMenu key="docs" icon={<FileTextOutlined className={styles.menuIcon} />} title={<span>Documentos</span>}>
         <Menu.Item key="docs-1" icon={<FileTextOutlined className={styles.menuIcon} />} disabled>Documentos 1</Menu.Item>
       </Menu.SubMenu>
-      <Menu.Item key="alerts" icon={<AlertOutlined className={styles.menuIcon} />} disabled>Alertas</Menu.Item>
+      <Menu.Item key="alerts" icon={<AlertOutlined className={styles.menuIcon} />} onClick={() => navigate("/alerts")}>Alertas</Menu.Item>
     </Menu>
   );
 
@@ -170,7 +174,14 @@ const AppLayoutInner: React.FC<{ children: React.ReactNode }> = ({ children }) =
             {menuContent}
           </div>
           <div className={styles.menuSidebarBottom}>
-            <div className={styles.supportSection}>
+            <div 
+              className={`${styles.supportSection} ${location.pathname.startsWith("/support") ? styles.supportSectionSelected : ""}`} 
+              onClick={() => {
+                navigate("/support");
+                isMobile && setDrawerOpen(false);
+              }} 
+              style={{ cursor: 'pointer' }}
+            >
               <CustomerServiceOutlined className={styles.supportIcon} />
               <span className={styles.supportText}>Soporte</span>
             </div>
@@ -232,7 +243,14 @@ const AppLayoutInner: React.FC<{ children: React.ReactNode }> = ({ children }) =
             {menuContent}
           </div>
           <div className={styles.menuSidebarBottom}>
-            <div className={styles.supportSection}>
+            <div 
+              className={`${styles.supportSection} ${location.pathname.startsWith("/support") ? styles.supportSectionSelected : ""}`} 
+              onClick={() => {
+                navigate("/support");
+                isMobile && setDrawerOpen(false);
+              }} 
+              style={{ cursor: 'pointer' }}
+            >
               <CustomerServiceOutlined className={styles.supportIcon} />
               <span className={styles.supportText}>Soporte</span>
             </div>
