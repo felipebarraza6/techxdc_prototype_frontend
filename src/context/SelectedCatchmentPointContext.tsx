@@ -31,7 +31,8 @@ export const SelectedCatchmentPointProvider: React.FC<{ children: React.ReactNod
     if (catchmentPoints.length === 0) {
       getAll();
     }
-  }, [getAll, catchmentPoints.length]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Solo al montar
 
   useEffect(() => {
     console.log('Contexto actualizado: selectedCatchmentPoint', selectedCatchmentPoint);
