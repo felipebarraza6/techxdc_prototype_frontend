@@ -6,10 +6,6 @@ import RegisterPage from "./pages/auth/RegisterPage";
 import RecoverPasswordPage from "./pages/auth/RecoverPasswordPage";
 import UserProfile from "./pages/UserProfile";
 import AppLayout from "./components/layout/AppLayout";
-
-// Telemetry
-import Telemetry from "./pages/telemetry/Telemetry";
-
 // Clients
 import ClientListPage from "./pages/clients/ClientListPage";
 import ClientCreatePage from "./pages/clients/ClientCreatePage";
@@ -20,6 +16,9 @@ import GroupListPage from "./pages/groups/GroupListPage";
 import GroupCreatePage from "./pages/groups/GroupCreatePage";
 import GroupEditPage from "./pages/groups/GroupEditPage";
 import { HeaderActionsProvider } from "./context/HeaderActionsContext";
+
+// Telemetry
+import Telemetry from "./pages/telemetry/Telemetry";
 
 // DGA
 import DgaMEE from "./pages/dga/DGA_MEE";
@@ -33,6 +32,7 @@ import AlertsPage from './pages/alerts/AlertsPage';
 import AlertCreatePage from './pages/alerts/AlertCreatePage';
 import SupportPage from './pages/support/SupportPage';
 import { SelectedCatchmentPointProvider } from './context/SelectedCatchmentPointContext';
+
 
 
 const ProtectedLayout: React.FC = () => (
@@ -77,8 +77,9 @@ const AppRouter: React.FC = () => {
           <Route path="/telemetry" element={<Telemetry />} />
 
           {/* Documentos */}
-          <Route path="/documents" element={<DocumentosPage />} />
 
+          <Route path="/documents" element={<DocumentosPage />} />
+          
           {/* DGA */}
           <Route path="/dga" element={<DgaMEE />} />
           <Route path="/dga/analisis" element={<DGA_Analisis />} />
