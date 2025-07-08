@@ -27,7 +27,7 @@ const MetricCard: React.FC<MetricCardProps> = ({ icon, title, value, unit, times
 );
 
 const Telemetry = () => {
-  const { selectedCatchmentPoint, catchmentPoints } = useSelectedCatchmentPoint();
+  const { selectedCatchmentPoint } = useSelectedCatchmentPoint();
   const { interactions, loading, error, getInteractionsByCatchmentPoint } = useInteractionDetails();
   const { isMobile } = useBreakpoint();
   const { dgaConfigs, getAllDgaConfigs } = useDgaConfigCatchment();
@@ -44,11 +44,19 @@ const Telemetry = () => {
     }
   }, [selectedCatchmentPoint, getInteractionsByCatchmentPoint]);
 
-  // LOGS comparativos para depuración de IDs
-  console.log('IDs en selector:', catchmentPoints.map(cp => cp.id));
-  console.log('point_catchment en dgaConfigs:', dgaConfigs.map(cfg => cfg.point_catchment));
-  console.log('point_catchment en profileDataConfigs:', profileDataConfigs.map(cfg => cfg.point_catchment));
-  console.log('selectedCatchmentPoint:', selectedCatchmentPoint?.id);
+  
+  const last = React.useMemo(() => interactions.length > 0 ? interactions[0] : null, [interactions]);
+  const dgaConfig = React.useMemo(() => selectedCatchmentPoint ? dgaConfigs.find(cfg => cfg.point_catchment === selectedCatchmentPoint.id) : undefined, [dgaConfigs, selectedCatchmentPoint]);
+  const profileConfig = React.useMemo(() => selectedCatchmentPoint ? profileDataConfigs.find(cfg => cfg.point_catchment === selectedCatchmentPoint.id) : undefined, [profileDataConfigs, selectedCatchmentPoint]);
+  const now = React.useMemo(() => new Date(), []);
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+  const totalMensual = React.useMemo(() => interactions
+    .filter(item => {
+      const date = new Date(item.date_time_medition);
+      return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+    })
+    .reduce((sum, item) => sum + (typeof item.total_diff === 'number' ? item.total_diff : 0), 0), [interactions, currentMonth, currentYear]);
 
   if (!selectedCatchmentPoint) {
     return <Alert message="Selecciona un pozo para ver la telemetría." type="info" showIcon />;
@@ -62,13 +70,6 @@ const Telemetry = () => {
     return <Alert message="Error al cargar datos de telemetría" description={error.toString()} type="error" showIcon />;
   }
 
-  // El último registro de medición (puede ser null)
-  const last = interactions.length > 0 ? interactions[0] : null;
-  // Buscar la config DGA correspondiente al pozo seleccionado
-  const dgaConfig = dgaConfigs.find(cfg => cfg.point_catchment === selectedCatchmentPoint.id);
-  // Buscar la config de perfil correspondiente al pozo seleccionado
-  const profileConfig = profileDataConfigs.find(cfg => cfg.point_catchment === selectedCatchmentPoint.id);
-
   return (
     <div style={{ minHeight: '100vh', padding: 24, color: '#1C355F', width: '100%' }}>
       <Row gutter={[16, 16]}>
@@ -79,7 +80,7 @@ const Telemetry = () => {
             <MetricCard icon={<DashboardTwoTone twoToneColor="#1677ff" style={{ fontSize: 20 }} />} title="Caudal actual" value={last ? last.flow : '--'} unit="L/s" />
             <MetricCard icon={<FundTwoTone twoToneColor="#1677ff" style={{ fontSize: 20 }} />} title="Nivel freático" value={last ? last.nivel : '--'} unit="metros" />
             <MetricCard icon={<DatabaseTwoTone twoToneColor="#1677ff" style={{ fontSize: 20 }} />} title="Acumulado" value={last ? last.total : '--'} unit="m³" />
-            <MetricCard icon={<InfoCircleTwoTone twoToneColor="#1677ff" style={{ fontSize: 20 }} />} title="Total mensual" value="--" unit="m³" />
+            <MetricCard icon={<InfoCircleTwoTone twoToneColor="#1677ff" style={{ fontSize: 20 }} />} title="Total mensual" value={totalMensual.toLocaleString('es-CL', { maximumFractionDigits: 2 })} unit="m³" />
           </Space>
         </Col>
         {/* Columna central: Visualización del Pozo */}
@@ -97,6 +98,13 @@ const Telemetry = () => {
                     ? { position: 'relative', top: -40, left: -15 }
                     : { position: 'relative', top: -83, left: 0 }
                 }
+                wellData={last ? {
+                  depth: last.nivel ? Number(last.nivel) : undefined,
+                  flowRate: last.flow ? Number(last.flow) : undefined,
+                  volume: last.total ? Number(last.total) : undefined
+                } : undefined}
+                loading={loading}
+                error={!!error}
               />
             </div>
           </Card>
@@ -121,27 +129,27 @@ const Telemetry = () => {
                 <div style={{ color: '#1E293B', fontWeight: 500, marginBottom: 4 }}>Posicionamientos</div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
                   <span style={{ color: '#64748B' }}>Bomba</span>
-                  <span style={{ fontWeight: 600, color: '#1C355F' }}>-- <span style={{ color: '#9CA3AF', fontWeight: 400 }}>m</span></span>
+                  <span style={{ fontWeight: 600, color: '#1C355F' }}>{profileConfig?.d2 ? `${profileConfig.d2} m` : '-- m'}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                   <span style={{ color: '#64748B' }}>Sensor Nivel</span>
-                  <span style={{ fontWeight: 600, color: '#1C355F' }}>-- <span style={{ color: '#9CA3AF', fontWeight: 400 }}>m</span></span>
+                  <span style={{ fontWeight: 600, color: '#1C355F' }}>{profileConfig?.d3 ? `${profileConfig.d3} m` : '-- m'}</span>
                 </div>
                 <div style={{ borderTop: '1px solid #E5E7EB', margin: '8px 0' }} />
                 <div style={{ color: '#1E293B', fontWeight: 500, marginBottom: 4 }}>Diámetros</div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
                   <span style={{ color: '#64748B' }}>Ducto salida bomba</span>
-                  <span style={{ fontWeight: 600, color: '#1C355F' }}>-- <span style={{ color: '#9CA3AF', fontWeight: 400 }}>pulg</span></span>
+                  <span style={{ fontWeight: 600, color: '#1C355F' }}>{profileConfig?.d4 ? `${profileConfig.d4} pulg` : '-- pulg'}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
                   <span style={{ color: '#64748B' }}>Flujómetro</span>
-                  <span style={{ fontWeight: 600, color: '#1C355F' }}>-- <span style={{ color: '#9CA3AF', fontWeight: 400 }}>pulg</span></span>
+                  <span style={{ fontWeight: 600, color: '#1C355F' }}>{profileConfig?.d5 ? `${profileConfig.d5} pulg` : '-- pulg'}</span>
                 </div>
                 <div style={{ borderTop: '1px solid #E5E7EB', margin: '8px 0' }} />
                 <div style={{ color: '#1E293B', fontWeight: 500, marginBottom: 4 }}>Caudalímetro</div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 2 }}>
                   <span style={{ color: '#64748B' }}>Puesto en marcha</span>
-                  <span style={{ fontWeight: 600, color: '#1C355F' }}>{profileConfig?.date_start_telemetry ? profileConfig.date_start_telemetry : '--'}</span>
+                  <span style={{ fontWeight: 600, color: '#1C355F' }}>{profileConfig?.date_start_telemetry || '--'}</span>
                 </div>
               </div>
             </Card>
@@ -156,7 +164,6 @@ const Telemetry = () => {
                     </span>
                   </span>
                 </div>
-                {/* Lista de mediciones real, pero sin datos dummy ni botón de mediciones */}
                 {interactions.slice(0, 5).map((item) => (
                   <React.Fragment key={item.id}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 0' }}>
