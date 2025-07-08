@@ -32,13 +32,16 @@ import DocumentosPage from "./pages/documents/documents";
 import AlertsPage from './pages/alerts/AlertsPage';
 import AlertCreatePage from './pages/alerts/AlertCreatePage';
 import SupportPage from './pages/support/SupportPage';
+import { SelectedCatchmentPointProvider } from './context/SelectedCatchmentPointContext';
 
 
 const ProtectedLayout: React.FC = () => (
   <HeaderActionsProvider>
-    <AppLayout>
-      <Outlet />
-    </AppLayout>
+    <SelectedCatchmentPointProvider>
+      <AppLayout>
+        <Outlet />
+      </AppLayout>
+    </SelectedCatchmentPointProvider>
   </HeaderActionsProvider>
 );
 

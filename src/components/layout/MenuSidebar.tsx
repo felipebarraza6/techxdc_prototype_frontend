@@ -1,11 +1,13 @@
 import React from 'react';
-import { Layout, Dropdown, Drawer, Menu } from 'antd';
-import { CloseOutlined, DownOutlined, CustomerServiceOutlined, UserOutlined } from '@ant-design/icons';
+import { Layout, Drawer, Menu } from 'antd';
+import { CloseOutlined, CustomerServiceOutlined, UserOutlined } from '@ant-design/icons';
 import styles from './AppLayout.module.css';
 import logoIkolu from '../../assets/img/logoikolu.png';
 import logoEmpresa from '../../assets/img/logoempresa.png';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { DashboardOutlined, UsergroupAddOutlined, ExperimentOutlined, BarChartOutlined, SettingOutlined, LineChartOutlined, AppstoreOutlined, FileTextOutlined, AlertOutlined } from '@ant-design/icons';
+import CatchmentPointSelector from './CatchmentPointSelector';
+import { useSelectedCatchmentPoint } from '../../context/SelectedCatchmentPointContext';
 
 const { Sider } = Layout;
 
@@ -29,9 +31,6 @@ const LogoSection = ({ onClose }: { onClose?: () => void }) => (
 
 const MenuSidebar: React.FC<any> = ({
   isMobile,
-  projects,
-  selectedProject,
-  setSelectedProject,
   onSupportClick,
   drawerOpen,
   onDrawerClose,
@@ -54,22 +53,6 @@ const MenuSidebar: React.FC<any> = ({
     return ["dashboard"];
   }, [location.pathname]);
 
-  const handleMenuClick = (e: any) => {
-    const project = projects.find((p: any) => p.id === Number(e.key));
-    if (project) setSelectedProject(project);
-  };
-
-  const projectMenu = (
-    <Menu className={styles.projectDropdownMenu} onClick={handleMenuClick}>
-      {projects.map((project: any) => (
-        <Menu.Item key={project.id} className={styles.projectDropdownItem}>
-          <span>{`P${project.id}`}</span>
-          <span className={styles.projectCode}>{project.code}</span>
-        </Menu.Item>
-      ))}
-    </Menu>
-  );
-
   const handleMenuClickMobile = (cb: () => void) => {
     cb();
     if (isMobile && onMenuItemClick) onMenuItemClick();
@@ -79,6 +62,8 @@ const MenuSidebar: React.FC<any> = ({
     onSupportClick();
     if (isMobile && onMenuItemClick) onMenuItemClick();
   };
+
+  const { selectedCatchmentPoint, setSelectedCatchmentPoint, catchmentPoints } = useSelectedCatchmentPoint();
 
   const menuContent = (
     <Menu
@@ -130,32 +115,16 @@ const MenuSidebar: React.FC<any> = ({
       >
         <div style={{ padding: '16px 0 4px 0', background: '#1C355F', borderBottom: '1px solid #3B5484', position: 'relative' }}>
           <LogoSection onClose={onDrawerClose} />
+          <CatchmentPointSelector
+            selectedId={selectedCatchmentPoint ? selectedCatchmentPoint.id : null}
+            onSelect={id => {
+              const numId = Number(id);
+              const cp = catchmentPoints.find(c => c.id === numId) || null;
+              console.log('Pozo seleccionado:', cp);
+              setSelectedCatchmentPoint(cp);
+            }}
+          />
         </div>
-        <Dropdown overlay={projectMenu} trigger={['click']} placement="bottomLeft" disabled={projects.length === 0} overlayClassName={styles.projectDropdownMenu}>
-          <div className={styles.projectSection} style={{ display: 'flex', alignItems: 'center', gap: 8, height: 32 }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <span className={styles.statusIndicator} />
-              <span className={styles.statusText}>{selectedProject ? `P${selectedProject.id}` : ''}</span>
-            </span>
-            <span style={{
-              background: '#3368AB',
-              color: '#fff',
-              borderRadius: 4,
-              padding: '2px 10px',
-              fontSize: 13,
-              fontWeight: 500,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 0,
-              minWidth: 80,
-              justifyContent: 'center',
-              marginRight: 8,
-            }}>
-              {selectedProject ? selectedProject.code : ''}
-              <DownOutlined style={{ width: 10, height: 11.25, color: '#fff', fontSize: 12, marginLeft: 7 }} />
-            </span>
-          </div>
-        </Dropdown>
         <div style={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
           {menuContent}
         </div>
@@ -192,31 +161,15 @@ const MenuSidebar: React.FC<any> = ({
       style={{ background: '#1C355F', position: 'fixed', left: 0, top: 0, height: '100vh', zIndex: 100, display: 'flex', flexDirection: 'column' }}
     >
       <LogoSection />
-      <Dropdown overlay={projectMenu} trigger={['click']} placement="bottomLeft" disabled={projects.length === 0} overlayClassName={styles.projectDropdownMenu}>
-        <div className={styles.projectSection} style={{ display: 'flex', alignItems: 'center', gap: 8, height: 32 }}>
-          <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span className={styles.statusIndicator} />
-            <span className={styles.statusText}>{selectedProject ? `P${selectedProject.id}` : ''}</span>
-          </span>
-          <span style={{
-            background: '#3368AB',
-            color: '#fff',
-            borderRadius: 4,
-            padding: '2px 10px',
-            fontSize: 13,
-            fontWeight: 500,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 0,
-            minWidth: 80,
-            justifyContent: 'center',
-            marginRight: 8,
-          }}>
-            {selectedProject ? selectedProject.code : ''}
-            <DownOutlined style={{ width: 10, height: 11.25, color: '#fff', fontSize: 12, marginLeft: 7 }} />
-          </span>
-        </div>
-      </Dropdown>
+      <CatchmentPointSelector
+        selectedId={selectedCatchmentPoint ? selectedCatchmentPoint.id : null}
+        onSelect={id => {
+          const numId = Number(id);
+          const cp = catchmentPoints.find(c => c.id === numId) || null;
+          console.log('Pozo seleccionado:', cp);
+          setSelectedCatchmentPoint(cp);
+        }}
+      />
       <div style={{ flex: 1, overflow: 'auto', display: 'flex', flexDirection: 'column' }}>
         {menuContent}
       </div>

@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import axios from '../api/config';
 
 export const useApi = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const fetchData = async <T>(url: string): Promise<T | null> => {
+  const fetchData = useCallback(async <T>(url: string): Promise<T | null> => {
     setLoading(true);
     setError(null);
     try {
@@ -17,7 +17,7 @@ export const useApi = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   return { loading, error, fetchData };
 };
