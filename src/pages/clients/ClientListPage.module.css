@@ -1,0 +1,22 @@
+/* Eliminar clases .slide-motion-appear, .slide-motion-enter, .slide-motion-appear-active, .slide-motion-enter-active, .slide-motion-leave, .slide-motion-leave-active */
+
+.slide-motion-appear,
+.slide-motion-enter {
+  opacity: 0;
+  transform: translateY(-40px);
+}
+.slide-motion-appear-active,
+.slide-motion-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1), transform 0.4s cubic-bezier(0.4,0,0.2,1);
+}
+.slide-motion-leave {
+  opacity: 1;
+  transform: translateY(0);
+}
+.slide-motion-leave-active {
+  opacity: 0;
+  transform: translateY(-40px);
+  transition: opacity 0.4s cubic-bezier(0.4,0,0.2,1), transform 0.4s cubic-bezier(0.4,0,0.2,1);
+} 

@@ -100,6 +100,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
           className={styles.loginButton}
           htmlType="submit"
           loading={isLoading}
+          style={{ background: '#568E2B', border: 'none', color: '#fff' }}
         >
           Ingresar
         </Button>

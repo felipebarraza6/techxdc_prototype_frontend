@@ -77,7 +77,7 @@
 .content {
   flex: 1;
   width: 100%;
-  background: #fff;
+  /* background: #fff; */
   min-height: 70vh;
   display: flex;
   flex-direction: column;
@@ -128,17 +128,27 @@
 
 .menuList .ant-menu-item-selected,
 .menuList .ant-menu-item-active,
-.menuList .ant-menu-item:hover {
+.menuList .ant-menu-item:hover,
+.menuList .ant-menu-submenu .ant-menu-item-selected,
+.menuList .ant-menu-submenu .ant-menu-item-active,
+.menuList .ant-menu-submenu .ant-menu-item:hover {
   background: #568E2B !important;
   color: #fff !important;
-  font-weight: 500;
+  font-weight: 700;
   border-radius: 8px !important;
   margin: 0 4px 0 4px !important;
-  border-right: 3px solid #568E2B !important;
+  border-right: none !important;
+  border-left: none !important;
   padding-left: 14px !important;
   display: flex !important;
   align-items: center !important;
   gap: 6px !important;
+}
+
+.menuList .ant-menu-submenu .ant-menu-item {
+  background: transparent !important;
+  color: #fff !important;
+  font-weight: 400;
 }
 
 .menuList .ant-menu-submenu-title {
@@ -174,7 +184,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 18px 0 18px;
+  padding: 6px 18px 0 18px;
   border-top: 1px solid #3368AB;
   width: 100%;
   justify-content: flex-start;
@@ -241,16 +251,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 218px;
+  width: calc(100% - 8px);
   height: 32px;
   border-radius: 8px;
   border: 1px solid #3B5484;
   background: #3B5484;
   box-sizing: border-box;
-  padding: 5px 10px 5px 16px;
+  padding: 5px 14px;
   cursor: pointer;
   margin-bottom: 18px;
-  margin-left: 8px;
+  margin-left: 4px;
+  margin-right: 4px;
 }
 
 .statusIndicator {
@@ -295,6 +306,23 @@
   padding: 10px 10px;
   width: 100%;
   justify-content: flex-start;
+  transition: all 0.2s ease;
+  border-left: 3px solid transparent;
+}
+
+.supportSectionSelected {
+  border-left: 3px solid #3368AB !important;
+  border-radius: 0 8px 8px 0;
+}
+
+.supportSectionSelected .supportIcon {
+  color: #00BFFF !important;
+}
+
+.supportSectionSelected .supportText {
+  color: #FFFFFF !important;
+  font-weight: 500;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 }
 
 /* Responsive behavior */
@@ -328,16 +356,33 @@
   }
 
   .header {
-    padding: 0 8px !important;
-    min-width: 0;
-    width: 100vw;
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1001;
   }
   .headerContent {
     padding-left: 8px;
     padding-top: 10px;
+  }
+  .userSection {
+    padding-left: 24px !important;
+  }
+  .userSection .avatar {
+    margin-left: 8px;
+  }
+  .userSection .userDetails {
+    margin-left: 8px;
+  }
+  .supportSection {
+    padding-left: 24px !important;
+  }
+  .mainLayout, .content {
+    background: #f4f6fa !important;
+  }
+  .content {
+    padding-top: 130px !important;
   }
 }
 
@@ -499,4 +544,60 @@
 
 .sidebar, .menuList {
   color: #fff !important;
+}
+
+.hamburgerButton {
+  background: #1C355F !important;
+  border-radius: 8px !important;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none !important;
+  border: none !important;
+  padding: 0 !important;
+  transition: none;
+  outline: none !important;
+}
+
+.hamburgerButton:active,
+.hamburgerButton:focus,
+.hamburgerButton:focus-visible {
+  background: #1C355F !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.hamburgerButton:hover .hamburgerIcon {
+  filter: drop-shadow(0 0 6px #fff) drop-shadow(0 0 12px #fff);
+  transition: filter 0.3s;
+}
+
+.hamburgerIcon {
+  color: #fff !important;
+  font-size: 28px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.3s;
+}
+
+.hamburgerContainer {
+  background: #1C355F;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+.hamburgerButton:hover, .projectDropdownItem:hover, .projectDropdownMenu .ant-dropdown-menu-item:hover {
+  opacity: 0.85 !important;
+  background: inherit !important;
+  color: inherit !important;
+  border-color: inherit !important;
+  box-shadow: none !important;
 }

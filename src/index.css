@@ -57,7 +57,9 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  opacity: 0.85;
+  border-color: inherit;
+  background-color: inherit;
 }
 button:focus,
 button:focus-visible {
@@ -148,4 +150,38 @@ button[ant-click-animating-without-extra-node] {
 .cliente-header-actions .ant-space {
   display: flex !important;
   align-items: stretch !important;
+}
+
+/* Forzar texto blanco en TODO el menú y submenús, no solo en el seleccionado */
+.ant-menu,
+.ant-menu-item,
+.ant-menu-submenu-title,
+.ant-menu-submenu .ant-menu,
+.ant-menu-submenu-popup,
+.ant-menu-submenu-popup .ant-menu,
+.ant-menu-submenu-popup .ant-menu-item {
+  color: #fff !important;
+}
+
+/* Forzar fondo y texto blanco en TODOS los submenús popup de Ant Design */
+.ant-menu-item-selected,
+.ant-menu-submenu .ant-menu-item-selected,
+.ant-menu-submenu-popup .ant-menu-item-selected {
+  background: #568E2B !important;
+  color: #fff !important;
+  font-weight: 400 !important;
+  border-radius: 8px !important;
+}
+
+/* Forzar peso normal en ítems seleccionados del menú y submenús, incluyendo iconos */
+.ant-menu-item-selected,
+.ant-menu-submenu .ant-menu-item-selected,
+.ant-menu-submenu-popup .ant-menu-item-selected,
+.ant-menu-item-selected > span,
+.ant-menu-item-selected > .anticon,
+.ant-menu-submenu .ant-menu-item-selected > span,
+.ant-menu-submenu .ant-menu-item-selected > .anticon,
+.ant-menu-submenu-popup .ant-menu-item-selected > span,
+.ant-menu-submenu-popup .ant-menu-item-selected > .anticon {
+  font-weight: 400 !important;
 }
