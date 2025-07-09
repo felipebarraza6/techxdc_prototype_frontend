@@ -8,3 +8,59 @@
     border-radius: 50%;
     cursor: pointer;
 }
+
+@media (max-width: 900px) {
+  .custom-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  .ant-col, .ant-col-8, .ant-col-md-8, .ant-col-lg-8 {
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+  .ant-col-12, .ant-col-md-12, .ant-col-lg-12 {
+    max-width: 100% !important;
+    flex: 0 0 100% !important;
+  }
+  .ant-row {
+    flex-direction: column !important;
+  }
+  .dga-mee-bottom-block {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin-bottom: 16px !important;
+  }
+  .dga-mee-bottom-block:last-child {
+    margin-bottom: 0 !important;
+  }
+  .ant-btn, .compliance-button {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  .ant-card-body {
+    padding: 10px !important;
+  }
+  .ant-row, .ant-flex {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .ant-col {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .custom-card {
+    padding: 8px 4px !important;
+  }
+  .ant-card-body {
+    padding: 4px !important;
+  }
+  .dga-mee-bottom-block {
+    padding: 8px !important;
+  }
+}
