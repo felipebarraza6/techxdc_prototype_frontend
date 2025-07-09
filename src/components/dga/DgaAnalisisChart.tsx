@@ -1,26 +1,35 @@
 import { Line } from '@ant-design/plots';
 import { useInteractionDetails } from '../../hooks/useInteractionDetails';
 import { useEffect, useState } from 'react';
-import { Button, Flex, Spin, Typography } from 'antd';
+import { Button, Flex, Spin, Typography, Alert } from 'antd';
 import { useDgaConfigCatchment } from '../../hooks/useDgaConfigCatchment';
-
+import { useSelectedCatchmentPoint } from '../../context/SelectedCatchmentPointContext';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 const DgaAnalisisChart: React.FC = () => {
     const { interactions, getInteractionsByCatchmentPoint, loading } = useInteractionDetails();
     const { getDgaConfigById, currentDgaConfig } = useDgaConfigCatchment();
-    const userId = 2;
+    const { selectedCatchmentPoint } = useSelectedCatchmentPoint();
     const { Text } = Typography;
     const [dataType, setDataType] = useState<'acumulado' | 'caudal' | 'nivel'>('acumulado');
+    const { isMobile } = useBreakpoint();
+    const [loadingTimeout, setLoadingTimeout] = useState(false);
 
     useEffect(() => {
-        getInteractionsByCatchmentPoint(userId);
-    }, []);
+        if (selectedCatchmentPoint) {
+            getInteractionsByCatchmentPoint(selectedCatchmentPoint.id);
+            getDgaConfigById(selectedCatchmentPoint.id);
+        }
+    }, [selectedCatchmentPoint, getInteractionsByCatchmentPoint, getDgaConfigById]);
 
     useEffect(() => {
-        getDgaConfigById(userId);
-      }, []);
-
-    const threshold = Number(currentDgaConfig?.flow_granted_dga ?? 0);
+        if (loading) {
+            const timer = setTimeout(() => setLoadingTimeout(true), 10000);
+            return () => clearTimeout(timer);
+        } else {
+            setLoadingTimeout(false);
+        }
+    }, [loading]);
 
     const data = interactions.map((item) => ({
         Hora: new Date(item.date_time_medition).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }),
@@ -32,27 +41,14 @@ const DgaAnalisisChart: React.FC = () => {
                 : dataType === 'nivel'
                 ? Number(item.water_table)
                 : 0,
-        type: 'datos',
     }));
 
-    const thresholdLine =
-        dataType === 'caudal' && threshold
-            ? data.map((d) => ({
-                Hora: d.Hora,
-                Valor: threshold,
-                type: 'umbral',
-            }))
-            : [];
-
-    const finalData = [...data, ...thresholdLine];
-
-
     const config = {
-        data: finalData,
+        data,
         xField: 'Hora',
         yField: 'Valor',
-        seriesField: 'type',
-        height: 350,
+        autoFit: true,
+        height: isMobile ? 220 : 350,
         xAxis: {
             title: { text: 'Hora', style: { fontWeight: 600 } },
         },
@@ -76,32 +72,65 @@ const DgaAnalisisChart: React.FC = () => {
             shapeField: 'circle',
             sizeField: 4,
         },
-        color: (type: string) => {
-        console.log('COLOR TYPE:', type);
-        return type === 'umbral' ? 'red' : '#1890ff';
-        },
-
-        lineStyle: (type: string) =>
-        type === 'umbral'
-            ? { lineDash: [4, 4], lineWidth: 2 }
-            : { lineWidth: 2 },
         interaction: {
             tooltip: {
                 marker: false,
             },
         },
+        style: {
+            lineWidth: 2,
+        },
     };
 
-    if (loading || interactions.length === 0 || !currentDgaConfig) {
+    if (loadingTimeout) {
         return (
-            <div style={{ textAlign: 'center', padding: '2rem' }}>
+            <div style={{ marginTop: 24 }}>
+                <Alert
+                    message="No se pudo obtener datos de mediciones. Intenta nuevamente o selecciona otro punto."
+                    type="warning"
+                    showIcon
+                    style={{ fontSize: 16 }}
+                />
+            </div>
+        );
+    }
+
+    if (loading) {
+        return (
+            <div style={{ textAlign: 'center', padding: '2rem', width: '100%' }}>
                 <Spin size="large" />
             </div>
         );
     }
 
+    if (interactions.length === 0) {
+        return (
+            <div style={{ marginTop: 24 }}>
+                <Alert
+                    message="No hay mediciones disponibles para este punto de captación."
+                    type="info"
+                    showIcon
+                    style={{ fontSize: 16 }}
+                />
+            </div>
+        );
+    }
+
+    if (!currentDgaConfig) {
+        return (
+            <div style={{ marginTop: 24 }}>
+                <Alert
+                    message="No hay configuración DGA disponible para este punto de captación."
+                    type="info"
+                    showIcon
+                    style={{ fontSize: 16 }}
+                />
+            </div>
+        );
+    }
+
     return (
-        <Flex justify="start" vertical={true} style={{ width: '100%' }}>
+        <div style={{ width: '100%', maxWidth: '100vw' }}>
             <Flex justify="start" vertical={true} style={{ width: '100%' }}>
                 <Text style={{ fontSize: 16, fontWeight: 'bold', marginBottom: 8 }}>Autorizado</Text>
                 <Text style={{ fontSize: 12, fontWeight: 'light', marginBottom: 8 }}>
@@ -154,8 +183,10 @@ const DgaAnalisisChart: React.FC = () => {
                     </Button>
                 </Flex>
             </Flex>
-            <Line key={dataType} {...config} />
-        </Flex>
+            <div style={{ width: '100%' }}>
+                <Line {...config} />
+            </div>
+        </div>
     );
 };
 

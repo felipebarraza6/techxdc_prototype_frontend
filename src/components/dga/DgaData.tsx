@@ -45,10 +45,32 @@ const DgaData: React.FC<{ id: number, lastFlow: number, lastTotal: number, onDga
   }
 
   if (error) {
+    // Si el error es 404 (no data), mostrar mensaje amigable
+    const err: any = error;
+    if (err.response && err.response.status === 404) {
+      return (
+        <Alert
+          message="No hay configuración DGA disponible para este punto de captación."
+          type="info"
+          showIcon
+          style={{ fontSize: 16, margin: '16px 0' }}
+        />
+      );
+    }
+    // Para otros errores, mostrar mensaje técnico
     return <Alert message="Error al obtener la configuración DGA" type="error" />;
   }
 
-  if (!currentDgaConfig) return null;
+  if (!currentDgaConfig) {
+    return (
+      <Alert
+        message="No hay configuración DGA disponible para este punto de captación."
+        type="info"
+        showIcon
+        style={{ fontSize: 16, margin: '16px 0' }}
+      />
+    );
+  }
 
   const rows: RowData[] = [
     { key: 'send_dga', label: 'Estado de servicio', value: currentDgaConfig.send_dga == null? 'No activo' : 'Activado' },

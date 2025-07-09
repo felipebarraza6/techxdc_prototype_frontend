@@ -1,26 +1,30 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Spin, Col, Button, Typography, Flex } from 'antd';
+import { Spin, Col, Button, Typography, Flex, Alert } from 'antd';
 import { LinkOutlined } from '@ant-design/icons';
 import { useInteractionDetails } from '../../hooks/useInteractionDetails';
 import DgaMEECard from '../../components/dga/DgaMMECard';
 import DgaData from '../../components/dga/DgaData';
 import './DGA_MEE.css';
+import { useSelectedCatchmentPoint } from '../../context/SelectedCatchmentPointContext';
 
 const { Text } = Typography;
 
 const DgaMEE: React.FC = () => {
   const { interactions, getInteractionsByCatchmentPoint, loading } = useInteractionDetails();
+  const { selectedCatchmentPoint } = useSelectedCatchmentPoint();
   const [codeDga, setCodeDga] = useState<string>("");
   const [totalUsage, setTotalUsage] = useState<number>(0);
-  const userId = 2;
+  // const userId = 2;
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState<number>(0);
 
 
 
   useEffect(() => {
-    getInteractionsByCatchmentPoint(userId);
-  }, []);
+    if (selectedCatchmentPoint) {
+      getInteractionsByCatchmentPoint(selectedCatchmentPoint.id);
+    }
+  }, [selectedCatchmentPoint, getInteractionsByCatchmentPoint]);
 
   useEffect(() => {
     function updateWidth() {
@@ -41,10 +45,36 @@ const DgaMEE: React.FC = () => {
     ? Math.floor((availableWidth - (cardsPerRow * 265)) / (cardsPerRow - 1))
     : 0;
 
-  if (loading || interactions.length === 0) {
+  if (!selectedCatchmentPoint) {
+    return (
+      <div style={{ marginTop: 24 }}>
+        <Alert
+          message="Selecciona un punto de captación para ver el análisis MEE."
+          type="info"
+          showIcon
+          style={{ fontSize: 16 }}
+        />
+      </div>
+    );
+  }
+
+  if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '2rem' }}>
         <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (interactions.length === 0) {
+    return (
+      <div style={{ marginTop: 24 }}>
+        <Alert
+          message="No hay mediciones disponibles para este punto de captación."
+          type="info"
+          showIcon
+          style={{ fontSize: 16 }}
+        />
       </div>
     );
   }
@@ -74,13 +104,15 @@ const DgaMEE: React.FC = () => {
       {/* <Row gutter={16} style={{ marginTop: 32 }}> */}
       <Flex justify="start" wrap="wrap" gap="middle" style={{ marginTop: 16 }}>
         <Col span={8}>
-            <DgaData
-              id={userId}
-              lastFlow={Number(interactions[0].flow)}
-              lastTotal={interactions[0].total}
-              onDgaCode={setCodeDga}
-              onTotalUsage={setTotalUsage}
-            />
+            {selectedCatchmentPoint && (
+              <DgaData
+                id={selectedCatchmentPoint.id}
+                lastFlow={Number(interactions[0].flow)}
+                lastTotal={interactions[0].total}
+                onDgaCode={setCodeDga}
+                onTotalUsage={setTotalUsage}
+              />
+            )}
         </Col>
         <Col span={8} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
           <div style={{width: '313px', height: '86px', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>

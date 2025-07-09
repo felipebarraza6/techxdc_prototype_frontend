@@ -41,7 +41,7 @@ export const useInteractionDetails = () => {
   }, [fetchData]);
 
   const getInteractionsByCatchmentPoint = useCallback(async (catchmentPoint: number) => {
-    const url = `/api/interaction_detail_json?catchment_point=${catchmentPoint}`;
+    const url = `/api/interaction_detail_json?catchment_point=${catchmentPoint}&limit=20`;
     const data = await fetchData<{
       count: number;
       next: string | null;

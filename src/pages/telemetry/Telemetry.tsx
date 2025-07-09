@@ -1,7 +1,7 @@
 import React from 'react';
-import { Row, Col, Card, Typography, Space, Spin, Alert } from 'antd';
+import { Row, Col, Card, Typography, Space, Spin, Alert, Drawer, Button } from 'antd';
 import WellVisualization from '../../components/well/WellVisualization';
-import { ClockCircleTwoTone, DashboardTwoTone, DatabaseTwoTone, FundTwoTone, InfoCircleTwoTone, InfoCircleOutlined, FileTextOutlined } from '@ant-design/icons';
+import { ClockCircleTwoTone, DashboardTwoTone, DatabaseTwoTone, FundTwoTone, InfoCircleTwoTone, InfoCircleOutlined, FileTextOutlined, UpOutlined, DownOutlined } from '@ant-design/icons';
 import dgaLogo from '../../assets/img/dganuevo.jpg';
 import { useSelectedCatchmentPoint } from '../../context/SelectedCatchmentPointContext';
 import { useInteractionDetails } from '../../hooks/useInteractionDetails';
@@ -9,6 +9,7 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useDgaConfigCatchment } from '../../hooks/useDgaConfigCatchment';
 import { useProfileConfigCatchment } from '../../hooks/useProfileConfigCatchment';
 import type { MetricCardProps } from '../../types/telemetry';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const { Title, Text } = Typography;
 
@@ -32,6 +33,10 @@ const Telemetry = () => {
   const { isMobile } = useBreakpoint();
   const { dgaConfigs, getAllDgaConfigs } = useDgaConfigCatchment();
   const { profileDataConfigs, getProfileDataConfigs } = useProfileConfigCatchment();
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
+  const [showAll, setShowAll] = React.useState(false);
+  const pageSize = 5;
+  const medicionesCount = interactions.length;
 
   React.useEffect(() => {
     getAllDgaConfigs();
@@ -44,7 +49,11 @@ const Telemetry = () => {
     }
   }, [selectedCatchmentPoint, getInteractionsByCatchmentPoint]);
 
-  
+  // Resetear showAll al abrir drawer o cambiar de pozo
+  React.useEffect(() => {
+    setShowAll(false);
+  }, [drawerOpen, selectedCatchmentPoint]);
+
   const last = React.useMemo(() => interactions.length > 0 ? interactions[0] : null, [interactions]);
   const dgaConfig = React.useMemo(() => selectedCatchmentPoint ? dgaConfigs.find(cfg => cfg.point_catchment === selectedCatchmentPoint.id) : undefined, [dgaConfigs, selectedCatchmentPoint]);
   const profileConfig = React.useMemo(() => selectedCatchmentPoint ? profileDataConfigs.find(cfg => cfg.point_catchment === selectedCatchmentPoint.id) : undefined, [profileDataConfigs, selectedCatchmentPoint]);
@@ -59,7 +68,7 @@ const Telemetry = () => {
     .reduce((sum, item) => sum + (typeof item.total_diff === 'number' ? item.total_diff : 0), 0), [interactions, currentMonth, currentYear]);
 
   if (!selectedCatchmentPoint) {
-    return <Alert message="Selecciona un pozo para ver la telemetría." type="info" showIcon />;
+    return <Alert message="Selecciona un punto de captación para ver la telemetría." type="info" showIcon />;
   }
 
   if (loading) {
@@ -87,16 +96,16 @@ const Telemetry = () => {
         <Col xs={24} md={12}>
           <Card bordered style={{ borderRadius: 16, minHeight: 480, display: 'flex', flexDirection: 'column', padding: 20 }}>
             <div style={{ marginBottom: 4 }}>
-              <Title level={4} style={{ color: '#1C355F', margin: 0, textAlign: 'left', fontSize: 20, lineHeight: 1.4 }}>Visualización del Pozo</Title>
-              <Text type="secondary" style={{ color: '#1C355F', display: 'block', textAlign: 'left', fontSize: 14, lineHeight: 1.2, margin: 0 }}>Representación en tiempo real del estado del pozo</Text>
+              <Title level={4} style={{ color: '#1C355F', margin: 0, textAlign: 'left', fontSize: 20, lineHeight: 1.4 }}>Visualización del Punto de captación</Title>
+              <Text type="secondary" style={{ color: '#1C355F', display: 'block', textAlign: 'left', fontSize: 14, lineHeight: 1.2, marginTop: 5 }}>Representación en tiempo real del estado del punto de captación</Text>
             </div>
             <div style={{ flex: 1, width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
               <WellVisualization
-                pozoScale={isMobile ? 0.8 : 1.34}
+                pozoScale={isMobile ? 0.8 : 1.25}
                 pozoBoxStyle={
                   isMobile
                     ? { position: 'relative', top: -40, left: -15 }
-                    : { position: 'relative', top: -83, left: 0 }
+                    : { position: 'relative', top: -70, left: -30 }
                 }
                 wellData={last ? {
                   depth: last.nivel ? Number(last.nivel) : undefined,
@@ -153,39 +162,19 @@ const Telemetry = () => {
                 </div>
               </div>
             </Card>
-            {/* Historial reciente */}
-            <Card bordered style={{ borderRadius: 12, padding: 0 }}>
-              <div style={{ padding: '16px 20px 12px 20px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, width: '100%', paddingRight: 2 }}>
-                  <span style={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
-                    <InfoCircleOutlined style={{ color: '#1E293B', fontSize: 16, flexShrink: 0 }} />
-                    <span style={{ color: '#1E293B', fontWeight: 700, fontSize: 15, whiteSpace: 'nowrap', marginLeft: 7, overflow: 'hidden', textOverflow: 'ellipsis', flex: 1 }}>
-                      Historial reciente
-                    </span>
-                  </span>
-                </div>
-                {interactions.slice(0, 5).map((item) => (
-                  <React.Fragment key={item.id}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 0' }}>
-                      <div>
-                        <span style={{ color: '#1E293B', fontWeight: 700, fontSize: 17 }}>{item.total}</span>
-                        <span style={{ color: '#64748B', fontWeight: 500, fontSize: 15, marginLeft: 4 }}>m³</span>
-                        <div style={{ color: '#64748B', fontSize: 14, fontWeight: 500 }}>{item.date_time_medition}</div>
-                      </div>
-                    </div>
-                    <div style={{ borderTop: '1px solid #E5E7EB', margin: '0 0 0 0', width: '100%' }} />
-                  </React.Fragment>
-                ))}
-              </div>
-            </Card>
+            {/* Botón Mediciones */}
+            <Button
+              type="primary"
+              style={{ width: '100%', background: '#2C3D66', color: '#fff', fontWeight: 600, fontSize: 16, border: 'none', margin: '12px 0 0 0', borderRadius: 8 }}
+              onClick={() => setDrawerOpen(true)}
+            >
+              Mediciones ({medicionesCount})
+            </Button>
+            {/* Historial reciente (eliminado, ahora en el drawer) */}
             {/* Franja azul con icono y franja blanca con logo DGA */}
             <Card bordered={false} style={{ borderRadius: 12, padding: 0, background: 'transparent', boxShadow: 'none' }} bodyStyle={{ padding: 0 }}>
               <div style={{ background: '#2C3D66', borderRadius: '12px 12px 0 0', padding: '18px 20px 16px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-                  <span style={{ color: '#fff', fontWeight: 600, fontSize: 20, letterSpacing: 1 }}>{dgaConfig?.code_dga || '--'}</span>
-                  <FileTextOutlined style={{ color: '#fff', fontSize: 18, marginLeft: 10 }} />
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 0, width: '100%', justifyContent: 'center' }}>
                   <span style={{ color: '#fff', fontWeight: 500, fontSize: 15 }}>{dgaConfig?.standard || 'MAYOR'}</span>
                   <span style={{ background: '#3B5484', color: '#fff', borderRadius: 16, padding: '2px 16px', fontWeight: 600, fontSize: 15, display: 'inline-block' }}>{dgaConfig?.type_dga || 'SUBTERRÁNEO'}</span>
                 </div>
@@ -194,6 +183,87 @@ const Telemetry = () => {
                 <img src={dgaLogo} alt="Logo DGA" style={{ height: 70, width: 'auto', margin: '0 auto', display: 'block' }} />
               </div>
             </Card>
+            {/* Drawer de Mediciones */}
+            <Drawer
+              title={
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#2C3D66', padding: '12px 20px', borderRadius: '12px 12px 0 0', color: '#fff' }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <FileTextOutlined style={{ color: '#fff', fontSize: 18 }} />
+                    <span style={{ fontWeight: 600, fontSize: 18 }}>{dgaConfig?.code_dga || '--'}</span>
+                  </span>
+                  <span style={{ fontWeight: 600, fontSize: 18 }}>Mediciones ({medicionesCount})</span>
+                </div>
+              }
+              placement="right"
+              onClose={() => setDrawerOpen(false)}
+              open={drawerOpen}
+              width={420}
+              bodyStyle={{ padding: 0, background: '#f4f6fa' }}
+              headerStyle={{ padding: 0, background: 'transparent', borderBottom: 'none' }}
+            >
+              <div style={{ padding: '24px 24px 0 24px' }}>
+                {medicionesCount === 0 ? (
+                  <div style={{ color: '#64748B', textAlign: 'center', marginTop: 32 }}>No hay mediciones registradas.</div>
+                ) : (
+                  <>
+                    <div style={{ minHeight: 320, transition: 'all 0.3s', position: 'relative' }}>
+                      {/* Primeros 5 ítems siempre visibles (sin animación) */}
+                      {interactions.slice(0, pageSize).map((item) => (
+                        <React.Fragment key={item.id}>
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 0', gap: 24 }}>
+                            <span style={{ color: '#1E293B', fontWeight: 700, fontSize: 20, minWidth: 90 }}>{item.total} m³</span>
+                            <span style={{ color: '#64748B', fontWeight: 500, fontSize: 15, textAlign: 'right', flex: 1 }}>{item.date_time_medition}</span>
+                          </div>
+                          <div style={{ borderTop: '1px solid #E5E7EB', margin: '0 0 0 0', width: '100%' }} />
+                        </React.Fragment>
+                      ))}
+                      
+                      {/* Bloque animado solo para mediciones adicionales */}
+                      <AnimatePresence initial={false} mode="wait">
+                        {showAll && (
+                          <motion.div
+                            key="expanded"
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                            style={{ overflow: 'hidden' }}
+                          >
+                            {interactions.slice(pageSize).map((item) => (
+                              <React.Fragment key={item.id}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 0', gap: 24 }}>
+                                  <span style={{ color: '#1E293B', fontWeight: 700, fontSize: 20, minWidth: 90 }}>{item.total} m³</span>
+                                  <span style={{ color: '#64748B', fontWeight: 500, fontSize: 15, textAlign: 'right', flex: 1 }}>{item.date_time_medition}</span>
+                                </div>
+                                <div style={{ borderTop: '1px solid #E5E7EB', margin: '0 0 0 0', width: '100%' }} />
+                              </React.Fragment>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                    {interactions.length > pageSize && (
+                      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '18px 0 8px 0' }}>
+                        <span
+                          style={{ color: '#1677ff', cursor: 'pointer', textDecoration: 'underline', fontWeight: 600, fontSize: 15, display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                          onClick={() => setShowAll((prev) => !prev)}
+                        >
+                          {showAll ? (
+                            <>
+                              Ver menos <UpOutlined />
+                            </>
+                          ) : (
+                            <>
+                              Ver más <DownOutlined />
+                            </>
+                          )}
+                        </span>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+            </Drawer>
           </Space>
         </Col>
       </Row>
