@@ -22,6 +22,7 @@ const headerMap: Record<string, { title: string; subtitle: string }> = {
   "/dga": { title: "DGA MEE", subtitle: "Extracción de datos MEE" },
   "/dga/analisis": { title: "DGA Análisis", subtitle: "Monitoreo y análisis de mediciones" },
   "/documents": { title: "Documentos", subtitle: "Gestión Documental del Sistema" },
+  "/documents/reportes": { title: "Reportes", subtitle: "Descarga de documentos del sistema" }
 };
 
 interface HeaderProps {

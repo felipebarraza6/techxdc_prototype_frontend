@@ -26,6 +26,7 @@ import DGA_Analisis from "./pages/dga/DGA_Analisis";
 
 //Documents
 import DocumentosPage from "./pages/documents/documents";
+import Reportes from "./pages/documents/Reportes";
 
 // Alerts
 import AlertsPage from './pages/alerts/AlertsPage';
@@ -77,8 +78,8 @@ const AppRouter: React.FC = () => {
           <Route path="/telemetry" element={<Telemetry />} />
 
           {/* Documentos */}
-
           <Route path="/documents" element={<DocumentosPage />} />
+          <Route path="/documents/reportes" element={<Reportes />} />
           
           {/* DGA */}
           <Route path="/dga" element={<DgaMEE />} />
