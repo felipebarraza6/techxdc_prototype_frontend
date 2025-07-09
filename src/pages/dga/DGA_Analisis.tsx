@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import DgaAnalisisChart from '../../components/dga/DgaAnalisisChart';
-import { Card, Flex, Spin, Typography } from 'antd';
+import { Card, Flex, Spin, Typography, Alert } from 'antd';
 import { useInteractionDetails } from '../../hooks/useInteractionDetails';
+import { useSelectedCatchmentPoint } from '../../context/SelectedCatchmentPointContext';
 
 interface Interaction {
     n_voucher: string | null;
@@ -13,14 +14,30 @@ interface Interaction {
 
 const DGA_Analisis: React.FC = () => {
     const { interactions, getInteractionsByCatchmentPoint, loading } = useInteractionDetails();
+    const { selectedCatchmentPoint } = useSelectedCatchmentPoint();
     const { Text } = Typography;
-    const userId = 2;
+    // const userId = 2;
 
     
     useEffect(() => {
-        getInteractionsByCatchmentPoint(userId);
-    }, []);
+        if (selectedCatchmentPoint) {
+            getInteractionsByCatchmentPoint(selectedCatchmentPoint.id);
+        }
+    }, [selectedCatchmentPoint, getInteractionsByCatchmentPoint]);
 
+
+    if (!selectedCatchmentPoint) {
+        return (
+            <div style={{ marginTop: 24 }}>
+                <Alert
+                    message="Selecciona un punto de captación para ver el análisis DGA."
+                    type="info"
+                    showIcon
+                    style={{ fontSize: 16 }}
+                />
+            </div>
+        );
+    }
 
     if (loading || interactions.length === 0 ) {
         return (

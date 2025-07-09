@@ -50,19 +50,21 @@ const CatchmentPointSelector: React.FC<CatchmentPointSelectorProps> = ({ selecte
   const menu = (
     <Menu>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6, justifyContent: 'space-around' }}>
-        {validCatchmentPoints.map(cp => (
-          <Menu.Item key={cp.id} style={{ padding: 0 }} onClick={() => {
-            onSelect(cp.id);
-            setDropdownOpen(false);
-          }}>
-            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-              <span style={{ fontWeight: 600, color: '#1C355F', minWidth: 38, textAlign: 'left', paddingLeft: 12 }}>{`P${cp.id}`}</span>
-              <span style={{ background: '#3368AB', color: '#fff', borderRadius: 4, padding: '2px 10px', fontSize: 13, fontWeight: 500, marginLeft: 'auto', minWidth: 90, textAlign: 'center', display: 'inline-block' }}>
-                {getCodeDga(cp.id)}
-              </span>
-            </div>
-          </Menu.Item>
-        ))}
+        {validCatchmentPoints
+          .filter(cp => typeof cp.id === 'number' && cp.id !== undefined && cp.id !== null)
+          .map(cp => (
+            <Menu.Item key={cp.id} style={{ padding: 0 }} onClick={() => {
+              onSelect(cp.id);
+              setDropdownOpen(false);
+            }}>
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+                <span style={{ fontWeight: 600, color: '#1C355F', minWidth: 38, textAlign: 'left', paddingLeft: 12 }}>{`P${cp.id}`}</span>
+                <span style={{ background: '#3368AB', color: '#fff', borderRadius: 4, padding: '2px 10px', fontSize: 13, fontWeight: 500, marginLeft: 'auto', minWidth: 90, textAlign: 'center', display: 'inline-block' }}>
+                  {getCodeDga(cp.id)}
+                </span>
+              </div>
+            </Menu.Item>
+          ))}
       </div>
       <Menu.Divider />
       <div

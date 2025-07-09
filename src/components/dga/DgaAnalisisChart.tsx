@@ -3,21 +3,21 @@ import { useInteractionDetails } from '../../hooks/useInteractionDetails';
 import { useEffect, useState } from 'react';
 import { Button, Flex, Spin, Typography } from 'antd';
 import { useDgaConfigCatchment } from '../../hooks/useDgaConfigCatchment';
+import { useSelectedCatchmentPoint } from '../../context/SelectedCatchmentPointContext';
 
 const DgaAnalisisChart: React.FC = () => {
     const { interactions, getInteractionsByCatchmentPoint, loading } = useInteractionDetails();
     const { getDgaConfigById, currentDgaConfig } = useDgaConfigCatchment();
-    const userId = 2;
+    const { selectedCatchmentPoint } = useSelectedCatchmentPoint();
     const { Text } = Typography;
     const [dataType, setDataType] = useState<'acumulado' | 'caudal' | 'nivel'>('acumulado');
 
     useEffect(() => {
-        getInteractionsByCatchmentPoint(userId);
-    }, []);
-
-    useEffect(() => {
-        getDgaConfigById(userId);
-      }, []);
+        if (selectedCatchmentPoint) {
+            getInteractionsByCatchmentPoint(selectedCatchmentPoint.id);
+            getDgaConfigById(selectedCatchmentPoint.id);
+        }
+    }, [selectedCatchmentPoint, getInteractionsByCatchmentPoint, getDgaConfigById]);
 
     const data = interactions.map((item) => ({
         Hora: new Date(item.date_time_medition).toLocaleTimeString('es-CL', { hour: '2-digit', minute: '2-digit' }),
@@ -69,10 +69,18 @@ const DgaAnalisisChart: React.FC = () => {
         },
     };
 
-    if (loading || interactions.length === 0 || !currentDgaConfig) {
+    if (loading || interactions.length === 0) {
         return (
             <div style={{ textAlign: 'center', padding: '2rem' }}>
                 <Spin size="large" />
+            </div>
+        );
+    }
+
+    if (!currentDgaConfig) {
+        return (
+            <div style={{ textAlign: 'center', padding: '2rem', color: '#64748B', fontSize: 16 }}>
+                No hay configuración DGA disponible para este punto de captación.
             </div>
         );
     }
