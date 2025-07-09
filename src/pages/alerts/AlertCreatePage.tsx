@@ -1,8 +1,7 @@
 import React from 'react';
-import { Row, Col, Card, Input, Button, Typography, Space, Tag, Badge } from 'antd';
+import { Row, Col, Card, Input, Button, Typography, Space, Tag } from 'antd';
 import { FileTextOutlined } from '@ant-design/icons';
 import AlertCreateForm from '../../components/alerts/AlertCreateForm';
-import AlertDetail from '../../components/alerts/AlertDetail';
 import AlertComment from '../../components/alerts/AlertComment';
 import { SendOutlined } from '@ant-design/icons';
 import { useBreakpoint } from '../../hooks/useBreakpoint';

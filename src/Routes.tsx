@@ -5,10 +5,7 @@ import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
 import RecoverPasswordPage from "./pages/auth/RecoverPasswordPage";
 import UserProfile from "./pages/UserProfile";
-
-// Telemetry
-import Telemetry from "./pages/telemetry/Telemetry";
-
+import AppLayout from "./components/layout/AppLayout";
 // Clients
 import ClientListPage from "./pages/clients/ClientListPage";
 import ClientCreatePage from "./pages/clients/ClientCreatePage";
@@ -18,30 +15,33 @@ import ClientEditPage from "./pages/clients/ClientEditPage";
 import GroupListPage from "./pages/groups/GroupListPage";
 import GroupCreatePage from "./pages/groups/GroupCreatePage";
 import GroupEditPage from "./pages/groups/GroupEditPage";
-import AppLayout from "./components/layout/AppLayout";
 import { HeaderActionsProvider } from "./context/HeaderActionsContext";
+
+// Telemetry
+import Telemetry from "./pages/telemetry/Telemetry";
 
 // DGA
 import DgaMEE from "./pages/dga/DGA_MEE";
 import DGA_Analisis from "./pages/dga/DGA_Analisis";
 
 //Documents
-import DocumentosPage from "./pages/documents";
-
-// Telemetry
-import Telemetry from "./pages/telemetry/Telemetry";
+import DocumentosPage from "./pages/documents/documents";
 
 // Alerts
 import AlertsPage from './pages/alerts/AlertsPage';
 import AlertCreatePage from './pages/alerts/AlertCreatePage';
 import SupportPage from './pages/support/SupportPage';
+import { SelectedCatchmentPointProvider } from './context/SelectedCatchmentPointContext';
+
 
 
 const ProtectedLayout: React.FC = () => (
   <HeaderActionsProvider>
-    <AppLayout>
-      <Outlet />
-    </AppLayout>
+    <SelectedCatchmentPointProvider>
+      <AppLayout>
+        <Outlet />
+      </AppLayout>
+    </SelectedCatchmentPointProvider>
   </HeaderActionsProvider>
 );
 
@@ -77,7 +77,8 @@ const AppRouter: React.FC = () => {
           <Route path="/telemetry" element={<Telemetry />} />
 
           {/* Documentos */}
-          <Route path="/documents" element={<DocumentosPage />
+
+          <Route path="/documents" element={<DocumentosPage />} />
           
           {/* DGA */}
           <Route path="/dga" element={<DgaMEE />} />

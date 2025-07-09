@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useVariable, type NewVariable } from '../../hooks/useVariable';
 
 export const VariableTestPage = () => {

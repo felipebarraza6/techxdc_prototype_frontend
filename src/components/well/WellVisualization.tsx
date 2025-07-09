@@ -103,7 +103,13 @@ const WellVisualization: React.FC<{
           </div>
           <div className={styles.sensor}>
             <div className={styles.punta}>
-              <Text style={{ color: 'white' }}>{loading || error ? '--' : wellData ? `${wellData.depth.toFixed(2)} m` : '--'}</Text>
+              <Text style={{ color: 'white' }}>{
+                loading || error
+                  ? '--'
+                  : wellData && typeof wellData.depth === 'number'
+                  ? `${wellData.depth.toFixed(2)} m`
+                  : '--'
+              }</Text>
             </div>
           </div>
           <div className={styles.lineaLogger}></div>
@@ -113,7 +119,13 @@ const WellVisualization: React.FC<{
               <img src={logoDatalogger} alt="Logo datalogger" className={styles.dataloggerLogo} />
               <center>
                 <Text className={styles.tableroText} style={{ color: 'black', fontWeight: 500, fontSize: '1.0em' }}>
-                  {loading || error ? '--' : wellData ? wellData.volume.toLocaleString('es-CL', { maximumFractionDigits: 3 }) : '--'}
+                  {
+                    loading || error
+                      ? '--'
+                      : wellData && typeof wellData.volume === 'number'
+                      ? wellData.volume.toLocaleString('es-CL', { maximumFractionDigits: 3 })
+                      : '--'
+                  }
                   <br /> m³
                 </Text>
               </center>
@@ -123,7 +135,13 @@ const WellVisualization: React.FC<{
           </div>
           <div className={styles.caudalimetro}>
             <Text className={styles.caudalimetroText}>
-              {loading || error ? '--' : wellData ? `${wellData.flowRate.toFixed(2)} lt/s` : '--'}
+              {
+                loading || error
+                  ? '--'
+                  : wellData && typeof wellData.flowRate === 'number'
+                  ? `${wellData.flowRate.toFixed(2)} lt/s`
+                  : '--'
+              }
             </Text>
           </div>
         </div>

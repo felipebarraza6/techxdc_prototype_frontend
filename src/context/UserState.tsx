@@ -36,6 +36,10 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       };
 
       localStorage.setItem("userData", JSON.stringify(userDataToStore));
+      // Guardar el token real bajo la clave 'token' para Axios
+      if (userDataToStore.token) {
+        localStorage.setItem("token", userDataToStore.token);
+      }
 
       dispatch({
         type: 'LOGIN',
