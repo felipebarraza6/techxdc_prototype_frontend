@@ -55,8 +55,8 @@
   flex-direction: column;
   justify-content: flex-start;
   height: 100%;
-  padding-top: 10px;
-  padding-left: 10px;
+  padding-top: 18px;
+  padding-left: 32px;
 }
 
 .title {
@@ -64,14 +64,15 @@
   font-weight: 600;
   margin: 0;
   color:  #2C3D66;
-
+  text-align: left;
 }
 
 .subtitle {
   font-size: 1rem;
   color: #64748B;
-  ;
-  margin-top: 4px;
+  margin-top: -15px;
+  margin-left: 30px;
+  text-align: left;
 }
 
 .content {
