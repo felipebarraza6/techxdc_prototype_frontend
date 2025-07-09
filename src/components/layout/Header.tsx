@@ -37,7 +37,7 @@ const AppHeader: React.FC<HeaderProps> = ({ selectedProject, headerActions, isMo
   if (location.pathname === '/telemetry') {
     header = {
       title: 'Telemetría',
-      subtitle: selectedProject ? `Monitoreo en tiempo real del pozo P${selectedProject.id}` : 'Monitoreo en tiempo real del pozo',
+      subtitle: selectedProject ? `Monitoreo en tiempo real del punto de captación P${selectedProject.id}` : 'Monitoreo en tiempo real del pozo',
     };
   }
   return (
