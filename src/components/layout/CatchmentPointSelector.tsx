@@ -19,6 +19,7 @@ const CatchmentPointSelector: React.FC<CatchmentPointSelectorProps> = ({ selecte
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<Error | null>(null);
   const [showAll, setShowAll] = React.useState(false);
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
   React.useEffect(() => {
     if (catchmentPoints.length === 0 && !loading && !error) {
@@ -43,27 +44,36 @@ const CatchmentPointSelector: React.FC<CatchmentPointSelectorProps> = ({ selecte
   // Buscar el code_dga correspondiente al pozo seleccionado
   const getCodeDga = (id: number) => {
     const dga = dgaConfigs.find(cfg => cfg.point_catchment === id);
-    return dga?.code_dga || '--';
+    return dga?.code_dga || 'Sin O.B';
   };
 
   const menu = (
-    <Menu onClick={({ key }) => {
-      if (key === 'toggleShowAll') {
-        setShowAll((prev) => !prev);
-      } else {
-        onSelect(Number(key));
-      }
-    }}>
-      {validCatchmentPoints.map(cp => (
-        <Menu.Item key={cp.id}>
-          <span style={{ fontWeight: 600, color: '#1C355F' }}>{`P${cp.id}`}</span>
-          <span style={{ background: '#3368AB', color: '#fff', borderRadius: 4, padding: '2px 10px', fontSize: 13, fontWeight: 500, marginLeft: 8 }}>
-            {getCodeDga(cp.id)}
-          </span>
-        </Menu.Item>
-      ))}
+    <Menu>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, justifyContent: 'space-around' }}>
+        {validCatchmentPoints.map(cp => (
+          <Menu.Item key={cp.id} style={{ padding: 0 }} onClick={() => {
+            onSelect(cp.id);
+            setDropdownOpen(false);
+          }}>
+            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
+              <span style={{ fontWeight: 600, color: '#1C355F', minWidth: 38, textAlign: 'left', paddingLeft: 12 }}>{`P${cp.id}`}</span>
+              <span style={{ background: '#3368AB', color: '#fff', borderRadius: 4, padding: '2px 10px', fontSize: 13, fontWeight: 500, marginLeft: 'auto', minWidth: 90, textAlign: 'center', display: 'inline-block' }}>
+                {getCodeDga(cp.id)}
+              </span>
+            </div>
+          </Menu.Item>
+        ))}
+      </div>
       <Menu.Divider />
-      <Menu.Item key="toggleShowAll" style={{ color: '#1677ff', fontWeight: 600, textAlign: 'center' }}>
+      <div
+        style={{ color: '#1677ff', fontWeight: 600, textAlign: 'center', cursor: 'pointer', padding: '8px 0' }}
+        onClick={e => {
+          e.preventDefault();
+          e.stopPropagation();
+          setShowAll(prev => !prev);
+          setDropdownOpen(true);
+        }}
+      >
         {showAll ? (
           <>
             <EyeInvisibleOutlined style={{ marginRight: 6 }} />
@@ -75,7 +85,7 @@ const CatchmentPointSelector: React.FC<CatchmentPointSelectorProps> = ({ selecte
             Mostrar todos los pozos
           </>
         )}
-      </Menu.Item>
+      </div>
     </Menu>
   );
 
@@ -88,7 +98,14 @@ const CatchmentPointSelector: React.FC<CatchmentPointSelectorProps> = ({ selecte
           <span className={styles.statusText}>{selected ? `P${selected.id}` : ''}</span>
         </span>
         {/* Botón azul solo muestra el código DGA */}
-        <Dropdown overlay={menu} trigger={['click']} placement="bottomLeft" overlayClassName={styles.projectDropdownMenu}>
+        <Dropdown
+          overlay={menu}
+          trigger={['click']}
+          placement="bottomLeft"
+          overlayClassName={styles.projectDropdownMenu}
+          open={dropdownOpen}
+          onOpenChange={setDropdownOpen}
+        >
           <span style={{ background: '#3368AB', color: '#fff', borderRadius: 4, padding: '2px 10px', fontSize: 13, fontWeight: 500, display: 'flex', alignItems: 'center', gap: 0, minWidth: 80, justifyContent: 'center', marginRight: 8, cursor: 'pointer' }}>
             {selected ? getCodeDga(selected.id) : '--'}
             <DownOutlined style={{ width: 10, height: 11.25, color: '#fff', fontSize: 12, marginLeft: 7 }} />
