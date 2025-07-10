@@ -56,6 +56,7 @@ const Reportes: React.FC = () => {
   useEffect(() => {
     if (
       selectedCatchmentPoint &&
+      Array.isArray(dateRange) &&
       dateRange[0] &&
       dateRange[1] &&
       !isNaN(dateRange[0].date()) &&
@@ -69,7 +70,7 @@ const Reportes: React.FC = () => {
   // Filtrar los datos del mes por el rango de días seleccionado
   const tableData = dailyInteractions
     .filter(item => {
-      if (!dateRange[0] || !dateRange[1]) return true;
+      if (!Array.isArray(dateRange) || !dateRange[0] || !dateRange[1]) return true;
       const day = dayjs(item.date_time_medition).date();
       return day >= dateRange[0].date() && day <= dateRange[1].date();
     })
@@ -173,11 +174,16 @@ const Reportes: React.FC = () => {
                 format="DD/MM/YYYY"
                 style={{ width: screens.xs ? '100%' : 320 }}
                 allowClear
+                disabled={!selectedCatchmentPoint}
               />
             </div>
             {/* Tabla de reportes */}
             <Card style={{ padding: 0 }} bodyStyle={{ padding: screens.xs ? 4 : 0 }}>
-              {loading ? (
+              {!selectedCatchmentPoint ? (
+                <Alert type="info" message="Seleccione un pozo para visualizar los reportes." showIcon style={{ margin: 16 }} />
+              ) : !dateRange || !dateRange[0] || !dateRange[1] ? (
+                <Alert type="info" message="Seleccione un rango de fechas para consultar los datos históricos." showIcon style={{ margin: 16 }} />
+              ) : loading ? (
                 <Spin style={{ display: 'block', margin: '40px auto' }} />
               ) : error ? (
                 <Alert type="error" message="Error al cargar datos" description={String(error)} showIcon style={{ margin: 16 }} />
@@ -318,7 +324,11 @@ const Reportes: React.FC = () => {
             </div>
             {/* Previsualización de la tabla - solo se muestra al hacer clic en "Ver Excel" */}
             <Modal open={excelModalOpen} onCancel={() => setExcelModalOpen(false)} footer={null} width={900} title="Previsualización de Excel">
-              {tableData.length === 0 ? (
+              {!selectedCatchmentPoint ? (
+                <Alert type="info" message="Seleccione un pozo para visualizar los reportes." showIcon style={{ margin: 32 }} />
+              ) : !dateRange || !dateRange[0] || !dateRange[1] ? (
+                <Alert type="info" message="Seleccione un rango de fechas para consultar los datos históricos." showIcon style={{ margin: 32 }} />
+              ) : tableData.length === 0 ? (
                 <Alert type="info" message="No hay datos para mostrar en este periodo." showIcon style={{ margin: 32 }} />
               ) : (
                 <div>
