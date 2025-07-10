@@ -1,4 +1,4 @@
-import { Button, Flex, Spin, Typography } from "antd";
+import { Button, Flex, Spin, Typography, Row, Col, Alert } from "antd";
 import Chart from "../../components/smart-analysis/Chart";
 import DateSelection from "../../components/smart-analysis/DateSelection";
 import { useEffect, useState } from "react";
@@ -7,6 +7,7 @@ import { useInteractionDetails } from "../../hooks/useInteractionDetails";
 import Card from "antd/es/card/Card";
 import { ClockCircleOutlined, ArrowLeftOutlined, ArrowRightOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import { useSelectedCatchmentPoint } from '../../context/SelectedCatchmentPointContext';
+import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 type InteractionDataItem = {
     id: number;
@@ -65,6 +66,7 @@ const SmartAnalysis: React.FC = () => {
     }
     const [cardData, setCardData] = useState<CardData | undefined>(undefined);
     const [loading, setLoading] = useState(false);
+    const { isMobile } = useBreakpoint();
 
 
     const getTodayDate = (): string => {
@@ -98,7 +100,7 @@ const SmartAnalysis: React.FC = () => {
         const data = await getInteractionDetailOneDay(selectedCatchmentPoint.id, monthNumber, dayNumber);
 
         if (data && data.length > 0) {
-            procesarDatos(data, "Datos diarios", "Hora", getYLabelForButton(activeButton));
+            procesarDatos(data, "Hora", getYLabelForButton(activeButton));
         } else {
             setChartValues(undefined);
         }
@@ -312,13 +314,11 @@ const SmartAnalysis: React.FC = () => {
 
     const procesarDatos = (
         data: InteractionDataItem[],
-        titulo: string,
         nombreEjeX: string,
         nombreEjeY: string
     ) => {
         if (data && data.length > 0) {
             let valores: { x: string; y: number }[] = [];
-            let chartTitle = "";
             let chartSubTitle = "";
 
             switch (activeButton) {
@@ -327,7 +327,6 @@ const SmartAnalysis: React.FC = () => {
                     x: modoDatos(nombreEjeX, item.date_time_medition),
                     y: item.total,
                 }));
-                chartTitle = "Acumulado (m³)";
                 chartSubTitle = "Comportamiento durante las últimas 24 horas";
                 break;
                 case "consumoHora":
@@ -335,7 +334,6 @@ const SmartAnalysis: React.FC = () => {
                     x: modoDatos(nombreEjeX, item.date_time_medition),
                     y: item.total_diff,
                 }));
-                chartTitle = "Consumo por hora (m³/h)";
                 chartSubTitle = "";
                 break;
                 case "consumoDia":
@@ -343,7 +341,6 @@ const SmartAnalysis: React.FC = () => {
                     x: modoDatos(nombreEjeX, item.date_time_medition),
                     y: item.total_today_diff,
                 }));
-                chartTitle = "Consumo día (m³)";
                 chartSubTitle = "";
                 break;
                 case "caudal2":
@@ -351,7 +348,6 @@ const SmartAnalysis: React.FC = () => {
                     x: modoDatos(nombreEjeX, item.date_time_medition),
                     y: parseFloat(item.flow),
                 }));
-                chartTitle = "Caudal (lt/s)";
                 chartSubTitle = "";
                 break;
                 case "nivel":
@@ -359,7 +355,6 @@ const SmartAnalysis: React.FC = () => {
                     x: modoDatos(nombreEjeX, item.date_time_medition),
                     y: parseFloat(item.water_table),
                 }));
-                chartTitle = "Nivel freático(m)";
                 chartSubTitle = "";
                 break;
                 default:
@@ -370,7 +365,7 @@ const SmartAnalysis: React.FC = () => {
             const promedioY = valores.length > 0 ? sumaY / valores.length : 0;
 
             setChartValues({
-                titulo: chartTitle,
+                titulo: "Acumulado (m³)",
                 subtitulo: chartSubTitle,
                 nombreEjeX,
                 nombreEjeY,
@@ -462,152 +457,173 @@ const SmartAnalysis: React.FC = () => {
 
 
     return (
-        <Flex style={{ width: '100%' }} justify="start" vertical={true}>
-            <DateSelection onDateSelected={handleAnalyze}/>
-            <Flex justify="start" wrap="wrap" style={{ width: '100%', margin: '40px 0' }}>
-                {buttons.map(({ id, labelLeft, labelRight }) => (
-                    <Button
-                        key={id}
-                        size="large"
-                        style={buttonStyle}
-                        className={activeButton === id ? 'active-button' : 'inactive-button'}
-                        onClick={() => handleClick(id)}
-                    >
-                        <Text className={activeButton === id ? 'left-text-active' : 'left-text-inactive'}>
-                            {labelLeft}
-                        </Text>
-                        {labelRight && (
-                            <Text className={activeButton === id ? 'right-text-active' : 'right-text-inactive'}>
-                            {labelRight}
-                            </Text>
+        !selectedCatchmentPoint ? (
+            <Alert message="Selecciona un pozo para ver el análisis." type="info" showIcon style={{ margin: 32 }} />
+        ) : (
+            <div style={{ width: '100%', padding: 24 }}>
+                <Row gutter={[24, 24]}>
+                    <Col xs={24}>
+                        <DateSelection onDateSelected={handleAnalyze} />
+                    </Col>
+                    <Col xs={24}>
+                        <Row gutter={[16, 16]} align="middle" justify="start" wrap>
+                            {buttons.map(({ id, labelLeft, labelRight }) => (
+                                <Col xs={12} sm={8} md={4} key={id} style={{ marginBottom: 8 }}>
+                                    <Button
+                                        size="large"
+                                        style={buttonStyle}
+                                        className={activeButton === id ? 'active-button' : 'inactive-button'}
+                                        onClick={() => handleClick(id)}
+                                        block
+                                    >
+                                        <Text className={activeButton === id ? 'left-text-active' : 'left-text-inactive'}>
+                                            {labelLeft}
+                                        </Text>
+                                        {labelRight && (
+                                            <Text className={activeButton === id ? 'right-text-active' : 'right-text-inactive'}>
+                                                {labelRight}
+                                            </Text>
+                                        )}
+                                    </Button>
+                                </Col>
+                            ))}
+                        </Row>
+                    </Col>
+                    <Col xs={24}>
+                        {loading ? (
+                            <div style={{ textAlign: 'center', padding: '2rem' }}>
+                                <Spin size="large" />
+                            </div>
+                        ) : chartValues ? (
+                            <Chart
+                                titulo={chartValues.titulo}
+                                subtitulo={chartValues.subtitulo}
+                                nombreEjeX={chartValues.nombreEjeX}
+                                nombreEjeY={chartValues.nombreEjeY}
+                                valores={chartValues.valores}
+                                umbral={chartValues.umbral}
+                                height={isMobile ? 250 : 350}
+                            />
+                        ) : (
+                            <div style={{ textAlign: 'center', padding: '2rem' }}>
+                                No hay datos disponibles
+                            </div>
                         )}
-                    </Button>
-                ))}
-            </Flex>
-            {loading ? (
-                <div style={{ textAlign: 'center', padding: '2rem' }}>
-                    <Spin size="large" />
-                </div>
-            ) : chartValues ? (
-                <Chart
-                    titulo={chartValues.titulo}
-                    subtitulo={chartValues.subtitulo}
-                    nombreEjeX={chartValues.nombreEjeX}
-                    nombreEjeY={chartValues.nombreEjeY}
-                    valores={chartValues.valores}
-                    umbral={chartValues.umbral}
-                />
-            ) : (
-                <div style={{ textAlign: 'center', padding: '2rem' }}>
-                    No hay datos disponibles
-                </div>
-            )}
-            <Flex justify="start" wrap="wrap" gap={16}  style={{ marginTop: 32 }}>
-                <Card style={{ width: '240px', marginRight: 16 }}>
-                    <Flex justify="start" vertical={true} style={{ width: '100%' }}>
-                        <Text style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 4 }}>Resumen acumulado</Text>
-                        <Text style={{ fontSize: 12, fontWeight: 'normal', marginBottom: 4 }}>{esModoMensual ? 'Primer y último registro del mes' : 'Primer y último registro del día'}</Text>
-                    </Flex>
-                    <Flex align="center" vertical={true} style={{ width: '100%', borderTop: '1px solid #e8e8e8'}}>
-                        <Flex justify="space-between" style={{width: '100%', marginTop: 10}}>
-                            <Flex>
-                                <ClockCircleOutlined style={{marginRight: 5}}/>
-                                <Text style= {{color:'#64748B', fontWeight: 'normal', fontSize: '14px'}}>{cardData?.totalFirstTime} hrs.</Text>
-                            </Flex>
-                            <Text style={{ fontWeight: 'bold', fontSize: '14px' }}>{cardData?.totalFirst} m³</Text>
-                        </Flex>
-                        <Flex justify="space-between" style={{width: '100%', marginTop: 5}}>
-                            <Flex>
-                                <ClockCircleOutlined style={{marginRight: 5}}/>
-                                <Text style= {{color:'#64748B', fontWeight: 'normal', fontSize: '14px'}}>{cardData?.totalLastTime} hrs.</Text>
-                            </Flex>
-                            <Text style={{ fontWeight: 'bold', fontSize: '14px' }}>{cardData?.totalLast} m³</Text>
-                        </Flex>
-                    </Flex>
-                </Card>
-
-                <Card style={{ width: '240px', marginRight: 16 }}>
-                    <Flex justify="start" vertical={true} style={{ width: '100%' }}>
-                        <Text style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 4 }}>Consumos MAX/MIN</Text>
-                        <Text style={{ fontSize: 12, fontWeight: 'normal', marginBottom: 4 }}>{esModoMensual ? 'Consumos MAX/MIN del mes' : 'Consumos MAX/MIN del día'}</Text>
-                    </Flex>
-                    <Flex align="center" vertical={true} style={{ width: '100%', borderTop: '1px solid #e8e8e8'}}>
-                        <Flex justify="space-between" style={{width: '100%', marginTop: 10}}>
-                            <Flex>
-                                <ArrowRightOutlined style={{marginRight: 5, color: 'green'}}/>
-                                <Text style= {{color:'#64748B', fontWeight: 'normal', fontSize: '14px'}}>{cardData?.maxUsageTime} hrs.</Text>
-                            </Flex>
-                            <Text style={{ fontWeight: 'bold', fontSize: '14px' }}>{cardData?.maxUsage} m³/h</Text>
-                        </Flex>
-                        <Flex justify="space-between" style={{width: '100%', marginTop: 5}}>
-                            <Flex>
-                                <ArrowLeftOutlined style={{marginRight: 5, color: 'red'}}/>
-                                <Text style= {{color:'#64748B', fontWeight: 'normal', fontSize: '14px'}}>{cardData?.minUsageTime} hrs.</Text>
-                            </Flex>
-                            <Text style={{ fontWeight: 'bold', fontSize: '14px' }}>{cardData?.minUsage} m³/h</Text>
-                        </Flex>
-                    </Flex>
-                </Card>
-
-                <Card style={{ width: '240px', marginRight: 16 }}>
-                    <Flex justify="start" vertical={true} style={{ width: '100%' }}>
-                        <Text style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 4 }}>{esModoMensual ? 'Consumo del mes' : 'Consumo del día'}</Text>
-                        <Text style={{ fontSize: 12, fontWeight: 'normal', marginBottom: 4 }}>Consumo registrado</Text>
-                    </Flex>
-                    <Flex align="center" vertical={true} style={{ width: '100%', borderTop: '1px solid #e8e8e8'}}>
-                        <Text style= {{ fontWeight: 'bold', fontSize: '24px'}}>{cardData?.dailyConsumption} m³</Text>
-                    </Flex>
-                </Card>
-
-                <Card style={{ width: '240px', marginRight: 16 }}>
-                    <Flex justify="start" vertical={true} style={{ width: '100%' }}>
-                        <Text style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 4 }}>Caudal MAX/MIN</Text>
-                        <Text style={{ fontSize: 12, fontWeight: 'normal', marginBottom: 4 }}>Registro máximo y mínimo{esModoMensual ? ' del mes' : ' del día'}</Text>
-                    </Flex>
-                    <Flex align="center" vertical={true} style={{ width: '100%', borderTop: '1px solid #e8e8e8'}}>
-                        <Flex justify="space-between" style={{width: '100%', marginTop: 10}}>
-                            <Flex>
-                                <ClockCircleOutlined style={{marginRight: 5}}/>
-                                <Text style= {{color:'#64748B', fontWeight: 'normal', fontSize: '14px'}}>{cardData?.maxFlowTime} hrs.</Text>
-                            </Flex>
-                            <Text style={{ fontWeight: 'bold', fontSize: '14px' }}>{cardData?.maxFlow} lts/s</Text>
-                        </Flex>
-                        <Flex justify="space-between" style={{width: '100%', marginTop: 5}}>
-                            <Flex>
-                                <ClockCircleOutlined style={{marginRight: 5}}/>
-                                <Text style= {{color:'#64748B', fontWeight: 'normal', fontSize: '14px'}}>{cardData?.minFlowTime} hrs.</Text>
-                            </Flex>
-                            <Text style={{ fontWeight: 'bold', fontSize: '14px' }}>{cardData?.minFlow} lts/s</Text>
-                        </Flex>
-                    </Flex>
-                </Card>
-
-                <Card style={{ width: '240px', marginRight: 16 }}>
-                    <Flex justify="start" vertical={true} style={{ width: '100%' }}>
-                        <Text style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 4 }}>Nivel freático MAX/MIN</Text>
-                        <Text style={{ fontSize: 12, fontWeight: 'normal', marginBottom: 4 }}>Registro máximo y mínimo{esModoMensual ? ' del mes' : ' del día'}</Text>
-                    </Flex>
-                    <Flex align="center" vertical={true} style={{ width: '100%', borderTop: '1px solid #e8e8e8'}}>
-                        <Flex justify="space-between" style={{width: '100%', marginTop: 10}}>
-                            <Flex>
-                                <InfoCircleOutlined style={{marginRight: 5}}/>
-                                <Text style= {{color:'#64748B', fontWeight: 'normal', fontSize: '14px'}}>{cardData?.waterTableMaxTime} hrs.</Text>
-                            </Flex>
-                            <Text style={{ fontWeight: 'bold', fontSize: '14px' }}>{cardData?.waterTableMax} m</Text>
-                        </Flex>
-                        <Flex justify="space-between" style={{width: '100%', marginTop: 5}}>
-                            <Flex>
-                                <InfoCircleOutlined style={{marginRight: 5}}/>
-                                <Text style= {{color:'#64748B', fontWeight: 'normal', fontSize: '14px'}}>{cardData?.waterTableMinTime} hrs.</Text>
-                            </Flex>
-                            <Text style={{ fontWeight: 'bold', fontSize: '14px' }}>{cardData?.waterTableMin} m</Text>
-                        </Flex>
-                    </Flex>
-                </Card>
-
-            </Flex>
-
-        </Flex>
+                    </Col>
+                    <Col xs={24}>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, width: '100%' }}>
+                            <div style={{ flex: '1 1 0', minWidth: 180, maxWidth: '20%', width: '20%', display: 'flex' }}>
+                                <Card style={{ minHeight: 180, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '100%' }}>
+                                    <Flex justify="start" vertical={true} style={{ width: '100%' }}>
+                                        <Text style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 4, color: '#1C355F' }}>Resumen acumulado</Text>
+                                        <Text style={{ fontSize: 12, fontWeight: 'normal', marginBottom: 4, color: '#64748B' }}>{esModoMensual ? 'Primer y último registro del mes' : 'Primer y último registro del día'}</Text>
+                                    </Flex>
+                                    <Flex align="center" vertical={true} style={{ width: '100%', borderTop: '1px solid #e8e8e8'}}>
+                                        <Flex justify="space-between" style={{width: '100%', marginTop: 10}}>
+                                            <Flex>
+                                                <ClockCircleOutlined style={{marginRight: 5}}/>
+                                                <Text style= {{color:'#1C355F', fontWeight: 'normal', fontSize: '14px'}}>{cardData?.totalFirstTime} hrs.</Text>
+                                            </Flex>
+                                            <Text style={{ fontWeight: 'bold', fontSize: '14px', color: '#1C355F' }}>{cardData?.totalFirst} m³</Text>
+                                        </Flex>
+                                        <Flex justify="space-between" style={{width: '100%', marginTop: 5}}>
+                                            <Flex>
+                                                <ClockCircleOutlined style={{marginRight: 5}}/>
+                                                <Text style= {{color:'#1C355F', fontWeight: 'normal', fontSize: '14px'}}>{cardData?.totalLastTime} hrs.</Text>
+                                            </Flex>
+                                            <Text style={{ fontWeight: 'bold', fontSize: '14px', color: '#1C355F' }}>{cardData?.totalLast} m³</Text>
+                                        </Flex>
+                                    </Flex>
+                                </Card>
+                            </div>
+                            <div style={{ flex: '1 1 0', minWidth: 180, maxWidth: '20%', width: '20%', display: 'flex' }}>
+                                <Card style={{ minHeight: 180, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '100%' }}>
+                                    <Flex justify="start" vertical={true} style={{ width: '100%' }}>
+                                        <Text style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 4, color: '#1C355F' }}>Consumos MAX/MIN</Text>
+                                        <Text style={{ fontSize: 12, fontWeight: 'normal', marginBottom: 4, color: '#64748B' }}>{esModoMensual ? 'Consumos MAX/MIN del mes' : 'Consumos MAX/MIN del día'}</Text>
+                                    </Flex>
+                                    <Flex align="center" vertical={true} style={{ width: '100%', borderTop: '1px solid #e8e8e8'}}>
+                                        <Flex justify="space-between" style={{width: '100%', marginTop: 10}}>
+                                            <Flex>
+                                                <ArrowRightOutlined style={{marginRight: 5, color: 'green'}}/>
+                                                <Text style= {{color:'#1C355F', fontWeight: 'normal', fontSize: '14px'}}>{cardData?.maxUsageTime} hrs.</Text>
+                                            </Flex>
+                                            <Text style={{ fontWeight: 'bold', fontSize: '14px', color: '#1C355F' }}>{cardData?.maxUsage} m³/h</Text>
+                                        </Flex>
+                                        <Flex justify="space-between" style={{width: '100%', marginTop: 5}}>
+                                            <Flex>
+                                                <ArrowLeftOutlined style={{marginRight: 5, color: 'red'}}/>
+                                                <Text style= {{color:'#1C355F', fontWeight: 'normal', fontSize: '14px'}}>{cardData?.minUsageTime} hrs.</Text>
+                                            </Flex>
+                                            <Text style={{ fontWeight: 'bold', fontSize: '14px', color: '#1C355F' }}>{cardData?.minUsage} m³/h</Text>
+                                        </Flex>
+                                    </Flex>
+                                </Card>
+                            </div>
+                            <div style={{ flex: '1 1 0', minWidth: 180, maxWidth: '20%', width: '20%', display: 'flex' }}>
+                                <Card style={{ minHeight: 180, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '100%' }}>
+                                    <Flex justify="start" vertical={true} style={{ width: '100%' }}>
+                                        <Text style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 4, color: '#1C355F' }}>{esModoMensual ? 'Consumo del mes' : 'Consumo del día'}</Text>
+                                        <Text style={{ fontSize: 12, fontWeight: 'normal', marginBottom: 4, color: '#64748B' }}>Consumo registrado</Text>
+                                    </Flex>
+                                    <Flex align="center" vertical={true} style={{ width: '100%', borderTop: '1px solid #e8e8e8'}}>
+                                        <Text style= {{ fontWeight: 'bold', fontSize: '24px', color: '#1C355F'}}>{cardData?.dailyConsumption} m³</Text>
+                                    </Flex>
+                                </Card>
+                            </div>
+                            <div style={{ flex: '1 1 0', minWidth: 180, maxWidth: '20%', width: '20%', display: 'flex' }}>
+                                <Card style={{ minHeight: 180, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '100%' }}>
+                                    <Flex justify="start" vertical={true} style={{ width: '100%' }}>
+                                        <Text style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 4, color: '#1C355F' }}>Caudal MAX/MIN</Text>
+                                        <Text style={{ fontSize: 12, fontWeight: 'normal', marginBottom: 4, color: '#64748B' }}>Registro máximo y mínimo{esModoMensual ? ' del mes' : ' del día'}</Text>
+                                    </Flex>
+                                    <Flex align="center" vertical={true} style={{ width: '100%', borderTop: '1px solid #e8e8e8'}}>
+                                        <Flex justify="space-between" style={{width: '100%', marginTop: 10}}>
+                                            <Flex>
+                                                <ClockCircleOutlined style={{marginRight: 5}}/>
+                                                <Text style= {{color:'#1C355F', fontWeight: 'normal', fontSize: '14px'}}>{cardData?.maxFlowTime} hrs.</Text>
+                                            </Flex>
+                                            <Text style={{ fontWeight: 'bold', fontSize: '14px', color: '#1C355F' }}>{cardData?.maxFlow} lts/s</Text>
+                                        </Flex>
+                                        <Flex justify="space-between" style={{width: '100%', marginTop: 5}}>
+                                            <Flex>
+                                                <ClockCircleOutlined style={{marginRight: 5}}/>
+                                                <Text style= {{color:'#1C355F', fontWeight: 'normal', fontSize: '14px'}}>{cardData?.minFlowTime} hrs.</Text>
+                                            </Flex>
+                                            <Text style={{ fontWeight: 'bold', fontSize: '14px', color: '#1C355F' }}>{cardData?.minFlow} lts/s</Text>
+                                        </Flex>
+                                    </Flex>
+                                </Card>
+                            </div>
+                            <div style={{ flex: '1 1 0', minWidth: 180, maxWidth: '20%', width: '20%', display: 'flex' }}>
+                                <Card style={{ minHeight: 180, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '100%' }}>
+                                    <Flex justify="start" vertical={true} style={{ width: '100%' }}>
+                                        <Text style={{ fontSize: 14, fontWeight: 'bold', marginBottom: 4, color: '#1C355F' }}>Nivel freático MAX/MIN</Text>
+                                        <Text style={{ fontSize: 12, fontWeight: 'normal', marginBottom: 4, color: '#64748B' }}>Registro máximo y mínimo{esModoMensual ? ' del mes' : ' del día'}</Text>
+                                    </Flex>
+                                    <Flex align="center" vertical={true} style={{ width: '100%', borderTop: '1px solid #e8e8e8'}}>
+                                        <Flex justify="space-between" style={{width: '100%', marginTop: 10}}>
+                                            <Flex>
+                                                <InfoCircleOutlined style={{marginRight: 5}}/>
+                                                <Text style= {{color:'#1C355F', fontWeight: 'normal', fontSize: '14px'}}>{cardData?.waterTableMaxTime} hrs.</Text>
+                                            </Flex>
+                                            <Text style={{ fontWeight: 'bold', fontSize: '14px', color: '#1C355F' }}>{cardData?.waterTableMax} m</Text>
+                                        </Flex>
+                                        <Flex justify="space-between" style={{width: '100%', marginTop: 5}}>
+                                            <Flex>
+                                                <InfoCircleOutlined style={{marginRight: 5}}/>
+                                                <Text style= {{color:'#1C355F', fontWeight: 'normal', fontSize: '14px'}}>{cardData?.waterTableMinTime} hrs.</Text>
+                                            </Flex>
+                                            <Text style={{ fontWeight: 'bold', fontSize: '14px', color: '#1C355F' }}>{cardData?.waterTableMin} m</Text>
+                                        </Flex>
+                                    </Flex>
+                                </Card>
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
+            </div>
+        )
     );
 };
 

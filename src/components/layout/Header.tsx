@@ -33,7 +33,7 @@ interface HeaderProps {
   onMenuClick?: () => void;
 }
 
-const AppHeader: React.FC<HeaderProps> = ({ selectedProject, selectedCatchmentPoint, headerActions, isMobile, onMenuClick }) => {
+const AppHeader: React.FC<HeaderProps> = ({  selectedCatchmentPoint, headerActions, isMobile, onMenuClick }) => {
   const location = useLocation();
   let header = headerMap[location.pathname] || { title: '', subtitle: '' };
   if (location.pathname === '/telemetry') {
