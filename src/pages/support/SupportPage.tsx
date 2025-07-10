@@ -3,6 +3,7 @@ import { Row, Col, Card, Form, Input, Select, Button, Alert, Typography, Space, 
 import { InfoCircleOutlined, FilterOutlined, FileTextOutlined, DeleteOutlined, DownOutlined, UpOutlined, SendOutlined, UserOutlined } from '@ant-design/icons';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import axios from 'axios';
+import { useSelectedCatchmentPoint } from '../../context/SelectedCatchmentPointContext';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -54,6 +55,7 @@ const SupportPage: React.FC = () => {
   const [commentInputs, setCommentInputs] = useState<Record<number, string>>({});
   const [commentLoading, setCommentLoading] = useState<Record<number, boolean>>({});
   const { isMobile } = useBreakpoint();
+  const { selectedCatchmentPoint } = useSelectedCatchmentPoint();
 
   // Cargar tickets y estados
   useEffect(() => {
@@ -153,8 +155,8 @@ const SupportPage: React.FC = () => {
         description: values.mensaje,
         priority: 'Media',
         created_by: 123, // TO-DO: Reemplazar por el id real del usuario cuando esté disponible
-        client_id: 1, // TO-DO: Reemplazar por el id real del cliente cuando esté disponible (igual que en alertas)
         designated: 123, // TO-DO: Reemplazar por el id real del designado cuando esté disponible
+        catchment_point_id: selectedCatchmentPoint?.id, // id del pozo en la raíz
         custom_fields: {
           variableId: values.variable,
           variableName: selectedVariable ? selectedVariable.label : undefined,

@@ -60,6 +60,7 @@ export const useInteractionDetails = () => {
         dayRange: string
       ) => {
       const url = `/api/interaction_detail_override?catchment_point=${catchment_point}&date_time_medition__month=${month}&date_time_medition__day__range=${dayRange}`;
+      console.log('URL overrideMethod:', url);
       const data = await fetchData<InteractionDetail[]>(url);
       if (Array.isArray(data)) {
         setDailyInteractions(data);

@@ -202,7 +202,6 @@ const SmartAnalysis: React.FC = () => {
     };
 
     const getMinMaxDailyConsumption = (data: InteractionDataItem[]) => {
-        console.log(data);
         if (data.length === 0) {
             return {
                 max: { value: '', date: '' },

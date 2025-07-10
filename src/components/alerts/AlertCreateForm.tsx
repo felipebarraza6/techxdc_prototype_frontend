@@ -17,7 +17,7 @@ interface Variable {
 
 interface AlertCreateFormProps {
   onCancel?: () => void;
-  catchmentPointId: number;
+  catchmentPointId?: number;
 }
 
 const AlertCreateForm: React.FC<AlertCreateFormProps> = ({ onCancel, catchmentPointId }) => {
@@ -75,23 +75,27 @@ const AlertCreateForm: React.FC<AlertCreateFormProps> = ({ onCancel, catchmentPo
         description: `Variable: ${selectedVariable ? selectedVariable.label : formValues.variable}, Condición: ${formValues.condicion}, Valor: ${formValues.valor}, Email: ${formValues.email}`,
         priority: 'Media',
         created_by: 123, // dummy
-        client_id: 1,   // Reemplazar por logica id del cliente real cuando se integre la selección de clientes
         designated: 123, // dummy
+        catchment_point_id: catchmentPointId, // id del pozo en la raíz
         custom_fields: {
-          catchmentPointId,
           variableId: formValues.variable,
           variableName: selectedVariable ? selectedVariable.label : undefined,
           valor: formValues.valor,
           condicion: formValues.condicion,
         },
       };
+      console.log('Payload enviado al backend:', payload);
       await axios.post('/api/tickets/', payload);
       setCreateModalOpen(false);
       form.resetFields();
       message.success('¡Alerta creada exitosamente!');
       if (onCancel) onCancel();
     } catch (err: any) {
-      setModalError(err.response?.data?.message || err.message || 'Error al crear la alerta');
+      setModalError(
+        typeof err.response?.data === 'object'
+          ? JSON.stringify(err.response.data, null, 2)
+          : err.response?.data?.message || err.message || 'Error al crear la alerta'
+      );
     } finally {
       setLoading(false);
     }
