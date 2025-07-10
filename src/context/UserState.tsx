@@ -1,7 +1,7 @@
 import { useReducer } from "react";
 import UserContext from "./UserContext";
 import { userReducer } from "./UserReducer";
-import axiosInstance from '../api/config';
+import { api_business } from '../api/config';
 import type { AxiosError } from "axios";
 import type { UserProviderProps, LoginUserData, UserState } from '../types/index';
 
@@ -19,54 +19,64 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
   const [globalState, dispatch] = useReducer(userReducer, initialState);
 
-  const loginUser = async (userData: LoginUserData) => {
+  // ===============================
+  // Función de Login
+  // ===============================
+  // Solo maneja la lógica, no muestra mensajes ni logs
+  // Retorna un objeto { success, message }
+  const loginUser = async (userData: LoginUserData): Promise<{ success: boolean; message: string }> => {
     try {
-      const res = await axiosInstance.post("/api/users/login", userData);
-
-      if (!res.data) {
-        throw new Error("Datos de login incompletos");
+      const res = await api_business.post("/api/auth/login", userData);
+      if (!res.data.success) {
+        return { success: false, message: res.data.message || 'Error desconocido de autenticación' };
       }
-
       const userDataToStore = {
-        token: res.data.token,
-        id: res.data.id,
-        name: res.data.name,
-        lastName: res.data.lastName,
-        email: res.data.email,
+        token: res.data.data?.token || null,
+        id: null,
+        name: null,
+        lastName: null,
+        email: userData.email || null,
       };
-
-      localStorage.setItem("userData", JSON.stringify(userDataToStore));
-      // Guardar el token real bajo la clave 'token' para Axios
-      if (userDataToStore.token) {
-        localStorage.setItem("token", userDataToStore.token);
+      try {
+        localStorage.setItem("userData", JSON.stringify(userDataToStore));
+        if (userDataToStore.token) {
+          localStorage.setItem("token", userDataToStore.token);
+        }
+      } catch (error) {
+        // No hacer nada, solo evitar que rompa
       }
-
-      dispatch({
-        type: 'LOGIN',
-        payload: userDataToStore,
-      });
-
-      return true;
+      // No hacemos dispatch ni cambiamos el estado global aún
+      return { success: true, message: res.data.message || 'Login exitoso' };
     } catch (error) {
-      const axiosError = error as AxiosError<{
-        message?: string;
-        errors?: Record<string, string>;
-      }>;
-      
-      const errorMessage = axiosError.response?.data?.message || 
-                          axiosError.message || 
-                          "Error desconocido en el login";
-      
-      console.error("Error al iniciar sesión:", errorMessage);
-      return false;
+      let errorMessage = 'Error desconocido en el login';
+      if (error && typeof error === 'object' && 'isAxiosError' in error) {
+        const axiosError = error as AxiosError<{ message?: string }>;
+        if (axiosError.response?.data?.message) {
+          errorMessage = axiosError.response.data.message;
+        } else if (axiosError.message) {
+          errorMessage = axiosError.message;
+        }
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      return { success: false, message: errorMessage };
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem("userData");
-
-    dispatch({ type: 'LOGOUT' });
-
+  // ===============================
+  // Función de Logout (sin cambios)
+  // ===============================
+  const logout = async () => {
+    try {
+      await api_business.post("/api/auth/logout");
+    } catch (error) {}
+    finally {
+      try {
+        localStorage.removeItem("userData");
+        localStorage.removeItem("token");
+      } catch (error) {}
+      dispatch({ type: 'LOGOUT' });
+    }
     return true;
   };
 

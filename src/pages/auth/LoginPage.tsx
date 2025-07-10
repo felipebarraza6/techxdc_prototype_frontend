@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { App as AntdApp } from 'antd';
 import LoginForm from '../../components/auth/LoginForm';
 import { FormProvider } from '../../context/Form/FormContext';
 import { useUser } from '../../hooks/useUser';
@@ -9,16 +10,25 @@ import logoSmartHydro from '../../assets/img/logoempresa.png';
 const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { loginUser } = useUser();
+  const { message } = AntdApp.useApp();
 
+  // ===============================
+  // Función de manejo del login
+  // ===============================
   const handleLogin = async (values: { email: string; password: string }) => {
     setIsLoading(true);
-    const success = await loginUser(values);
-    setIsLoading(false);
-
-    if (success) {
-      console.log('Login exitoso');
-    } else {
-      console.error('Login fallido');
+    try {
+      const result = await loginUser(values);
+      if (result.success) {
+        message.success(result.message || 'Login exitoso');
+        
+      } else {
+        message.error(result.message || 'Error de autenticación');
+      }
+    } catch (error) {
+      message.error('Error inesperado en el login');
+    } finally {
+      setIsLoading(false);
     }
   };
 

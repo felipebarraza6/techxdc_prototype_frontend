@@ -2,7 +2,6 @@ import React from 'react';
 import { Form, Input, Button, message } from 'antd';
 import type { FormProps } from 'antd';
 import { useFormContext } from '../../hooks/useFormContext';
-import { useAuthPayload } from '../../hooks/useAuthPayload';
 import { useFormErrors } from '../../hooks/useFormErrors';
 import styles from './LoginForm.module.css';
 
@@ -12,40 +11,39 @@ interface LoginFormValues {
 }
 
 interface LoginFormProps {
-  onSubmit: (values: LoginFormValues) => void;
+  onSubmit: (values: LoginFormValues) => Promise<{ success: boolean; message: string }>;
   isLoading?: boolean;
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
   const [form] = Form.useForm();
-  const { setFieldValue, resetForm } = useFormContext();
-  const { getLoginPayload } = useAuthPayload();
+  const { resetForm } = useFormContext();
   const { errors, setFieldError, clearAllErrors } = useFormErrors<LoginFormValues>();
 
-  const onFinish: FormProps<LoginFormValues>['onFinish'] = (values) => {
+  // ===============================
+  // Manejo del submit del formulario
+  // ===============================
+  // Si el login falla, solo se limpia el campo de password
+  const onFinish: FormProps<LoginFormValues>['onFinish'] = async (values) => {
     clearAllErrors();
-    let hasError = false;
-    if (!values.email) {
-      setFieldError('email', 'Verifica tu email');
-      hasError = true;
-    }
-    if (!values.password) {
-      setFieldError('password', 'Verifica tu contraseña');
-      hasError = true;
-    }
-    if (hasError) {
-      message.error('Por favor, completa todos los campos requeridos correctamente.');
+    // Validación simple
+    if (!values.email || !values.password) {
+      message.error('Por favor, completa todos los campos requeridos.');
       return;
     }
-    setFieldValue('email', values.email);
-    setFieldValue('password', values.password);
-    const payload = getLoginPayload();
-    onSubmit({
-      email: String(payload.email),
-      password: String(payload.password),
+    // Llamar a la función de login y esperar el resultado
+    const result = await onSubmit({
+      email: values.email,
+      password: values.password,
     });
-    form.resetFields();
-    resetForm();
+    // Si el login falla, solo limpiar el campo de password
+    if (!result.success) {
+      form.setFieldsValue({ password: '' });
+    } else {
+      // Si el login es exitoso, limpiar todo el formulario
+      form.resetFields();
+      resetForm();
+    }
   };
 
   const onFinishFailed: FormProps<LoginFormValues>['onFinishFailed'] = () => {

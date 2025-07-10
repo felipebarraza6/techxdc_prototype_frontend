@@ -33,13 +33,15 @@ export interface UserState {
 }
 
 export type UserAction =
-  | { type: 'LOGIN'; payload: UserPayload }
-  | { type: 'LOGOUT' };
+  | { type: "LOGIN"; payload: UserPayload }
+  | { type: "LOGOUT" };
 
 export interface UserContextProps {
   globalState: UserState;
-  loginUser: (userData: LoginUserData) => Promise<boolean>;
-  logout: () => void;
+  loginUser: (
+    userData: LoginUserData
+  ) => Promise<{ success: boolean; message: string }>;
+  logout: () => Promise<boolean>;
 }
 
 export interface UserProviderProps {
