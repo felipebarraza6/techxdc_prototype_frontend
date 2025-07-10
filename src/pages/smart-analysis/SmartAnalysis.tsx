@@ -6,6 +6,7 @@ import "./SmartAnalysis.css";
 import { useInteractionDetails } from "../../hooks/useInteractionDetails";
 import Card from "antd/es/card/Card";
 import { ClockCircleOutlined, ArrowLeftOutlined, ArrowRightOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { useSelectedCatchmentPoint } from '../../context/SelectedCatchmentPointContext';
 
 type InteractionDataItem = {
     id: number;
@@ -33,7 +34,7 @@ const SmartAnalysis: React.FC = () => {
     const { Text } = Typography;
     const [activeButton, setActiveButton] = useState<string>("acumulado");
     const { getInteractionDetailOneDay, getInteractionDetailOneMonth } = useInteractionDetails();
-    const userId = 2;
+    const { selectedCatchmentPoint } = useSelectedCatchmentPoint();
     type ChartValue = {
         titulo: string;
         subtitulo: string;
@@ -78,8 +79,10 @@ const SmartAnalysis: React.FC = () => {
 
     useEffect(() => {
         const today = getTodayDate();
-        getDayData(today);
-    }, []);
+        if (selectedCatchmentPoint) {
+            getDayData(today);
+        }
+    }, [selectedCatchmentPoint]);
 
 
     const handleAnalyze = (value: string | number) => {
@@ -88,10 +91,11 @@ const SmartAnalysis: React.FC = () => {
 
 
     const getDayData = async (day: string) => {
+        if (!selectedCatchmentPoint) return;
         setLoading(true);
         const dayNumber = Number(day.split("-")[2]);
         const monthNumber = Number(day.split("-")[1]);
-        const data = await getInteractionDetailOneDay(userId, monthNumber, dayNumber);
+        const data = await getInteractionDetailOneDay(selectedCatchmentPoint.id, monthNumber, dayNumber);
 
         if (data && data.length > 0) {
             procesarDatos(data, "Datos diarios", "Hora", getYLabelForButton(activeButton));
@@ -149,8 +153,9 @@ const SmartAnalysis: React.FC = () => {
     };
 
     const getMonthData = async (month: number) => {
+        if (!selectedCatchmentPoint) return;
         setLoading(true);
-        const data = await getInteractionDetailOneMonth(userId, month);
+        const data = await getInteractionDetailOneMonth(selectedCatchmentPoint.id, month);
 
         if (data && data.length > 0) {
             const valores = monthAverage(data, activeButton);
@@ -425,11 +430,15 @@ const SmartAnalysis: React.FC = () => {
 
     useEffect(() => {
         if (typeof selectedDate === "string") {
-            getDayData(selectedDate);
+            if (selectedCatchmentPoint) {
+                getDayData(selectedDate);
+            }
         } else if (typeof selectedDate === "number") {
-            getMonthData(selectedDate);
+            if (selectedCatchmentPoint) {
+                getMonthData(selectedDate);
+            }
         }
-    }, [activeButton, selectedDate]);
+    }, [activeButton, selectedDate, selectedCatchmentPoint]);
 
     const handleClick = (buttonId: string) => {
         setActiveButton(buttonId);
@@ -451,7 +460,7 @@ const SmartAnalysis: React.FC = () => {
         marginRight: 8
     };
 
-   
+
     return (
         <Flex style={{ width: '100%' }} justify="start" vertical={true}>
             <DateSelection onDateSelected={handleAnalyze}/>
@@ -480,7 +489,7 @@ const SmartAnalysis: React.FC = () => {
                     <Spin size="large" />
                 </div>
             ) : chartValues ? (
-                <Chart 
+                <Chart
                     titulo={chartValues.titulo}
                     subtitulo={chartValues.subtitulo}
                     nombreEjeX={chartValues.nombreEjeX}

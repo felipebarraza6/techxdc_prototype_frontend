@@ -9,6 +9,7 @@ import type { Project } from "../../api/projectService";
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useHeaderActions } from '../../context/HeaderActionsContext';
 import { SelectedProjectProvider, useSelectedProject } from '../../context/SelectedProjectContext';
+import { useSelectedCatchmentPoint } from '../../context/SelectedCatchmentPointContext';
 
 const { Content } = Layout;
 
@@ -16,6 +17,7 @@ const AppLayoutInner: React.FC<{ children: React.ReactNode }> = ({ children }) =
   const navigate = useNavigate();
   const [projects, setProjects] = React.useState<Project[]>([]);
   const { selectedProject, setSelectedProject } = useSelectedProject();
+  const { selectedCatchmentPoint } = useSelectedCatchmentPoint();
   const { isMobile } = useBreakpoint();
   const { headerActions } = useHeaderActions();
   const [drawerOpen, setDrawerOpen] = React.useState(false);
@@ -45,6 +47,7 @@ const AppLayoutInner: React.FC<{ children: React.ReactNode }> = ({ children }) =
       <Layout className={styles.mainLayout} style={{ marginLeft: isMobile ? 0 : 237 }}>
         <AppHeader
           selectedProject={selectedProject}
+          selectedCatchmentPoint={selectedCatchmentPoint}
           headerActions={headerActions}
           isMobile={isMobile}
           onMenuClick={handleMenuClick}
