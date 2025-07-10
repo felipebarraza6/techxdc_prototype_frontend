@@ -29,7 +29,15 @@ const LogoSection = ({ onClose }: { onClose?: () => void }) => (
   </div>
 );
 
-const MenuSidebar: React.FC<any> = ({
+interface MenuSidebarProps {
+  isMobile?: boolean;
+  onSupportClick: () => void;
+  drawerOpen?: boolean;
+  onDrawerClose?: () => void;
+  onMenuItemClick?: () => void;
+}
+
+const MenuSidebar: React.FC<MenuSidebarProps> = ({
   isMobile,
   onSupportClick,
   drawerOpen,
@@ -49,6 +57,7 @@ const MenuSidebar: React.FC<any> = ({
     if (location.pathname.startsWith("/alerts")) return ["alerts"];
     if (location.pathname.startsWith("/support")) return ["support"];
     if (location.pathname.startsWith("/dga")) return ["dga"];
+    if (location.pathname === "/documents/reportes") return ["reportes"];
     if (location.pathname.startsWith("/documents")) return ["documents"];
     return ["dashboard"];
   }, [location.pathname]);
@@ -94,6 +103,7 @@ const MenuSidebar: React.FC<any> = ({
       </Menu.SubMenu>
       <Menu.SubMenu key="docs" icon={<FileTextOutlined className={styles.menuIcon} />} title={<span>Documentos</span>}>
         <Menu.Item key="documents" icon={<FileTextOutlined className={styles.menuIcon} />} onClick={() => handleMenuClickMobile(() => navigate("/documents"))}>Documentos</Menu.Item>
+        <Menu.Item key="reportes" icon={<FileTextOutlined className={styles.menuIcon} />} onClick={() => handleMenuClickMobile(() => navigate("/documents/reportes"))}>Reportes</Menu.Item>
       </Menu.SubMenu>
       <Menu.Item key="alerts" icon={<AlertOutlined className={styles.menuIcon} />} onClick={() => handleMenuClickMobile(() => navigate("/alerts"))}>Alertas</Menu.Item>
     </Menu>
@@ -199,4 +209,4 @@ const MenuSidebar: React.FC<any> = ({
   );
 };
 
-export default MenuSidebar; 
+export default MenuSidebar;

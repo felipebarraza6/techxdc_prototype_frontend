@@ -15,29 +15,33 @@ const headerMap: Record<string, { title: string; subtitle: string }> = {
   "/clients/create": { title: "Crear nuevo cliente", subtitle: "Agregar información" },
   "/groups": { title: "Grupos", subtitle: "Listado de grupos" },
   "/groups/create": { title: "Nuevo Grupo", subtitle: "Crear grupo" },
-  "/smart-analysis": { title: "Smart Análisis", subtitle: "Análisis inteligente" },
+  "/smart-analysis": { title: "Smart Análisis", subtitle: "Monitoreo y análisis de datos hidráulicos" },
   "/alerts": { title: "Alertas", subtitle: "Gestión de alertas" },
   "/alerts/create": { title: "Alertas", subtitle: "Gestión de alertas" },
   "/support": { title: "Soporte", subtitle: "Gestión de tickets y solicitudes de ayudas" },
   "/dga": { title: "DGA MEE", subtitle: "Extracción de datos MEE" },
   "/dga/analisis": { title: "DGA Análisis", subtitle: "Monitoreo y análisis de mediciones" },
   "/documents": { title: "Documentos", subtitle: "Gestión Documental del Sistema" },
+  "/documents/reportes": { title: "Reportes", subtitle: "Descarga de documentos del sistema" }
 };
 
 interface HeaderProps {
   selectedProject?: any;
+  selectedCatchmentPoint?: any;
   headerActions?: React.ReactNode;
   isMobile: boolean;
   onMenuClick?: () => void;
 }
 
-const AppHeader: React.FC<HeaderProps> = ({ selectedProject, headerActions, isMobile, onMenuClick }) => {
+const AppHeader: React.FC<HeaderProps> = ({  selectedCatchmentPoint, headerActions, isMobile, onMenuClick }) => {
   const location = useLocation();
   let header = headerMap[location.pathname] || { title: '', subtitle: '' };
   if (location.pathname === '/telemetry') {
     header = {
       title: 'Telemetría',
-      subtitle: selectedProject ? `Monitoreo en tiempo real del punto de captación P${selectedProject.id}` : 'Monitoreo en tiempo real del pozo',
+      subtitle: selectedCatchmentPoint
+        ? `Monitoreo en tiempo real del punto de captación ${selectedCatchmentPoint.name || `P${selectedCatchmentPoint.id}`}`
+        : 'Monitoreo en tiempo real del pozo',
     };
   }
   return (

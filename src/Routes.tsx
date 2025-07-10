@@ -29,6 +29,7 @@ import SmartAnalysis from "./pages/smart-analysis/SmartAnalysis";
 
 //Documents
 import DocumentosPage from "./pages/documents/documents";
+import Reportes from "./pages/documents/Reportes";
 
 // Alerts
 import AlertsPage from './pages/alerts/AlertsPage';
@@ -80,6 +81,7 @@ const AppRouter: React.FC = () => {
 
           {/* Documentos */}
           <Route path="/documents" element={<DocumentosPage />} />
+          <Route path="/documents/reportes" element={<Reportes />} />
           
           {/* DGA */}
           <Route path="/dga" element={<DgaMEE />} />
