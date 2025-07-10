@@ -24,6 +24,9 @@ import Telemetry from "./pages/telemetry/Telemetry";
 import DgaMEE from "./pages/dga/DGA_MEE";
 import DGA_Analisis from "./pages/dga/DGA_Analisis";
 
+// Smart Analysis
+import SmartAnalysis from "./pages/smart-analysis/SmartAnalysis";
+
 //Documents
 import DocumentosPage from "./pages/documents/documents";
 import Reportes from "./pages/documents/Reportes";
@@ -33,7 +36,6 @@ import AlertsPage from './pages/alerts/AlertsPage';
 import AlertCreatePage from './pages/alerts/AlertCreatePage';
 import SupportPage from './pages/support/SupportPage';
 import { SelectedCatchmentPointProvider } from './context/SelectedCatchmentPointContext';
-
 
 
 const ProtectedLayout: React.FC = () => (
@@ -83,13 +85,15 @@ const AppRouter: React.FC = () => {
           
           {/* DGA */}
           <Route path="/dga" element={<DgaMEE />} />
-          <Route path="/dga/analisis" element={<DGA_Analisis />} />
+          <Route path="/dga/analisis" element={<DGA_Analisis/>} />
+          
+          {/* Smart Analysis */}
+          <Route path="/smart-analysis" element={<SmartAnalysis/>} />
 
           {/* Alertas y Soporte */}
           <Route path="/alerts" element={<AlertsPage />} />
           <Route path="/alerts/create" element={<AlertCreatePage />} />
           <Route path="/support" element={<SupportPage />} />
-
 
         </Route>
         {/* 404 */}

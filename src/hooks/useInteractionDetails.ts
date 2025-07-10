@@ -26,6 +26,7 @@ export type InteractionDetail = {
 export const useInteractionDetails = () => {
   const { loading, error, fetchData } = useApi();
   const [interactions, setInteractions] = useState<InteractionDetail[]>([]);
+  const [dailyInteractions, setDailyInteractions] = useState<InteractionDetail[]>([]);
 
   const getAllInteractions = useCallback(async () => {
     const data = await fetchData<{
@@ -52,11 +53,68 @@ export const useInteractionDetails = () => {
     return data;
   }, [fetchData]);
 
+  const getInteractionDetailOverride = useCallback(
+    async (
+        catchment_point: number, 
+        month: number, 
+        dayRange: string
+      ) => {
+      const url = `/api/interaction_detail_override?catchment_point=${catchment_point}&date_time_medition__month=${month}&date_time_medition__day__range=${dayRange}`;
+      const data = await fetchData<InteractionDetail[]>(url);
+      if (Array.isArray(data)) {
+        setDailyInteractions(data);
+      } else {
+        setDailyInteractions([]);
+      }
+      return data;
+    },
+    [fetchData]
+  );
+
+  const getInteractionDetailOneDay = useCallback(
+    async (
+        catchment_point: number, 
+        month: number, 
+        day: number
+      ) => {
+      const url = `/api/interaction_detail_override?catchment_point=${catchment_point}&date_time_medition__month=${month}&date_time_medition__day=${day}`;
+      const data = await fetchData<InteractionDetail[]>(url);
+      if (Array.isArray(data)) {
+        setDailyInteractions(data);
+      } else {
+        setDailyInteractions([]);
+      }
+      return data;
+    },
+    [fetchData]
+  );
+
+  const getInteractionDetailOneMonth = useCallback(
+    async (
+        catchment_point: number, 
+        month: number, 
+      ) => {
+      const url = `/api/interaction_detail_override?catchment_point=${catchment_point}&date_time_medition__month=${month}`;
+      const data = await fetchData<InteractionDetail[]>(url);
+      if (Array.isArray(data)) {
+        setDailyInteractions(data);
+      } else {
+        setDailyInteractions([]);
+      }
+      return data;
+    },
+    [fetchData]
+  );
+
   return {
     loading,
     error,
     interactions,
     getAllInteractions,
-    getInteractionsByCatchmentPoint
+    getInteractionsByCatchmentPoint,
+    getInteractionDetailOverride,
+    getInteractionDetailOneDay,
+    getInteractionDetailOneMonth,
+    dailyInteractions
   };
 };
