@@ -1,41 +1,77 @@
 import React, { useState } from 'react';
-import { Row, Col, Button, Card } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { Row, Col, Button, Card, Spin, Alert } from 'antd';
 import AlertList from '../../components/alerts/AlertList';
 import AlertDetail from '../../components/alerts/AlertDetail';
 import { useBreakpoint } from '../../hooks/useBreakpoint';
-
-const dummyAlerts = [
-  {
-    key: '1',
-    code: 'TK-003',
-    status: 'En desarrollo',
-    priority: 'Alta',
-    title: 'Error en lectura de sensor P2',
-    description: 'El sensor del pozo P2 no está enviando datos desde ayer por la tarde',
-    created: '2025-06-14',
-    updated: '2025-06-15',
-  },
-  {
-    key: '2',
-    code: 'TK-004',
-    status: 'Pendiente',
-    priority: 'Media',
-    title: 'Solicitud de nuevo reporte',
-    description: 'Necesito un reporte personalizado para el análisis mensual',
-    created: '2025-06-15',
-    updated: '2025-06-15',
-  },
-];
+import { useTicketsWithStatus } from '../../hooks/useTicketsWithStatus';
+import type { Ticket } from '../../hooks/useTicketsWithStatus';
+import AlertCreateForm from '../../components/alerts/AlertCreateForm';
+// import { useSelectedCatchmentPoint } from '../../context/SelectedCatchmentPointContext';
 
 const AlertsPage: React.FC = () => {
   const [selectedAlert, setSelectedAlert] = useState<any | null>(null);
-  const navigate = useNavigate();
+  const [showCreateForm, setShowCreateForm] = useState(false);
   const { isMobile } = useBreakpoint();
+  // const { selectedCatchmentPoint } = useSelectedCatchmentPoint();
+  const { tickets, loading, error } = useTicketsWithStatus();
+
+  // --- PREPARACIÓN PARA FILTRADO POR CLIENTE EN EL FUTURO ---
+  // TODO: Cuando el modelo de cliente esté disponible, usar el contexto real:
+  // import { useSelectedClient } from 'src/context/SelectedClientContext';
+  // const { selectedClient } = useSelectedClient();
+  // Por ahora, null o dummy:
+  const selectedClient = null;
+
+  // Cuando esté disponible, filtrar así:
+  const filteredTickets = selectedClient
+    ? tickets.filter((ticket) => (ticket as any).client_id === (selectedClient as any).id)
+    : tickets; // Por ahora, muestra todos
+
+  const transformedAlerts = filteredTickets.map((ticket: Ticket) => ({
+    key: ticket.id.toString(),
+    code: `TK-${ticket.id.toString().padStart(3, '0')}`,
+    status: ticket.status === 'closed' ? 'Cerrado' : 'En desarrollo',
+    priority: ticket.priority || 'Media',
+    title: ticket.title,
+    description: ticket.description || 'Sin descripción',
+    created: ticket.createdAt ? new Date(ticket.createdAt).toISOString().split('T')[0] : 'N/A',
+    updated: ticket.updatedAt ? new Date(ticket.updatedAt).toISOString().split('T')[0] : 'N/A',
+  }));
+
+  if (loading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        minHeight: '80vh',
+        background: '#f4f6fa'
+      }}>
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{ 
+        padding: '32px',
+        background: '#f4f6fa',
+        minHeight: '80vh'
+      }}>
+        <Alert
+          message="Error al cargar alertas"
+          description={error}
+          type="error"
+          showIcon
+        />
+      </div>
+    );
+  }
 
   return (
     <Row gutter={0} style={{ minHeight: '80vh', background: '#f4f6fa' }}>
-      {/* Panel izquierdo: Preview o mensaje vacío */}
+      {/* Panel izquierdo: Preview, formulario o mensaje vacío */}
       <Col 
         xs={24} 
         md={8} 
@@ -51,20 +87,22 @@ const AlertsPage: React.FC = () => {
           minHeight: isMobile ? 'auto' : '80vh'
         }}
       >
-        <Button 
-          type="primary" 
-          style={{ 
-            background: '#568E2B', 
-            border: 'none', 
-            width: isMobile ? '90%' : 180, 
-            height: isMobile ? 36 : 40, 
-            marginBottom: isMobile ? 16 : 32,
-            fontSize: isMobile ? 14 : undefined
-          }} 
-          onClick={() => navigate('/alerts/create')}
-        >
-          Crear nueva alerta
-        </Button>
+        {!showCreateForm && (
+          <Button 
+            type="primary" 
+            style={{ 
+              background: '#568E2B', 
+              border: 'none', 
+              width: isMobile ? '90%' : 180, 
+              height: isMobile ? 36 : 40, 
+              marginBottom: isMobile ? 16 : 32,
+              fontSize: isMobile ? 14 : undefined
+            }} 
+            onClick={() => setShowCreateForm(true)}
+          >
+            Crear nueva alerta
+          </Button>
+        )}
         <div style={{ 
           flex: 1, 
           display: 'flex', 
@@ -74,7 +112,9 @@ const AlertsPage: React.FC = () => {
           width: '100%',
           padding: isMobile ? '16px' : '0'
         }}>
-          {selectedAlert ? (
+          {showCreateForm ? (
+            <AlertCreateForm onCancel={() => setShowCreateForm(false)} catchmentPointId={0} />
+          ) : selectedAlert ? (
             <AlertDetail alert={selectedAlert} />
           ) : (
             <Card style={{ 
@@ -104,7 +144,7 @@ const AlertsPage: React.FC = () => {
         }}
       >
         {/* Header global lo maneja AppLayout */}
-        <AlertList alerts={dummyAlerts} onSelect={setSelectedAlert} selectedKey={selectedAlert?.key} />
+        <AlertList alerts={transformedAlerts} onSelect={setSelectedAlert} selectedKey={selectedAlert?.key} />
       </Col>
     </Row>
   );
