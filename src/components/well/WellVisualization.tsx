@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import styles from "./WellVisualization.module.css";
 import { Typography } from "antd";
-import { motion } from "framer-motion";
 import { useBreakpoint } from '../../hooks/useBreakpoint';
 
 const { Text } = Typography;
 
 interface Bubble {
   size: string;
-  top?: string;
+  top: string;
   left: string;
   animationDuration: string;
   animationDelay: string;
-  key: number;
+  key?: string | number;
+  yStart?: number;
+  yEnd?: number;
 }
 
 interface WellProps {
@@ -22,44 +23,76 @@ interface WellProps {
   profW: number | string;
 }
 
-const BUBBLE_COUNT = 20;
+interface TubeBubble {
+  size: string;
+  left: string;
+  top: string;
+  animationDuration: string;
+  animationDelay: string;
+  key?: string | number;
+}
 
 const generateRandomBubbles = (): Bubble[] => {
   const bubbles: Bubble[] = [];
   const positions = new Set<string>();
-  for (let i = 0; i < BUBBLE_COUNT; i++) {
+
+  for (let i = 0; i < 20; i++) {
     let top: string, left: string;
     do {
       top = Math.random() * 100 + "%";
       left = Math.random() * 100 + "%";
-    } while (positions.has(`${top}-${left}`));
-    positions.add(`${top}-${left}`);
-    const size = Math.random() * 5 + 2 + "px";
-    const animationDuration = (Math.random() * 2 + 3).toFixed(2) + "s";
-    const animationDelay = (Math.random() * 2).toFixed(2) + "s";
-    bubbles.push({ size, top, left, animationDuration, animationDelay, key: i + Math.random() });
+    } while (positions.has(top + "-" + left));
+
+    positions.add(top + "-" + left);
+
+    const size: string = Math.random() * 5 + 2 + "px"; // Size between 2px and 7px
+    const animationDuration: string = Math.random() * 5 + 5 + "s";
+    const animationDelay: string = Math.random() * -10 + "s";
+
+    bubbles.push({ 
+      size, 
+      top, 
+      left, 
+      animationDuration, 
+      animationDelay, 
+      key: `bubble-${i}-${Math.random()}`,
+      yStart: 0,
+      yEnd: -20
+    });
   }
+
   return bubbles;
 };
 
-const generateRandomBubblesForTube = (): Bubble[] => {
-  const bubbles: Bubble[] = [];
-  for (let i = 0; i < BUBBLE_COUNT; i++) {
-    const size = Math.random() * 5 + 2 + "px";
-    const left = Math.random() * 100 + "%";
-    const animationDuration = (Math.random() * 2 + 3).toFixed(2) + "s";
-    const animationDelay = (Math.random() * 2).toFixed(2) + "s";
-    bubbles.push({ size, left, animationDuration, animationDelay, key: i + Math.random() });
+const generateRandomBubblesForTube = (): TubeBubble[] => {
+  const bubbles: TubeBubble[] = [];
+
+  for (let i = 0; i < 20; i++) {
+    const size: string = Math.random() * 5 + 2 + "px"; // Size between 2px and 7px
+    const left: string = Math.random() * 100 + "%";
+    const top: string = Math.random() * 70 + "%"; // Generar top aleatorio entre 0% y 70%
+    const animationDuration: string = Math.random() * 5 + 5 + "s";
+    const animationDelay: string = Math.random() * -10 + "s";
+
+    bubbles.push({ 
+      size, 
+      left, 
+      top, 
+      animationDuration, 
+      animationDelay, 
+      key: `tube-bubble-${i}-${Math.random()}`
+    });
   }
+
   return bubbles;
 };
 
 const Well: React.FC<WellProps> = ({ total, nivel, caudal, profW }) => {
   const [bubbles, setBubbles] = useState<Bubble[]>([]);
-  const [tubeBubbles, setTubeBubbles] = useState<Bubble[]>([]);
+  const [tubeBubbles, setTubeBubbles] = useState<TubeBubble[]>([]);
   const [niveLevel, setNivelLevel] = useState<number | string>(nivel);
   const [prof, setProf] = useState<number | string>(profW);
-  const { isDesktop, pozoScale } = useBreakpoint();
+  const { pozoScale } = useBreakpoint();
 
   // Para reiniciar burbujas periódicamente y simular ciclo
   useEffect(() => {
@@ -98,7 +131,7 @@ const Well: React.FC<WellProps> = ({ total, nivel, caudal, profW }) => {
   };
 
   return (
-    <div
+    <div 
       className={styles.pozo}
       style={{ transform: `scale(${pozoScale})`, transformOrigin: 'center' }}
     >
@@ -107,51 +140,36 @@ const Well: React.FC<WellProps> = ({ total, nivel, caudal, profW }) => {
       <div className={styles["nivel-agua"]}>
         <div className={styles.tierra}></div>
         <div className={styles["agua-inferior"]}>
-          {bubbles.map((bubble) => (
-            <motion.div
-              key={bubble.key}
+          {bubbles.map((bubble, index) => (
+            <div
+              key={index}
               className={styles.burbuja}
               style={{
                 width: bubble.size,
                 height: bubble.size,
-                left: bubble.left,
                 top: bubble.top,
-                position: 'absolute',
+                left: bubble.left,
+                animationDuration: bubble.animationDuration,
+                animationDelay: bubble.animationDelay,
               }}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: [0, 1, 0.7, 0], y: [-10, -40, -80, -120] }}
-              transition={{
-                duration: parseFloat(bubble.animationDuration),
-                delay: parseFloat(bubble.animationDelay),
-                repeat: Infinity,
-                repeatType: 'loop',
-                ease: 'easeInOut',
-              }}
-            />
+            ></div>
           ))}
         </div>
         <div className={styles["tubo-pozo"]}>
           <div style={nivelStyle} className={styles.nivel} key="nivel">
-            {tubeBubbles.map((bubble) => (
-              <motion.div
-                key={bubble.key}
+            {tubeBubbles.map((bubble, index) => (
+              <div
+                key={index}
                 className={styles["burbuja-tubo"]}
                 style={{
                   width: bubble.size,
                   height: bubble.size,
                   left: bubble.left,
-                  position: 'absolute',
+                  top: bubble.top,
+                  animationDuration: bubble.animationDuration,
+                  animationDelay: bubble.animationDelay,
                 }}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: [0, 1, 0.7, 0], y: [-10, -30, -60, -100] }}
-                transition={{
-                  duration: parseFloat(bubble.animationDuration),
-                  delay: parseFloat(bubble.animationDelay),
-                  repeat: Infinity,
-                  repeatType: 'loop',
-                  ease: 'easeInOut',
-                }}
-              />
+              ></div>
             ))}
           </div>
         </div>
@@ -159,7 +177,7 @@ const Well: React.FC<WellProps> = ({ total, nivel, caudal, profW }) => {
       <div className={styles.sensor}>
         <div className={styles.punta}>
           <Text style={{ color: "white" }}>
-            {nivel && parseFloat(nivel as string).toFixed(2)} m
+            {nivel && parseFloat(String(nivel)).toFixed(2)} m
           </Text>
         </div>
       </div>
@@ -182,9 +200,10 @@ const Well: React.FC<WellProps> = ({ total, nivel, caudal, profW }) => {
         <div className={styles["pata-izquierda"]}></div>
         <div className={styles["pata-derecha"]}></div>
       </div>
+
       <div className={styles.caudalimetro}>
         <Text style={{ textAlign: "center", color: "white" }}>
-          {caudal && parseFloat(caudal as string).toFixed(2)} lt/s
+          {caudal && parseFloat(String(caudal)).toFixed(2)} lt/s
         </Text>
       </div>
     </div>

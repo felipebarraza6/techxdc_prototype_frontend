@@ -63,7 +63,7 @@ console.log("🔧 api_business configurado con baseURL:", BUSINESS_URL);
 api_telemetry.interceptors.request.use(
   (config) => {
     // Usar siempre el token fijo proporcionado
-    const token = "22984860397712d467987e2ea66a9e64e45a9ea8";
+    const token = localStorage.getItem("token");
     config.headers.Authorization = `Token ${token}`;
     return config;
   },
@@ -76,15 +76,21 @@ api_telemetry.interceptors.request.use(
 api_business.interceptors.request.use(
   (config) => {
     try {
-      const token = localStorage.getItem("user_token");
-      if (token) {
-        config.headers.Authorization = `Token ${token}`;
-        console.log(
-          "Token enviado (business):",
-          token.substring(0, 10) + "..."
-        );
+      const userDataString = localStorage.getItem("userData");
+      if (userDataString) {
+        const userData = JSON.parse(userDataString);
+        const token = userData?.token;
+        if (token) {
+          config.headers.Authorization = `Token ${token}`;
+          console.log(
+            "Token enviado (business):",
+            token.substring(0, 10) + "..."
+          );
+        } else {
+          console.warn("No se encontró token en userData (business)");
+        }
       } else {
-        console.warn("No se encontró token en localStorage (business)");
+        console.warn("No se encontró userData en localStorage (business)");
       }
     } catch (error) {
       console.warn("No se pudo acceder a localStorage:", error);

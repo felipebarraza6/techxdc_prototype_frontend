@@ -32,13 +32,16 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       }
       const userDataToStore = {
         token: res.data.data?.token || null,
-        id: null,
-        name: null,
-        lastName: null,
-        email: userData.email || null,
+        id: res.data.data?.user.id || null,
+        username: res.data.data?.user.username || null,
+        email: res.data.data?.user.email || null,
+        first_name: res.data.data?.user.first_name || null,
+        last_name: res.data.data?.user.last_name || null,
+        rol: res.data.data?.user.rol || null,
       };
       try {
         localStorage.setItem("userData", JSON.stringify(userDataToStore));
+        localStorage.setItem("catchmentPoints", JSON.stringify(res.data.data?.catchmentPoints));
         if (userDataToStore.token) {
           localStorage.setItem("token", userDataToStore.token);
         }

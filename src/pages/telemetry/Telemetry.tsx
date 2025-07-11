@@ -101,19 +101,10 @@ const Telemetry = () => {
             </div>
             <div style={{ flex: 1, width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
               <WellVisualization
-                pozoScale={isMobile ? 0.8 : 1.25}
-                pozoBoxStyle={
-                  isMobile
-                    ? { position: 'relative', top: -40, left: -15 }
-                    : { position: 'relative', top: -70, left: -30 }
-                }
-                wellData={last ? {
-                  depth: last.nivel ? Number(last.nivel) : undefined,
-                  flowRate: last.flow ? Number(last.flow) : undefined,
-                  volume: last.total ? Number(last.total) : undefined
-                } : undefined}
-                loading={loading}
-                error={!!error}
+                total={last ? Number(last.total) : 0}
+                nivel={last ? Number(last.nivel) : 0}
+                caudal={last ? Number(last.flow) : 0}
+                profW={profileConfig?.d1 ? Number(profileConfig.d1) : 50}
               />
             </div>
           </Card>
