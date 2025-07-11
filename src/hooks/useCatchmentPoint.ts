@@ -17,6 +17,17 @@ export type CatchmentPoint = {
   users_viewers: number[];
 };
 
+export type CatchmentsApiResponse = {
+  
+    id: number;
+    projectId: number;
+    title: string;
+    ownerUser: number;
+    id_api_telemetry: number;
+    code_dga: string;
+    token_api_telemetry: string;
+}
+
 type NewCatchmentPoint = Omit<CatchmentPoint, 'id' | 'created' | 'modified'>;
 
 export const useCatchmentPoint = () => {
@@ -28,10 +39,10 @@ export const useCatchmentPoint = () => {
     try {
       console.log('Llamando a getAll...');
       const data = await fetchData<{
-          count: number;
-          next: string | null;
-          previous: string | null;
-          results: CatchmentPoint[];
+        count: number;
+        next: string | null;
+        previous: string | null;
+        results: CatchmentPoint[];
       }>('/api/catchment_point/');
 
       if (data) {

@@ -101,19 +101,10 @@ const Telemetry = () => {
             </div>
             <div style={{ flex: 1, width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
               <WellVisualization
-                pozoScale={isMobile ? 0.8 : 1.25}
-                pozoBoxStyle={
-                  isMobile
-                    ? { position: 'relative', top: -40, left: -15 }
-                    : { position: 'relative', top: -70, left: -30 }
-                }
-                wellData={last ? {
-                  depth: last.nivel ? Number(last.nivel) : undefined,
-                  flowRate: last.flow ? Number(last.flow) : undefined,
-                  volume: last.total ? Number(last.total) : undefined
-                } : undefined}
-                loading={loading}
-                error={!!error}
+                total={last ? Number(last.total) : 0}
+                nivel={last ? Number(last.nivel) : 0}
+                caudal={last ? Number(last.flow) : 0}
+                profW={profileConfig?.d1 ? Number(profileConfig.d1) : 50}
               />
             </div>
           </Card>
@@ -197,9 +188,10 @@ const Telemetry = () => {
               placement="right"
               onClose={() => setDrawerOpen(false)}
               open={drawerOpen}
-              width={420}
+              width={isMobile ? '70vw' : 420}
               bodyStyle={{ padding: 0, background: '#f4f6fa' }}
               headerStyle={{ padding: 0, background: 'transparent', borderBottom: 'none' }}
+              closable={false}
             >
               <div style={{ padding: '24px 24px 0 24px' }}>
                 {medicionesCount === 0 ? (
@@ -210,9 +202,16 @@ const Telemetry = () => {
                       {/* Primeros 5 ítems siempre visibles (sin animación) */}
                       {interactions.slice(0, pageSize).map((item) => (
                         <React.Fragment key={item.id}>
-                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 0', gap: 24 }}>
-                            <span style={{ color: '#1E293B', fontWeight: 700, fontSize: 20, minWidth: 90 }}>{item.total} m³</span>
-                            <span style={{ color: '#64748B', fontWeight: 500, fontSize: 15, textAlign: 'right', flex: 1 }}>{item.date_time_medition}</span>
+                          <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'flex-start',
+                            padding: '16px 0',
+                            paddingLeft: 12,
+                            width: '100%'
+                          }}>
+                            <span style={{ color: '#1E293B', fontWeight: 700, fontSize: 20, textAlign: 'left', width: '100%' }}>{item.total} m³</span>
+                            <span style={{ color: '#64748B', fontWeight: 500, fontSize: 15, marginTop: 4, textAlign: 'left', width: '100%' }}>{item.date_time_medition}</span>
                           </div>
                           <div style={{ borderTop: '1px solid #E5E7EB', margin: '0 0 0 0', width: '100%' }} />
                         </React.Fragment>
@@ -231,9 +230,16 @@ const Telemetry = () => {
                           >
                             {interactions.slice(pageSize).map((item) => (
                               <React.Fragment key={item.id}>
-                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 0', gap: 24 }}>
-                                  <span style={{ color: '#1E293B', fontWeight: 700, fontSize: 20, minWidth: 90 }}>{item.total} m³</span>
-                                  <span style={{ color: '#64748B', fontWeight: 500, fontSize: 15, textAlign: 'right', flex: 1 }}>{item.date_time_medition}</span>
+                                <div style={{
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  alignItems: 'flex-start',
+                                  padding: '16px 0',
+                                  paddingLeft: 12,
+                                  width: '100%'
+                                }}>
+                                  <span style={{ color: '#1E293B', fontWeight: 700, fontSize: 20, textAlign: 'left', width: '100%' }}>{item.total} m³</span>
+                                  <span style={{ color: '#64748B', fontWeight: 500, fontSize: 15, marginTop: 4, textAlign: 'left', width: '100%' }}>{item.date_time_medition}</span>
                                 </div>
                                 <div style={{ borderTop: '1px solid #E5E7EB', margin: '0 0 0 0', width: '100%' }} />
                               </React.Fragment>
@@ -245,7 +251,7 @@ const Telemetry = () => {
                     {interactions.length > pageSize && (
                       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '18px 0 8px 0' }}>
                         <span
-                          style={{ color: '#1677ff', cursor: 'pointer', textDecoration: 'underline', fontWeight: 600, fontSize: 15, display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                          style={{ color: '#2C3D66', cursor: 'pointer', textDecoration: 'underline', fontWeight: 600, fontSize: 15, display: 'inline-flex', alignItems: 'center', gap: 4 }}
                           onClick={() => setShowAll((prev) => !prev)}
                         >
                           {showAll ? (

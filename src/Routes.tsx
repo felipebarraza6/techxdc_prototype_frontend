@@ -54,13 +54,14 @@ const AppRouter: React.FC = () => {
     <BrowserRouter>
       <Routes>
         {/* Rutas públicas (sin layout global) */}
+        <Route path="/" element={<LoginPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/recover-password" element={<RecoverPasswordPage />} />
 
         {/* Rutas protegidas (con layout global) */}
         <Route element={<ProtectedLayout />}>
-          <Route path="/" element={<Home />} />
+          {/* <Route path="/" element={<Home />} /> */} {/* TO-DO: Home deshabilitado como root */}
           <Route path="/profile" element={<UserProfile />} />
 
           {/* Clients */}

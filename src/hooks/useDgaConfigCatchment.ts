@@ -40,6 +40,10 @@ export const useDgaConfigCatchment = () => {
   }, [fetchData]);
 
   const getDgaConfigById = useCallback(async (id: number) => {
+    const selectedId = localStorage.getItem("selectedId");
+    if (selectedId) {
+      id = parseInt(selectedId);
+    }
     const data = await fetchData<DgaDataConfig>(`/api/dga_data_config_catchment/${id}/`);
     if (data) setCurrentDgaConfig(data);
     return data;

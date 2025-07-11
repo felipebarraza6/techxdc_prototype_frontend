@@ -6,11 +6,13 @@ import { useUser } from '../../hooks/useUser';
 import styles from './LoginPage.module.css';
 import logoIkolu from '../../assets/img/logoikolu.png';
 import logoSmartHydro from '../../assets/img/logoempresa.png';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { loginUser } = useUser();
   const { message } = AntdApp.useApp();
+  const navigate = useNavigate();
 
   // ===============================
   // Función de manejo del login
@@ -21,12 +23,14 @@ const LoginPage: React.FC = () => {
       const result = await loginUser(values);
       if (result.success) {
         message.success(result.message || 'Login exitoso');
-        
+        navigate('/telemetry');
       } else {
         message.error(result.message || 'Error de autenticación');
       }
+      return result;
     } catch (error) {
       message.error('Error inesperado en el login');
+      return { success: false, message: 'Error inesperado en el login' };
     } finally {
       setIsLoading(false);
     }

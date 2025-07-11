@@ -1,11 +1,11 @@
 import React from 'react';
-import { Dropdown, Menu, Spin } from 'antd';
+import { Dropdown, Menu } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { DatabaseTwoTone, EyeInvisibleOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import styles from './AppLayout.module.css';
-import { useSelectedCatchmentPoint } from '../../context/SelectedCatchmentPointContext';
 import { useDgaConfigCatchment } from '../../hooks/useDgaConfigCatchment';
 import { useProfileConfigCatchment } from '../../hooks/useProfileConfigCatchment';
+import type {  CatchmentsApiResponse } from '../../hooks/useCatchmentPoint';
 
 interface CatchmentPointSelectorProps {
   selectedId: number | null;
@@ -13,33 +13,27 @@ interface CatchmentPointSelectorProps {
 }
 
 const CatchmentPointSelector: React.FC<CatchmentPointSelectorProps> = ({ selectedId, onSelect }) => {
-  const { catchmentPoints, selectedCatchmentPoint, getAll } = useSelectedCatchmentPoint();
+  const catchmentPoints: CatchmentsApiResponse[] = JSON.parse(localStorage.getItem("catchmentPoints") || "[]");
   const { dgaConfigs, getAllDgaConfigs } = useDgaConfigCatchment();
   const { profileDataConfigs, getProfileDataConfigs } = useProfileConfigCatchment();
-  const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState<Error | null>(null);
   const [showAll, setShowAll] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
   React.useEffect(() => {
-    if (catchmentPoints.length === 0 && !loading && !error) {
-      setLoading(true);
-      getAll().catch(setError).finally(() => setLoading(false));
-    }
     getAllDgaConfigs();
     getProfileDataConfigs();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Solo al montar
 
   // Usar el pozo seleccionado del contexto para mostrar el código fijo
-  const selected = selectedCatchmentPoint || catchmentPoints.find(cp => cp.id === selectedId);
+  const selected = catchmentPoints.find((cp: CatchmentsApiResponse) => cp.id === selectedId);
 
   // Filtrar solo los pozos que tengan datos DGA o perfil
   const dgaIds = dgaConfigs.map(cfg => cfg.point_catchment);
   const profileIds = profileDataConfigs.map(cfg => cfg.point_catchment);
   const validCatchmentPoints = showAll
     ? catchmentPoints
-    : catchmentPoints.filter(cp => dgaIds.includes(cp.id) || profileIds.includes(cp.id));
+    : catchmentPoints.filter((cp: CatchmentsApiResponse) => dgaIds.includes(cp.id) || profileIds.includes(cp.id));
 
   // Buscar el code_dga correspondiente al pozo seleccionado
   const getCodeDga = (id: number) => {
@@ -51,8 +45,8 @@ const CatchmentPointSelector: React.FC<CatchmentPointSelectorProps> = ({ selecte
     <Menu>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 6, justifyContent: 'space-around' }}>
         {validCatchmentPoints
-          .filter(cp => typeof cp.id === 'number' && cp.id !== undefined && cp.id !== null)
-          .map(cp => (
+          .filter((cp: CatchmentsApiResponse) => typeof cp.id === 'number' && cp.id !== undefined && cp.id !== null)
+          .map((cp: CatchmentsApiResponse) => (
             <Menu.Item key={cp.id} style={{ padding: 0 }} onClick={() => {
               onSelect(cp.id);
               setDropdownOpen(false);
@@ -113,7 +107,6 @@ const CatchmentPointSelector: React.FC<CatchmentPointSelectorProps> = ({ selecte
             <DownOutlined style={{ width: 10, height: 11.25, color: '#fff', fontSize: 12, marginLeft: 7 }} />
           </span>
         </Dropdown>
-        {loading && <Spin size="small" style={{ marginLeft: 8 }} />}
       </div>
       {/* Mensaje explicativo */}
       {!showAll && validCatchmentPoints.length < catchmentPoints.length && (

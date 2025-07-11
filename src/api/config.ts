@@ -62,23 +62,9 @@ console.log("🔧 api_business configurado con baseURL:", BUSINESS_URL);
 // Interceptor para la API de telemetría
 api_telemetry.interceptors.request.use(
   (config) => {
-    try {
-      // agregar de usuari autenticado la id api smart hydro
-      const token = localStorage.getItem("token");
-      //
-      if (token) {
-        config.headers.Authorization = `Token ${token}`;
-        console.log(
-          "Token enviado (telemetry):",
-          token.substring(0, 10) + "..."
-        );
-      } else {
-        console.warn("No se encontró token en localStorage (telemetry)");
-      }
-    } catch (error) {
-      console.warn("No se pudo acceder a localStorage:", error);
-      // Continuar sin token si no se puede acceder a localStorage
-    }
+    // Usar siempre el token fijo proporcionado
+    const token = localStorage.getItem("selectedToken");
+    config.headers.Authorization = `Token ${token}`;
     return config;
   },
   (error) => {
@@ -90,15 +76,21 @@ api_telemetry.interceptors.request.use(
 api_business.interceptors.request.use(
   (config) => {
     try {
-      const token = localStorage.getItem("user_token");
-      if (token) {
-        config.headers.Authorization = `Token ${token}`;
-        console.log(
-          "Token enviado (business):",
-          token.substring(0, 10) + "..."
-        );
+      const userDataString = localStorage.getItem("userData");
+      if (userDataString) {
+        const userData = JSON.parse(userDataString);
+        const token = userData?.token;
+        if (token) {
+          config.headers.Authorization = `Token ${token}`;
+          console.log(
+            "Token enviado (business):",
+            token.substring(0, 10) + "..."
+          );
+        } else {
+          console.warn("No se encontró token en userData (business)");
+        }
       } else {
-        console.warn("No se encontró token en localStorage (business)");
+        console.warn("No se encontró userData en localStorage (business)");
       }
     } catch (error) {
       console.warn("No se pudo acceder a localStorage:", error);

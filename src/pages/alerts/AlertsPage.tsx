@@ -6,13 +6,13 @@ import { useBreakpoint } from '../../hooks/useBreakpoint';
 import { useTicketsWithStatus } from '../../hooks/useTicketsWithStatus';
 import type { Ticket } from '../../hooks/useTicketsWithStatus';
 import AlertCreateForm from '../../components/alerts/AlertCreateForm';
-// import { useSelectedCatchmentPoint } from '../../context/SelectedCatchmentPointContext';
+import { useSelectedCatchmentPoint } from '../../context/SelectedCatchmentPointContext';
 
 const AlertsPage: React.FC = () => {
   const [selectedAlert, setSelectedAlert] = useState<any | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const { isMobile } = useBreakpoint();
-  // const { selectedCatchmentPoint } = useSelectedCatchmentPoint();
+  const { selectedCatchmentPoint } = useSelectedCatchmentPoint();
   const { tickets, loading, error } = useTicketsWithStatus();
 
   // --- PREPARACIÓN PARA FILTRADO POR CLIENTE EN EL FUTURO ---
@@ -113,7 +113,7 @@ const AlertsPage: React.FC = () => {
           padding: isMobile ? '16px' : '0'
         }}>
           {showCreateForm ? (
-            <AlertCreateForm onCancel={() => setShowCreateForm(false)} catchmentPointId={0} />
+            <AlertCreateForm onCancel={() => setShowCreateForm(false)} catchmentPointId={selectedCatchmentPoint?.id ?? undefined} />
           ) : selectedAlert ? (
             <AlertDetail alert={selectedAlert} />
           ) : (

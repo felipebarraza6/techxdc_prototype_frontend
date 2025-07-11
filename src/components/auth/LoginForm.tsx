@@ -41,6 +41,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
     //result.data.token
     //result.data.user
     //result.data.catchmentPoints
+    
 
     // Si el login falla, solo limpiar el campo de password
     if (!result.success) {
