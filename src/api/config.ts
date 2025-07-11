@@ -62,23 +62,9 @@ console.log("🔧 api_business configurado con baseURL:", BUSINESS_URL);
 // Interceptor para la API de telemetría
 api_telemetry.interceptors.request.use(
   (config) => {
-    try {
-      // agregar de usuari autenticado la id api smart hydro
-      const token = localStorage.getItem("token");
-      //
-      if (token) {
-        config.headers.Authorization = `Token ${token}`;
-        console.log(
-          "Token enviado (telemetry):",
-          token.substring(0, 10) + "..."
-        );
-      } else {
-        console.warn("No se encontró token en localStorage (telemetry)");
-      }
-    } catch (error) {
-      console.warn("No se pudo acceder a localStorage:", error);
-      // Continuar sin token si no se puede acceder a localStorage
-    }
+    // Usar siempre el token fijo proporcionado
+    const token = "22984860397712d467987e2ea66a9e64e45a9ea8";
+    config.headers.Authorization = `Token ${token}`;
     return config;
   },
   (error) => {
