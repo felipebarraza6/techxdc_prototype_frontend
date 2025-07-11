@@ -36,6 +36,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ onSubmit, isLoading }) => {
       email: values.email,
       password: values.password,
     });
+
+    
+    //result.data.token
+    //result.data.user
+    //result.data.catchmentPoints
+
     // Si el login falla, solo limpiar el campo de password
     if (!result.success) {
       form.setFieldsValue({ password: '' });

@@ -63,7 +63,9 @@ console.log("🔧 api_business configurado con baseURL:", BUSINESS_URL);
 api_telemetry.interceptors.request.use(
   (config) => {
     try {
+      // agregar de usuari autenticado la id api smart hydro
       const token = localStorage.getItem("token");
+      //
       if (token) {
         config.headers.Authorization = `Token ${token}`;
         console.log(
@@ -88,7 +90,7 @@ api_telemetry.interceptors.request.use(
 api_business.interceptors.request.use(
   (config) => {
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("user_token");
       if (token) {
         config.headers.Authorization = `Token ${token}`;
         console.log(
