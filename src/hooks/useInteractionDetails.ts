@@ -27,6 +27,9 @@ export const useInteractionDetails = () => {
   const { loading, error, fetchData } = useApi();
   const [interactions, setInteractions] = useState<InteractionDetail[]>([]);
   const [dailyInteractions, setDailyInteractions] = useState<InteractionDetail[]>([]);
+  const [nextPageUrl, setNextPageUrl] = useState<string | null>(null);
+  const [previousPageUrl, setPreviousPageUrl] = useState<string | null>(null);
+  const [totalCount, setTotalCount] = useState<number>(0);
 
   const getAllInteractions = useCallback(async () => {
     const data = await fetchData<{
@@ -40,18 +43,23 @@ export const useInteractionDetails = () => {
     return data;
   }, [fetchData]);
 
-  const getInteractionsByCatchmentPoint = useCallback(async (catchmentPoint: number) => {
-    const url = `/api/interaction_detail_json?catchment_point=${catchmentPoint}&limit=20`;
-    const data = await fetchData<{
-      count: number;
-      next: string | null;
-      previous: string | null;
-      results: InteractionDetail[];
-    }>(url);
+const getInteractionsByCatchmentPoint = useCallback(async (catchmentPoint: number, page: number = 1) => {
+  const url = `/api/interaction_detail_json?catchment_point=${catchmentPoint}&limit=20&page=${page}`;
+  const data = await fetchData<{
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: InteractionDetail[];
+  }>(url);
 
-    if (data) setInteractions(data.results);
-    return data;
-  }, [fetchData]);
+  if (data) {
+    setInteractions(data.results);
+    setNextPageUrl(data.next);
+    setPreviousPageUrl(data.previous);
+    setTotalCount(data.count);
+  }
+  return data;
+}, [fetchData]);
 
   const getInteractionDetailOverride = useCallback(
     async (
@@ -115,6 +123,9 @@ export const useInteractionDetails = () => {
     getInteractionDetailOverride,
     getInteractionDetailOneDay,
     getInteractionDetailOneMonth,
-    dailyInteractions
+    dailyInteractions,
+    nextPageUrl,
+    previousPageUrl,
+    totalCount,
   };
 };

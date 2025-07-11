@@ -15,6 +15,7 @@ const DgaData: React.FC<{ id: number, lastFlow: number, lastTotal: number, onDga
 
   useEffect(() => {
     getDgaConfigById(id);
+    console.log(currentDgaConfig)
   }, []);
 
   useEffect(() => {
@@ -25,6 +26,7 @@ const DgaData: React.FC<{ id: number, lastFlow: number, lastTotal: number, onDga
       if (onTotalUsage) {
         onTotalUsage(currentDgaConfig.total_granted_dga ?? 0);
       }
+      console.log(currentDgaConfig);
     }
   }, [currentDgaConfig]);
 
@@ -75,6 +77,7 @@ const DgaData: React.FC<{ id: number, lastFlow: number, lastTotal: number, onDga
   const rows: RowData[] = [
     { key: 'send_dga', label: 'Estado de servicio', value: currentDgaConfig.send_dga == null? 'No activo' : 'Activado' },
     { key: 'code_dga', label: 'Código de obra', value: currentDgaConfig.date_created_code ? `${currentDgaConfig.code_dga} (${currentDgaConfig.date_created_code})` : currentDgaConfig.code_dga },
+    { key: 'date_created_code', label: 'Fecha de creación obra', value: currentDgaConfig.date_created_code ?? 'Incompleto' },
     { key: 'standard', label: 'Estándar', value: currentDgaConfig.standard },
     { key: 'created',  label: 'Creado', value: currentDgaConfig.created ? currentDgaConfig.created.split('T')[0] : ''},
     { key: 'type_dga', label: 'Tipo de captación', value: currentDgaConfig.type_dga },
@@ -82,8 +85,8 @@ const DgaData: React.FC<{ id: number, lastFlow: number, lastTotal: number, onDga
     { key: 'percentUsage', label: '% Caudal en uso', value: `${getFlowPercent(Number(currentDgaConfig.flow_granted_dga)).toLocaleString('es-CL', { maximumFractionDigits: 2 })}%`},
     { key: 'total_granted_dga', label: 'Total autorizado', value: Number(currentDgaConfig.total_granted_dga).toLocaleString('es-CL') },
     { key: 'percentTotal', label: '% Total autorizado', value: `${getTotalPercent(Number(currentDgaConfig.total_granted_dga)).toLocaleString('es-CL', { maximumFractionDigits: 2 })}%` },
-    { key: 'shac', label: 'SHAC', value: currentDgaConfig.shac },
-    { key: 'date_start_compliance', label: 'Cumplimiento MEE', value: currentDgaConfig.date_start_compliance },
+    { key: 'shac', label: 'SHAC', value: currentDgaConfig.shac ?? 'Incompleto'},
+    { key: 'date_start_compliance', label: 'Cumplimiento MEE', value: currentDgaConfig.date_start_compliance ?? 'Incompleto' },
 
 
     // { key: 'modified', label: 'Modificado', value: currentDgaConfig.modified },
