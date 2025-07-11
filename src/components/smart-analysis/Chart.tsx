@@ -35,7 +35,8 @@ const Chart: React.FC<Props> = ({ titulo, subtitulo, nombreEjeX, nombreEjeY, val
         }))
         : [];
 
-  const finalData = [...data, ...thresholdLine];
+  //const finalData = [...data, ...thresholdLine];
+  const finalData = [...data, ];
 
     const config = {
         data: finalData,

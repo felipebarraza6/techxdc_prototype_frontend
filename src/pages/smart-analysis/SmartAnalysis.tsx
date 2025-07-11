@@ -445,7 +445,7 @@ const SmartAnalysis: React.FC = () => {
         { id: 'consumoDia', labelLeft: 'Consumo día', labelRight: 'm³/d' },
         { id: 'caudal2', labelLeft: 'Caudal', labelRight: 'lt/s' },
         { id: 'nivel', labelLeft: 'Nivel freático', labelRight: 'm' },
-        { id: 'datos', labelLeft: 'Datos' },
+        //{ id: 'datos', labelLeft: 'Datos' },
     ];
 
     const buttonStyle = {
