@@ -63,7 +63,7 @@ console.log("🔧 api_business configurado con baseURL:", BUSINESS_URL);
 api_telemetry.interceptors.request.use(
   (config) => {
     // Usar siempre el token fijo proporcionado
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("selectedToken");
     config.headers.Authorization = `Token ${token}`;
     return config;
   },

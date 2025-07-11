@@ -42,6 +42,8 @@ export const UserProvider = ({ children }: UserProviderProps) => {
       try {
         localStorage.setItem("userData", JSON.stringify(userDataToStore));
         localStorage.setItem("catchmentPoints", JSON.stringify(res.data.data?.catchmentPoints));
+        localStorage.setItem("selectedToken", res.data.data?.catchmentPoints[0].token_api_telemetry);
+        localStorage.setItem("selectedId", res.data.data?.catchmentPoints[0].id_api_telemetry);
         if (userDataToStore.token) {
           localStorage.setItem("token", userDataToStore.token);
         }
