@@ -10,9 +10,10 @@ interface CardComponentProps {
   flow: string;
   total: number;
   water_table: string;
+  onCardClick?: () => void;
 }
 
-const DgaMEECard: React.FC<CardComponentProps> = ({ date_time_medition, flow, total, water_table }) => {
+const DgaMEECard: React.FC<CardComponentProps> = ({ date_time_medition, flow, total, water_table, onCardClick }) => {
   return (
     <Card className="custom-card">
       <div className="card-header">
@@ -51,6 +52,7 @@ const DgaMEECard: React.FC<CardComponentProps> = ({ date_time_medition, flow, to
         size="large"
         className="compliance-button"
         style={{ fontSize: 14 }}
+        onClick={onCardClick}
       >
         Cumplimiento MEE
       </Button>

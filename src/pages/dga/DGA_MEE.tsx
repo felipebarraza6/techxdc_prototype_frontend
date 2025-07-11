@@ -6,25 +6,64 @@ import DgaMEECard from '../../components/dga/DgaMMECard';
 import DgaData from '../../components/dga/DgaData';
 import './DGA_MEE.css';
 import { useSelectedCatchmentPoint } from '../../context/SelectedCatchmentPointContext';
+import { Modal } from 'antd';
 
 const { Text } = Typography;
 
+interface Interaction {
+  date_time_medition: string;
+  flow: string;
+  total: number;
+  water_table: string;
+  n_voucher: string | null;
+  return_dga: string | null;
+}
+
 const DgaMEE: React.FC = () => {
-  const { interactions, getInteractionsByCatchmentPoint, loading } = useInteractionDetails();
+  const { interactions, getInteractionsByCatchmentPoint, loading, totalCount } = useInteractionDetails();
   const { selectedCatchmentPoint } = useSelectedCatchmentPoint();
   const [codeDga, setCodeDga] = useState<string>("");
   const [totalUsage, setTotalUsage] = useState<number>(0);
   // const userId = 2;
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState<number>(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedInteraction, setSelectedInteraction] = useState<Interaction | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
+  const loadPage = async (page: number) => {
+    if (!selectedCatchmentPoint) return;
+    await getInteractionsByCatchmentPoint(selectedCatchmentPoint.id, page);
+    setCurrentPage(page);
+  };
 
+  const openModal = (interaction: Interaction) => {
+    setSelectedInteraction(interaction);
+    setIsModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+    setSelectedInteraction(null);
+  };
+
+  useEffect(() => {
+    console.log(interactions);
+  }, [interactions]);
 
   useEffect(() => {
     if (selectedCatchmentPoint) {
-      getInteractionsByCatchmentPoint(selectedCatchmentPoint.id);
+      loadPage(1);
     }
-  }, [selectedCatchmentPoint, getInteractionsByCatchmentPoint]);
+  }, [selectedCatchmentPoint]);
+
+  useEffect(() => {
+    if (totalCount) {
+      setTotalPages(Math.ceil(totalCount / 20)); // 20 es el limit en la consulta
+    }
+  }, [totalCount]);
+
 
   useEffect(() => {
     function updateWidth() {
@@ -44,6 +83,21 @@ const DgaMEE: React.FC = () => {
   const gap = cardsPerRow > 1
     ? Math.floor((availableWidth - (cardsPerRow * 265)) / (cardsPerRow - 1))
     : 0;
+
+  const maxPagesToShow = 5;
+
+  // calcular el bloque actual, empieza en 0
+  const currentBlock = Math.floor((currentPage - 1) / maxPagesToShow);
+
+  // página inicial y final del bloque actual
+  const startPage = currentBlock * maxPagesToShow + 1;
+  const endPage = Math.min(startPage + maxPagesToShow - 1, totalPages);
+
+  const pagesToShow = [];
+  for (let i = startPage; i <= endPage; i++) {
+    pagesToShow.push(i);
+  }
+
 
   if (!selectedCatchmentPoint) {
     return (
@@ -88,17 +142,40 @@ const DgaMEE: React.FC = () => {
               flow={item.flow}
               total={item.total}
               water_table={item.water_table}
+              onCardClick={() => openModal(item)}
             />
         ))}
       </Flex>
       <Flex justify="end" gap={"middle"} style={{ marginTop: 16 }}>
-            <div className='circle-container'> {'<'} </div>
-            <div className='circle-container'> {'1'} </div>
-            <div className='circle-container'> {'2'} </div>
-            <div className='circle-container'> {'3'} </div>
-            <div className='circle-container'> {'4'} </div>
-            <div className='circle-container'> {'5'} </div>
-            <div className='circle-container'> {'>'} </div>
+        {/* Flecha para ir al bloque anterior */}
+        <div
+          className='circle-container'
+          style={{ cursor: startPage > 1 ? 'pointer' : 'default', opacity: startPage > 1 ? 1 : 0.5 }}
+          onClick={() => startPage > 1 && loadPage(startPage - 1)}
+        >
+          {'<'}
+        </div>
+
+        {/* Mostrar páginas del bloque actual */}
+        {pagesToShow.map((page) => (
+          <div
+            key={page}
+            className={`circle-container ${currentPage === page ? 'active' : ''}`}
+            style={{ cursor: 'pointer' }}
+            onClick={() => loadPage(page)}
+          >
+            {page}
+          </div>
+        ))}
+
+        {/* Flecha para ir al siguiente bloque */}
+        <div
+          className='circle-container'
+          style={{ cursor: endPage < totalPages ? 'pointer' : 'default', opacity: endPage < totalPages ? 1 : 0.5 }}
+          onClick={() => endPage < totalPages && loadPage(endPage + 1)}
+        >
+          {'>'}
+        </div>
       </Flex>
       {/* Grid inferior */}
       {/* <Row gutter={16} style={{ marginTop: 32 }}> */}
@@ -138,6 +215,19 @@ const DgaMEE: React.FC = () => {
         </Col>
         </Flex>
       {/* </Row> */}
+      <Modal
+        title="Detalle de Medición"
+        visible={isModalVisible}
+        onCancel={closeModal}
+        footer={null}
+      >
+        {selectedInteraction && (
+          <div>
+            <p><strong>Respuesta servicio DGA:</strong> {selectedInteraction.return_dga}</p>
+            <p><strong>Voucher:</strong> {selectedInteraction.n_voucher ?? 'No completado'}</p>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
