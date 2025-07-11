@@ -81,8 +81,6 @@ const MenuSidebar: React.FC<MenuSidebarProps> = ({
       style={{ background: "#1C355F", borderRight: "none" }}
       className={styles.menuList}
     >
-      <Menu.Item key="dashboard" icon={<DashboardOutlined className={styles.menuIcon} />} onClick={() => handleMenuClickMobile(() => navigate("/"))}>Dashboard</Menu.Item>
-      <Menu.Item key="clients" icon={<UsergroupAddOutlined className={styles.menuIcon} />} onClick={() => handleMenuClickMobile(() => navigate("/clients"))}>Clientes</Menu.Item>
       <Menu.Item key="telemetry" icon={<ExperimentOutlined className={styles.menuIcon} />} onClick={() => handleMenuClickMobile(() => navigate("/telemetry"))}>Telemetría</Menu.Item>
       <Menu.Item key="smart-analysis" icon={<BarChartOutlined className={styles.menuIcon} />} onClick={() => handleMenuClickMobile(() => navigate("/smart-analysis"))}>Smart Análisis</Menu.Item>
       <Menu.SubMenu key="dga" icon={<SettingOutlined className={styles.menuIcon} />} title={<span>DGA</span>}>
